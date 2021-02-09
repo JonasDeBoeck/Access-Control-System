@@ -1,7 +1,7 @@
 import axios from 'axios'
 import https from 'https'
 
-function login(username, password, callback){
+const login = function(username, password, callback){
     let data = {
         "User": {
           "login_id": username,
@@ -23,7 +23,20 @@ function login(username, password, callback){
     
     instance.post("http://localhost:8080/api/login", JSON.stringify(data), config)
     .catch(error => console.log(error.response))
-    .then(result => callback(result.headers['bs-session-id']))
+    .then(result => callback(result.headers["bs-session-id"]))
 }
 
-export default login
+const getDoors = function(session){
+    let headers = {
+        headers: {
+            "bs-session-id": session
+        }
+    }
+    console.log(session)
+    axios.get("http://localhost:8080/api/doors",headers).then(result => console.log(result))
+}
+
+export default {
+    login,
+    getDoors
+}
