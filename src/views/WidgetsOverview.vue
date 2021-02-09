@@ -1,27 +1,17 @@
 <template>
-  <div class="widgets">
+  <div id="widgets">
     <h1>Widgets</h1>
-    <form>
-      <h2>Add Widget</h2>
-
-      <input type="text" placeholder="Widget naam">
-
-
-      <v-select v-bind:options="doors"
-                v-model="selectedDoor" 
-                label="name">
-      </v-select>
-    </form>
+    <AddWidget/>
   </div>
 </template>
 
 <script>
-import vSelect from 'vue-select'
 import * as f from '../variables'
+import AddWidget from '../components/AddWidget.vue'
 export default {
   name: 'WidgetsOverview',
   components:{
-    vSelect
+    AddWidget
   },
   created() {
     f.default.login("admin","t",f.default.getDoors)
@@ -47,3 +37,4 @@ export default {
     }
 }
 </script>
+
