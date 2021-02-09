@@ -22,19 +22,21 @@
                         btn1OnClick: () => { close(); },
                         btn2OnClick: () => { setTime(); }
                         }">
-        <div class="time_form">
-            <p>
-                <input type="number" v-model="hours" min="0">
-                <label>Uren</label>
-            </p>
-            <p>
-                <input type="number" v-model="minutes" min="0" max="60">
-                <label>Minuten</label>
-            </p>
-            <p>
-                <input type="number" v-model="seconds" min="0" max="60">
-                <label>Seconden</label>
-            </p>
+        <div class="wrapper">
+            <div class="time_form">
+                <p class="form-group">
+                    <label>Uren</label>
+                    <input type="number" v-model="hours" min="0" max="4" class="form-control" width="90px">
+                </p>
+                <p class="form-group">
+                    <label>Minuten</label>
+                    <input type="number" v-model="minutes" min="0" max="60" class="form-control">
+                </p>
+                <p class="form-group">
+                    <label>Seconden</label>
+                    <input type="number" v-model="seconds" min="0" max="60" class="form-control">
+                </p>
+            </div>
         </div>
         </vue-modal-2>
     </div>
@@ -93,10 +95,6 @@ export default {
     box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
 }
 
-.door p {
-    align-self: center;
-}
-
 .icons {
     width: 100%;
     display: flex;
@@ -115,18 +113,26 @@ i {
     border-left: 0.25rem solid red;
 }
 
-input {
-    width: 30px;
-}
-
 .time_form {
     display: flex;
     justify-content: center;
     flex-direction: column;
+    width: 30%;
 }
 
 label {
     margin-left: 5px;
     margin-right: 5px;
+}
+
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-group {
+    margin-block-end: 1em;
+    margin-block-start: 1em;
 }
 </style>

@@ -59,6 +59,8 @@ export default {
   justify-content: space-between;
   padding-left: 2.5em;
   padding-right: 2.5em;
+  padding-top: 1em;
+  padding-bottom: 1em;
   background: #fff;
   box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
 }
@@ -70,6 +72,14 @@ input[type=text] {
   padding:.50rem 1rem;
   border-top-left-radius: .35rem;
   border-bottom-left-radius: .35rem;
+}
+
+input:focus, button:focus {
+  outline: none;
+}
+
+button:hover {
+  background: rgb(26, 72, 207);
 }
 
 button {
@@ -85,5 +95,6 @@ button {
 
 h1 {
   color: rgba(58,96,208,1);
+  margin: 0;
 }
 </style>
