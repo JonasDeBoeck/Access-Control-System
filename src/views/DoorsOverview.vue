@@ -1,7 +1,11 @@
 <template>
-  <div class="doors">
+  <div class="door-overview">
     <h1>Doors</h1>
-    <Doors/>
+    <form action="">
+      <input type="text">
+      <input type="submit">
+    </form>
+    <Doors v-bind:doors="doors"/>
   </div>
 </template>
 
@@ -9,12 +13,27 @@
 import Doors from '@/components/Doors'
 import axios from 'axios'
 import https from 'https'
-//import jquery from 'jquery'
 
 export default {
   name: 'DoorsOverview',
   components: {
     Doors
+  },
+  data() {
+    return {
+      doors: [
+        {name: 'K2.09', opened: false},
+        {name: 'K2.10', opened: true},
+        {name: 'K2.11', opened: false},
+        {name: 'K2.12', opened: false},
+        {name: 'K2.13', opened: false},
+        {name: 'K2.14', opened: false},
+        {name: 'K2.15', opened: false},
+        {name: 'K2.16', opened: true},
+        {name: 'K2.17', opened: true},
+      ],
+      session_id: ''
+    }
   },
   created(){
     let data = {
@@ -37,12 +56,17 @@ export default {
     }
 
     instance.post("http://localhost:8080/api/login", JSON.stringify(data), config).catch(error => console.log(error.response)).then(result => console.log(result.headers))
-    // fetch("http://localhost:8080/api/login", {
-    //   mode: 'no-cors',
-    //   method: "POST",
-    //   body: JSON.stringify(data)
-    // }).then(response => console.log(response.headers))
-    //   .catch(err => console.log(err.response))
   }
 }
 </script>
+
+<style scoped>
+.door-overview {
+  height: 100%;
+}
+
+form {
+  float: right;
+  margin-right: 2em;
+}
+</style>
