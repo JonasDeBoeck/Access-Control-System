@@ -9,12 +9,15 @@
   },
   "dependencies": {
     "@burhanahmeed/vue-modal-2": "^1.1.4",
+    "@popperjs/core": "^2.6.0",
     "axios": "^0.21.1",
+    "bootstrap": "^5.0.0-beta1",
     "core-js": "^3.6.5",
     "jquery": "^3.5.1",
     "vue": "^2.6.11",
+    "vue-multiselect": "^2.1.6",
     "vue-router": "^3.2.0",
-    "vue-slider-component": "^3.2.11",
+    "vue-select": "^3.11.2",
     "vue-template-compiler": "^2.6.12"
   },
   "devDependencies": {
