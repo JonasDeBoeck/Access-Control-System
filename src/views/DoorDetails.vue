@@ -13,29 +13,24 @@
                <div class="input-group-prepend">
                   <span class="input-group-text" id="basic-addon1">Tijd open</span>
                </div>
-               <input type="text" class="form-control" placeholder="[DOOR NAME]" aria-label="Username" aria-describedby="basic-addon1">
+               <input type="number" min=0 class="form-control" placeholder="Dagen" aria-label="Username" aria-describedby="basic-addon1">
+               <input type="number" min=0 class="form-control" placeholder="Minuten" aria-label="Username" aria-describedby="basic-addon1">
+               <input type="number" min=0 class="form-control" placeholder="Seconden" aria-label="Username" aria-describedby="basic-addon1">
             </div>
-            <br>
             <br>
             <div class="input-group mb-1">
+               <div class="input-group mb-3">
                <div class="input-group-prepend">
-                  <span class="input-group-text" id="basic-addon1">Omschrijving</span>
-               </div>
-               <input type="text" class="form-control" placeholder="[DOOR DESCRIPTION]" aria-label="Username" aria-describedby="basic-addon1">
-            </div>
-            <br>
-            <br>
-            <div class="input-group mb-3">
-               <div class="input-group-prepend">
-                  <label class="input-group-text" for="inputGroupSelect01">Options</label>
+                  <label class="input-group-text" for="inputGroupSelect01">Groep</label>
                </div>
                <select class="custom-select" id="inputGroupSelect01">
-                  <option selected>Choose...</option>
+                  <option selected>Kies...</option>
                   <option value="1">One</option>
                   <option value="2">Two</option>
                   <option value="3">Three</option>
                </select>
                </div>
+            </div>
             <input type="submit" value="save" id="saveinformation"/>
          </form>
       </div>
@@ -69,7 +64,6 @@
    display: grid;
    grid-template-columns: 33% 33% 33%;
    text-align: left;
-   column-gap: 5%;
 }
 
 .lastusers{
