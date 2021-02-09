@@ -7,7 +7,7 @@
 
 <script>
 import Doors from '@/components/Doors'
-import login from '../variables.js'
+import login from '../variables'
 
 export default {
   name: 'DoorsOverview',
@@ -20,7 +20,7 @@ export default {
       console.log(session)
     }
 
-    login("admin","t", callback)
+    login.login("admin","t", callback)
   }
 }
 </script>
