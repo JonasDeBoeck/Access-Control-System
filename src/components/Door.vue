@@ -1,13 +1,13 @@
 <template>
-    <div class="door">
+    <div class="door" v-bind:class="{'is-opened':door.opened, 'is-locked':!door.opened}">
         <div>
             <p>{{door.name}}</p>
         </div>
         <div class="icons">
-            <div v-on:click="unlock" v-bind:class="{'is-opened':door.opened}">
+            <div v-on:click="unlock">
                 <i class="fas fa-lock-open"></i>
             </div>
-            <div v-on:click="lock" v-bind:class="{'is-locked':!door.opened}">
+            <div v-on:click="lock">
                 <i class="fas fa-lock"></i>
             </div>
             <div v-on:click="open">
@@ -22,19 +22,21 @@
                         btn1OnClick: () => { close(); },
                         btn2OnClick: () => { setTime(); }
                         }">
-        <div class="time_form">
-            <p>
-                <input type="number" v-model="hours" min="0">
-                <label>Uren</label>
-            </p>
-            <p>
-                <input type="number" v-model="minutes" min="0" max="60">
-                <label>Minuten</label>
-            </p>
-            <p>
-                <input type="number" v-model="seconds" min="0" max="60">
-                <label>Seconden</label>
-            </p>
+        <div class="wrapper">
+            <div class="time_form">
+                <p class="form-group">
+                    <label>Uren</label>
+                    <input type="number" v-model="hours" min="0" max="4" class="form-control" width="90px">
+                </p>
+                <p class="form-group">
+                    <label>Minuten</label>
+                    <input type="number" v-model="minutes" min="0" max="60" class="form-control">
+                </p>
+                <p class="form-group">
+                    <label>Seconden</label>
+                    <input type="number" v-model="seconds" min="0" max="60" class="form-control">
+                </p>
+            </div>
         </div>
         </vue-modal-2>
     </div>
@@ -67,9 +69,9 @@ export default {
             this.$vm2.close('time')
         },
         setTime() {
-            console.log(this.hours); 
-            console.log(this.minutes); 
-            console.log(this.seconds);
+            let seconds = (this.hours * 3600) + (this.minutes * 60) + this.seconds
+            console.log(seconds)
+            this.$vm2.close('time')
         },
         resetInputs() {
             this.hours = 0;
@@ -82,18 +84,15 @@ export default {
 
 <style scoped>
 .door {
-    background-color: gray;
+    background-color: #fff;
     width: 100%;
     height: 100%;
-    border-radius: 5%;
+    border-radius: .35rem;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-}
-
-.door p {
-    align-self: center;
+    box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
 }
 
 .icons {
@@ -107,24 +106,33 @@ i {
 }
 
 .is-opened {
-    color: green;
+    border-left: 0.25rem solid green;
 }
 
 .is-locked {
-    color: red;
-}
-
-input {
-    width: 30px;
+    border-left: 0.25rem solid red;
 }
 
 .time_form {
     display: flex;
     justify-content: center;
+    flex-direction: column;
+    width: 30%;
 }
 
 label {
     margin-left: 5px;
     margin-right: 5px;
+}
+
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-group {
+    margin-block-end: 1em;
+    margin-block-start: 1em;
 }
 </style>
