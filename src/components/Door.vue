@@ -1,13 +1,13 @@
 <template>
-    <div class="door">
+    <div class="door" v-bind:class="{'is-opened':door.opened, 'is-locked':!door.opened}">
         <div>
             <p>{{door.name}}</p>
         </div>
         <div class="icons">
-            <div v-on:click="unlock" v-bind:class="{'is-opened':door.opened}">
+            <div v-on:click="unlock">
                 <i class="fas fa-lock-open"></i>
             </div>
-            <div v-on:click="lock" v-bind:class="{'is-locked':!door.opened}">
+            <div v-on:click="lock">
                 <i class="fas fa-lock"></i>
             </div>
             <div v-on:click="open">
@@ -67,9 +67,9 @@ export default {
             this.$vm2.close('time')
         },
         setTime() {
-            console.log(this.hours); 
-            console.log(this.minutes); 
-            console.log(this.seconds);
+            let seconds = (this.hours * 3600) + (this.minutes * 60) + this.seconds
+            console.log(seconds)
+            this.$vm2.close('time')
         },
         resetInputs() {
             this.hours = 0;
@@ -82,14 +82,15 @@ export default {
 
 <style scoped>
 .door {
-    background-color: gray;
+    background-color: #fff;
     width: 100%;
     height: 100%;
-    border-radius: 5%;
+    border-radius: .35rem;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
 }
 
 .door p {
@@ -107,11 +108,11 @@ i {
 }
 
 .is-opened {
-    color: green;
+    border-left: 0.25rem solid green;
 }
 
 .is-locked {
-    color: red;
+    border-left: 0.25rem solid red;
 }
 
 input {
@@ -121,6 +122,7 @@ input {
 .time_form {
     display: flex;
     justify-content: center;
+    flex-direction: column;
 }
 
 label {

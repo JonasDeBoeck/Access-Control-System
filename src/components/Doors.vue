@@ -24,10 +24,10 @@ export default {
     grid-template-rows: 2fr 2fr 2fr;
     grid-template-columns: 1fr 1fr 1fr;
     row-gap: 20%;
-    column-gap: 15%;
-    margin-top: 5em;
-    margin-left: 2em;
-    margin-right: 2em;
+    column-gap: 5%;
+    margin-left: 2.5em;
+    margin-right: 2.5em;
+    margin-top: 2.5em;
     height: 80%;
   }
 </style>
