@@ -1,6 +1,8 @@
 <template>
     <div class="widget" :style="cssVars">
-        <img class="icon" :src="require(`../assets/icons/${this.widget.icon}.png`)" alt="icoon">
+        <div class="iconcontainer">
+            <img class="icon" :src="require(`../assets/icons/${this.widget.icon}.png`)" alt="icoon">    
+        </div>
         <div class="content">
             <h2>{{widget.name}}</h2>
             <div class="doors">
@@ -40,14 +42,20 @@ export default {
         border-radius: .35rem;
         display: flex;
         align-items: center;
-        justify-content: space-around;
+        justify-content: space-between;
         box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
     }
 
+    .iconcontainer{
+        flex-basis: 20%;
+    }
+
     .content{
+        flex-basis: 80%;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        margin-right: 1em;
     }
 
     .icon{ 
