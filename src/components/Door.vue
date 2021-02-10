@@ -15,6 +15,7 @@
             <div v-on:click="open" class="clock">
                 <i class="fas fa-clock"></i>
             </div>
+            <router-link :to="{name: 'DoorDetails', params: {id: this.door.id}}" tag="div"><i class="fas fa-edit"></i></router-link>
         </div>
         <vue-modal-2 name="time" @on-close="close" 
         noHeader
