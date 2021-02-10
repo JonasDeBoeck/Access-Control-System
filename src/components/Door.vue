@@ -12,7 +12,7 @@
                 <i class="fas fa-lock"></i>
                 <small>Sluit</small>
             </div>
-            <div v-on:click="open">
+            <div v-on:click="open" class="clock">
                 <i class="fas fa-clock"></i>
             </div>
         </div>
@@ -101,6 +101,7 @@ export default {
     width: 100%;
     display: flex;
     justify-content: space-evenly;
+    
 }
 
 i {
@@ -143,6 +144,11 @@ label {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    cursor: pointer;
+}
+
+.clock {
+    cursor: pointer;
 }
 
 small {
