@@ -4,8 +4,8 @@ import https from 'https'
 async function login(username, password){
     let data = {
         "User": {
-          "login_id": username,
-          "password": password
+            "login_id": username,
+            "password": password
         }
     }
     
@@ -30,12 +30,26 @@ async function getDoors(session){
             "bs-session-id": session
         }
     }
-    console.log(session)
     const response = await axios.get("http://localhost:8080/api/doors",headers)
+    return response
+}
+
+async function getDoorsStatus(session){
+    let headers = {
+        headers: {
+            "bs-session-id": session
+        }
+    }
+
+    let data = {
+        "monitoring_permission": true
+    }
+    const response = await axios.post("http://localhost:8080/api/doors/status", JSON.stringify(data), headers)
     return response
 }
 
 export default {
     login,
-    getDoors
+    getDoors,
+    getDoorsStatus
 }
