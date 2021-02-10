@@ -30,7 +30,6 @@ async function getDoors(session){
             "bs-session-id": session
         }
     }
-    console.log(session)
     const response = await axios.get("http://localhost:8080/api/doors",headers)
     return response
 }

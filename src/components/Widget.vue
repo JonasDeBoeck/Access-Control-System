@@ -1,8 +1,8 @@
 <template>
     <div class="widget" :style="cssVars">
-        <h2>{{widget.name}}</h2>
+        <img class="icon" :src="require(`../assets/icons/${this.widget.icon}.png`)" alt="icoon">
         <div class="content">
-            <!-- image -->
+            <h2>{{widget.name}}</h2>
             <div class="doors">
                 <p v-for="door in widget.doors" v-bind:key="door.id">{{door.name}}</p>
             </div>
@@ -14,12 +14,20 @@
 export default {
     name: "Widget",
     props: ["widget"],
+    data(){
+        return {
+            
+        }
+    },
     computed: {
         cssVars(){
             return {
                 '--background': this.widget.colour
             }
         }
+    },
+    methods: {
+        
     }
 }
 </script>
@@ -32,8 +40,19 @@ export default {
         border-radius: .35rem;
         display: flex;
         align-items: center;
-        justify-content: center;
-        flex-direction: column;
+        justify-content: space-around;
         box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
+    }
+
+    .content{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .icon{ 
+        margin: 10px;
+        width: 45px;
+        height: 45px;
     }
 </style>

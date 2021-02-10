@@ -43,9 +43,9 @@
     </div>
     
     <div class="icons">
-        <button class="icon" value="deur"><img src="https://img.icons8.com/pastel-glyph/50/000000/door--v3.png"/></button>
-        <button class="icon" value="lift"><img src="https://img.icons8.com/metro/50/000000/elevator.png"/></button> 
-        <button class="icon" value="bareel"><img src="https://img.icons8.com/ios/50/000000/tollbooth.png"/></button> 
+        <button class="icon" @click="this.icon = 'open-door'" value="open-door"><img src="@/assets/icons/open-door.png" alt=""></button>
+        <button class="icon" @click="this.icon = 'elevator'" value="elevator"><img src="@/assets/icons/elevator.png" alt=""></button> 
+        <button class="icon" @click="this.icon = 'parking'" value="parking"><img src="@/assets/icons/parking.png" alt=""></button>
     </div>
     
     <button @click="addWidget" class="btn btn-primary">Voeg toe</button>
@@ -83,10 +83,7 @@ export default {
         seconds: 0,
         widgetname: "",
         colour: '#000000',
-        category: {
-            class: undefined,
-            unicode: undefined
-            }
+        icon: ""
         }
     },
     methods: {
@@ -96,6 +93,7 @@ export default {
                 name: this.widgetname,
                 doors: this.selectedDoors,
                 colour: this.colour,
+                icon: this.icon,
                 duration: {
                     hours: this.hours,
                     minutes: this.minutes,
@@ -158,7 +156,8 @@ export default {
     .icon {
         border-radius: 5px;
         padding: 10px;
-        width: 75px;
-        height: 75px;
+        width: 84;
+        height: 84;
+        border: none;
     }
 </style>
