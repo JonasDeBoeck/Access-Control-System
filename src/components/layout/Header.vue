@@ -2,14 +2,18 @@
     <header class="header">
         <div class="wrapper">
             <div>
-            <h1>LOGO</h1>
+            <h1>ACS 🔒</h1>
             </div>
-            <hr>
+            <hr class="sidebar-divider">
             <div class="nav">
-                <router-link to="/" class="links">Portaal</router-link>
-                <hr>
-                <router-link to="/doors" class="links">Overzicht deuren</router-link>
-                <router-link to="/widgets" class="links">Widgets</router-link>
+                <nav>
+                    <router-link to="/" tag="li" class="links"><span id="portal"><i class="fas fa-home"></i>Portaal<i class="fas fa-angle-left arrow"></i></span></router-link>
+                    <hr class="sidebar-divider">
+                    <router-link to="/doors" tag="li" class="links"><span><i class="fas fa-door-open"></i>deuren<i class="fas fa-angle-left arrow"></i></span></router-link>
+                    <hr class="sidebar-divider">
+                    <router-link to="/widgets" tag="li" class="links"><span><i class="fas fa-cogs"></i>Widgets<i class="fas fa-angle-left arrow" ></i></span></router-link>
+                    <hr class="sidebar-divider">
+                </nav>
             </div>
         </div>
     </header>
@@ -22,7 +26,6 @@ export default {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
 
 .header {
     background: rgb(78,115,223);
@@ -36,12 +39,14 @@ export default {
 .nav {
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
-    font-size: 1.5em;
+    justify-content: space-between;
+    font-size: 1em;
+    font-family: 'Oswald';
+    text-transform: uppercase;
 }
  
 .links {
-    color: white;
+    color: lightgray;
     text-decoration: none;
 }
 
@@ -51,14 +56,48 @@ export default {
 }
 
 hr {
-    width: 80%;
+    width: 85%;
     border: 0;
-    height: 1px;
-    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), #858796, rgba(0, 0, 0, 0));
+    box-sizing: content-box;
+    color: #fff;
+    /*height: 1px;*/
+    background: linear-gradient(to right, rgba(0, 0, 0, 0), #fff, rgba(0, 0, 0, 0));
+}
+
+.sidebar-divider {
+    margin: 1rem 1rem 1rem
 }
 
 h1 {
     margin: 0;
-    font-style: 'Lobster', cursive;
+    font-family: 'Oswald';
+    font-weight: normal;
+    color: #fff;
+    font-size: 3rem;
 }
+
+i {
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+
+span:hover {
+    color: white;
+    cursor: pointer;
+}
+
+nav li.router-link-exact-active {
+    color: white;
+    
+}
+
+nav li.router-link-exact-active .arrow {
+    transform: rotate(180deg);
+}
+
+.arrow {
+    transition: transform .4s ease-in-out;  
+}
+
 </style>
