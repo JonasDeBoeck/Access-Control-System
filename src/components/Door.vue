@@ -1,14 +1,16 @@
 <template>
     <div class="door" v-bind:class="{'is-opened':door.opened, 'is-locked':!door.opened}">
         <div>
-            <p>{{door.name}}</p>
+            <p class="name">{{door.name}}</p>
         </div>
         <div class="icons">
-            <div v-on:click="unlock">
+            <div v-on:click="unlock" v-if="!door.opened" class="lock">
                 <i class="fas fa-lock-open"></i>
+                <small>Open</small>
             </div>
-            <div v-on:click="lock">
+            <div v-on:click="lock" v-if="door.opened" class="lock">
                 <i class="fas fa-lock"></i>
+                <small>Sluit</small>
             </div>
             <div v-on:click="open">
                 <i class="fas fa-clock"></i>
@@ -134,5 +136,22 @@ label {
 .form-group {
     margin-block-end: 1em;
     margin-block-start: 1em;
+}
+
+.lock {
+    min-width: 36px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+small {
+    font-weight: bold;
+    font-family: 'Oswald';
+}
+
+.name {
+    font-family: 'Oswald';
+    text-transform: uppercase;
 }
 </style>
