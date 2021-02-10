@@ -14,7 +14,7 @@ export default {
     AddWidget
   },
   created() {
-    f.default.login("admin","t",f.default.getDoors)
+    f.default.login("admin","dIET34#ucll",f.default.getDoors)
   },
   data(){
     return {
