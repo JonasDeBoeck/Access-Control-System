@@ -77,13 +77,12 @@ export default {
       return value.name.match(this.searchterm)
     }
   },
-  created(){
+  async created(){
     this.filteredDoors = this.doors
     this.updateVisibleDoors(this.doors)
-    f.default.login("admin","dIET34#ucll").then(session =>
-    f.default.getDoors(session).then(doors => this.realDoors = doors.data))
-    f.default.login("admin","dIET34#ucll").then(session =>
-    f.default.getDoorsStatus(session).then(status => this.status = status.data))
+    const key = await f.default.login("admin","dIET34#ucll")
+    const result = await f.default.getDoorsForOverview(key)
+    console.log(result)
   }
 }
 </script>

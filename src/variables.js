@@ -31,7 +31,7 @@ async function getDoors(session){
         }
     }
     const response = await axios.get("http://localhost:8080/api/doors",headers)
-    return response
+    return response.data
 }
 
 async function getDoorsStatus(session){
@@ -45,11 +45,39 @@ async function getDoorsStatus(session){
         "monitoring_permission": true
     }
     const response = await axios.post("http://localhost:8080/api/doors/status", JSON.stringify(data), headers)
-    return response
+    return response.data
+}
+
+async function getDoorsForOverview(session){
+    const doorsStatus = await getDoorsStatus(session)
+    const doors = await getDoors(session)
+    const rowsDoors = doors['DoorCollection']['rows']
+    const rowsDoorsStatus = doorsStatus['DoorStatusCollection']['rows']
+    const result = []
+    rowsDoors.forEach(row => result.push({
+        id : row.id,
+        name : row.name
+    }))
+    const statusResult = []
+    rowsDoorsStatus.forEach(row => statusResult.push({
+        id : row.door_id.id,
+        unlocked : row.unlocked
+    }))
+    for(let i=0; i < result.length; i++){
+        let door = result[i]
+        for(let j=0; j < statusResult.length; j++){
+            let status = statusResult[j]
+            if(door.id === status.id){
+                door.unlocked = status.unlocked
+            }
+        }
+    }
+    return result
 }
 
 export default {
     login,
     getDoors,
-    getDoorsStatus
+    getDoorsStatus,
+    getDoorsForOverview
 }
