@@ -133,6 +133,8 @@ button {
 h1 {
   color: rgba(58,96,208,1);
   margin: 0;
+  font-family: 'Oswald';
+  text-transform: uppercase;
 }
 
 .pages {
