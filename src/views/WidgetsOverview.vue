@@ -21,7 +21,7 @@ export default {
     Widget
   },
   created() {
-    f.default.login("admin","t",f.default.getDoors)
+    f.default.login("admin","t").then(session => f.default.getDoors(session).then(doors => console.log(doors)))
   },
   data(){
     return {

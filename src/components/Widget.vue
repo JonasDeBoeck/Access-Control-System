@@ -1,6 +1,12 @@
 <template>
     <div class="widget" :style="cssVars">
         <h2>{{widget.name}}</h2>
+        <div class="content">
+            <!-- image -->
+            <div class="doors">
+                <p v-for="door in widget.doors" v-bind:key="door.id">{{door.name}}</p>
+            </div>
+        </div>
     </div>
 </template>
 

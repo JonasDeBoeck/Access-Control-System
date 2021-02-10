@@ -18,7 +18,6 @@
 import Doors from '@/components/Doors'
 import login from '../variables'
 
-
 export default {
   name: 'DoorsOverview',
   components: {

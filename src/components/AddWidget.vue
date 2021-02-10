@@ -12,7 +12,7 @@
             <label id="selected_deur" class="input-group-text" for="inputGroupSelect01">Deur</label>
         </div>
         <div id="multiselect">
-            <multiselect v-model="selectedDoors" :options="doors" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Pick some" label="name" track-by="id" :preselect-first="true">
+            <multiselect v-model="selectedDoors" :options="doors" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Pick some" label="name" track-by="id">
             </multiselect>
         </div>
     </div>
@@ -42,6 +42,11 @@
         <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" v-model="colour">
     </div>
     
+    <div class="icons">
+        <button class="icon" value="deur"><img src="https://img.icons8.com/pastel-glyph/50/000000/door--v3.png"/></button>
+        <button class="icon" value="lift"><img src="https://img.icons8.com/metro/50/000000/elevator.png"/></button> 
+        <button class="icon" value="bareel"><img src="https://img.icons8.com/ios/50/000000/tollbooth.png"/></button> 
+    </div>
     
     <button @click="addWidget" class="btn btn-primary">Voeg toe</button>
 </form>
@@ -77,7 +82,11 @@ export default {
         minutes: 0,
         seconds: 0,
         widgetname: "",
-        colour: '#000000'
+        colour: '#000000',
+        category: {
+            class: undefined,
+            unicode: undefined
+            }
         }
     },
     methods: {
@@ -133,9 +142,23 @@ export default {
         line-height: 1.5;
     }
 
-
     label {
         margin-left: 5px;
         margin-right: 5px;
+    }
+
+    .icons{
+        display: flex;
+        margin: 1em;
+        justify-content: space-between;
+    }
+    .icon:visited {
+        background: #7995f1;
+    }
+    .icon {
+        border-radius: 5px;
+        padding: 10px;
+        width: 75px;
+        height: 75px;
     }
 </style>
