@@ -45,6 +45,7 @@ export default {
         {id: 10, name: 'K2.18', opened: true},
         {id: 11, name: 'K2.19', opened: true}
       ],
+      realDoors: [],
       sessionId: '',
       filteredDoors: [],
       currentPage: 0,
@@ -85,7 +86,8 @@ export default {
             "bs-session-id": session
         }
       }
-      axios.get("http://localhost:8080/api/doors",headers).then(result => console.log(result.data))
+      axios.get("http://localhost:8080/api/doors",headers).then(result => console.log(result.data['DoorCollection']['rows']))
+      console.log(this.realDoors)
     }
     login.login("admin","dIET34#ucll", callback)
   }
