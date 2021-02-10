@@ -4,8 +4,10 @@
    <div class="deurdetail">
       <div class="status">
       <h2>Status</h2>
-         <input type="submit" id="open" value="Open"/>
-         <input type="submit" id="close" value="Sluit"/>
+         <div class= "statusbuttons">
+            <input type="submit" id="open" value="Open"/>
+            <input type="submit" id="close" value="Sluit"/>
+         </div>
       </div>
       <div class="opentimegroup">
          <form>
@@ -31,7 +33,7 @@
                </select>
                </div>
             </div>
-            <input type="submit" value="save" id="saveinformation"/>
+            <input type="submit" value="Opslaan" id="saveinformation"/>
          </form>
       </div>
    <div class="lastusers">
@@ -43,17 +45,6 @@
          <li>[time] - [user4]</li>
          <li>[time] - [user5]</li>
       </ul>
-   </div>
-   <div class="information">
-   <h2>Informatie</h2>
-      <div>
-         <h3>Open</h3>
-         <p>Open tijd: [INSERT OPEN TIME SLIDER HERE] </p>
-      </div>
-      <div>
-         <h3>Duaal Authenticatie</h3>
-         <p>Device: [INSERT DEVICE HERE]</p>
-      </div>
    </div>
    </div>
    </div>
@@ -92,10 +83,18 @@
    background-color: #EEEE;
    border-radius:.35rem;
    margin: 2em;
+   display: flex;
+   flex-direction: column;
+   align-content: flex-end;
 }
 
 select{
    border-radius:.35rem;
    margin-left: 1em;
+}
+
+.statusbuttons{
+   display:flex;
+   justify-content: space-between;
 }
 </style>
