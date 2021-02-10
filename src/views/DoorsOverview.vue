@@ -20,6 +20,7 @@
 import Doors from '@/components/Doors'
 import Pagination from '@/components/Pagination'
 import login from '../variables'
+import axios from 'axios'
 
 
 export default {
@@ -28,6 +29,7 @@ export default {
     Doors,
     Pagination
   },
+
   data() {
     return {
       doors: [
@@ -78,9 +80,14 @@ export default {
     this.filteredDoors = this.doors
     this.updateVisibleDoors(this.doors)
     let callback = function(session){
-      console.log(session)
+      let headers = {
+        headers: {
+            "bs-session-id": session
+        }
+      }
+      axios.get("http://localhost:8080/api/doors",headers).then(result => console.log(result.data))
     }
-    login.login("admin","t", callback)
+    login.login("admin","dIET34#ucll", callback)
   }
 }
 </script>
