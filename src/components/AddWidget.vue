@@ -9,11 +9,16 @@
 
     <div class="input-group mb-3 deuren">
         <div class="input-group-prepend">
-            <label id="selected_deur" class="input-group-text" for="inputGroupSelect01">Deur</label>
+            <span id="selected_deur" class="input-group-text" for="inputGroupSelect01">Deur</span>
         </div>
         <div id="multiselect">
-            <multiselect v-model="selectedDoors" :options="doors" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Pick some" label="name" track-by="id">
-            </multiselect>
+            <div>
+                <multiselect class="selecter" :taggable="true" :limit="0" v-model="selectedDoors" :options="doors" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Pick some" label="name" track-by="id" :preselect-first="false">
+                </multiselect>
+                <div v-for="door in selectedDoors" v-bind:key="door.id">
+                    <pre><code>{{ door.name  }}</code></pre>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -114,6 +119,8 @@ export default {
 <style src="vue-multiselect/dist/vue-multiselect.min.css">
 </style>
 <style scoped>
+
+
     #add_widget{
         max-width: 30vw !important;
         align-self: flex-end;
@@ -138,6 +145,15 @@ export default {
         margin-left: -5px;
         margin-top: -2px;
         line-height: 1.5;
+    }
+
+    #multiselect >>> .multiselect__single{
+        display: none;
+    }
+
+    .selecter{
+        width: 12vw;
+        max-height: 2vh;
     }
 
     label {
