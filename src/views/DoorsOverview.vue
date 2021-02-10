@@ -13,13 +13,15 @@
     <Doors v-bind:doors="visibleDoors"/>
     <Pagination v-bind:doors="filteredDoors" v-bind:currentPage="currentPage" v-bind:pageSize="pageSize" v-on:page:update="updatePage" class="pages" v-if="this.searchterm.length > 0"/>
     <Pagination v-bind:doors="doors" v-bind:currentPage="currentPage" v-bind:pageSize="pageSize" v-on:page:update="updatePage" class="pages" v-if="this.searchterm.length === 0"/>
+    <p>{{realDoors}}</p>
+    <p>{{status}}</p>
   </div>
 </template>
 
 <script>
 import Doors from '@/components/Doors'
 import Pagination from '@/components/Pagination'
-import login from '../variables'
+import * as f from '../variables'
 
 export default {
   name: 'DoorsOverview',
@@ -43,6 +45,8 @@ export default {
         {id: 11, name: 'K2.19', opened: true}
       ],
       sessionId: '',
+      status: [],
+      realDoors: [],
       filteredDoors: [],
       currentPage: 0,
       pageSize: 9,
@@ -73,13 +77,12 @@ export default {
       return value.name.match(this.searchterm)
     }
   },
-  created(){
+  async created(){
     this.filteredDoors = this.doors
     this.updateVisibleDoors(this.doors)
-    let callback = function(session){
-      console.log(session)
-    }
-    login.login("admin","t", callback)
+    const key = await f.default.login("admin","dIET34#ucll")
+    const result = await f.default.getDoorsForOverview(key)
+    console.log(result)
   }
 }
 </script>
@@ -88,7 +91,6 @@ export default {
 .door-overview {
   height: 100%;
 }
-
 .head {
   display: flex;
   align-items: center;
@@ -100,7 +102,6 @@ export default {
   background: #fff;
   box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
 }
-
 input[type=text] {
   border: 0;
   color: #6E707E;
@@ -109,15 +110,12 @@ input[type=text] {
   border-top-left-radius: .35rem;
   border-bottom-left-radius: .35rem;
 }
-
 input:focus, button:focus {
   outline: none;
 }
-
 button:hover {
   background: rgb(26, 72, 207);
 }
-
 button {
   margin-left: -1px;
   color: #fff;
@@ -128,14 +126,12 @@ button {
   border-bottom-right-radius: .35rem;
   padding:.50rem 1rem;
 }
-
 h1 {
   color: rgba(58,96,208,1);
   margin: 0;
   font-family: 'Oswald';
   text-transform: uppercase;
 }
-
 .pages {
   margin-top: 0.5em;
 }
