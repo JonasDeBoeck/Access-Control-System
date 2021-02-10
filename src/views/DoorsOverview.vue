@@ -22,7 +22,6 @@ import Pagination from '@/components/Pagination'
 import login from '../variables'
 import axios from 'axios'
 
-
 export default {
   name: 'DoorsOverview',
   components: {
