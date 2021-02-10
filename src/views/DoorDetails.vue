@@ -55,37 +55,48 @@
    display: grid;
    grid-template-columns: 33% 33% 33%;
    text-align: left;
+   row-gap: 20%;
+   column-gap: 5%;
+   margin-left: 2.5em;
+   margin-right: 2.5em;
+   margin-top: 2.5em;
+   height: 80%;
 }
 
 .lastusers{
-   padding: 1em;
-   background-color: #EEEE;
-   border-radius:.35rem;
-   margin: 2em;
+   background-color: #fff;
+   width: 100%;
+   height: 100%;
+   border-radius: .35rem;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   flex-direction: column;
+   box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
 }
 
 .opentimegroup{
-   padding: 1em;
-   background-color: #EEEE;
-   border-radius:.35rem;
-   margin: 2em;
-}
-
-.information{
-   padding: 1em;
-   background-color: #EEEE;
-   border-radius:.35rem;
-   margin: 2em;
+   background-color: #fff;
+   width: 100%;
+   height: 100%;
+   border-radius: .35rem;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   flex-direction: column;
+   box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
 }
 
 .status{
-   padding: 1em;
-   background-color: #EEEE;
-   border-radius:.35rem;
-   margin: 2em;
+   background-color: #fff;
+   width: 100%;
+   height: 100%;
+   border-radius: .35rem;
    display: flex;
+   align-items: center;
+   justify-content: center;
    flex-direction: column;
-   align-content: flex-end;
+   box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
 }
 
 select{
