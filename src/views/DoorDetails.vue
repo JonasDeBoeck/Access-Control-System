@@ -1,102 +1,172 @@
 <template>
-   <div>
-   <h1>Deur Detail</h1>
+   <div class="detail">
+   <div class="head">
+      <h1>Deur details</h1>
+    </div>
    <div class="deurdetail">
-      <div class="status">
-      <h2>Status</h2>
+      <div class="status" v-bind:class="{'is-opened':door.opened, 'is-locked':!door.opened}">
+      <div class="statuscontainer">
+         <h2>Status</h2>
+         <p v-if="door.opened">Open</p>
+         <p v-if="!door.opened">Gesloten</p>
+      </div>
          <div class= "statusbuttons">
-            <input type="submit" id="open" value="Open"/>
-            <input type="submit" id="close" value="Sluit"/>
+            <div v-on:click="unlock" v-if="!door.opened" class="lock">
+                <i class="fas fa-lock-open"></i>
+                <small>Open</small>
+            </div>
+            <div v-on:click="lock" v-if="door.opened" class="lock">
+                <i class="fas fa-lock"></i>
+                <small>Sluit</small>
+            </div>
          </div>
       </div>
-      <div class="opentimegroup">
+      <div class="card opentimegroup">
+         <h5 class="card-header">
+            Tijd instellen
+         </h5>
          <form>
-            <div class="input-group mb-1">
-               <div class="input-group-prepend">
-                  <span class="input-group-text" id="basic-addon1">Tijd open</span>
+            <div class="opentimeform">
+               <div class="form-group">
+                  <label>Minuten</label>
+                  <input type="number" min=0 class="form-control" placeholder="Minuten">
                </div>
-               <input type="number" min=0 class="form-control" placeholder="Dagen" aria-label="Username" aria-describedby="basic-addon1">
-               <input type="number" min=0 class="form-control" placeholder="Minuten" aria-label="Username" aria-describedby="basic-addon1">
-               <input type="number" min=0 class="form-control" placeholder="Seconden" aria-label="Username" aria-describedby="basic-addon1">
+               <div class="form-group">
+                  <label>Seconden</label>
+                  <input type="number" min=0 class="form-control" placeholder="Seconden">
+               </div>
+               <input type="submit" value="Opslaan" id="saveinformation" class="btn btn-primary"/>
             </div>
-            <br>
-            <div class="input-group mb-1">
-               <div class="input-group mb-3">
-               <div class="input-group-prepend">
-                  <label class="input-group-text" for="inputGroupSelect01">Groep</label>
-               </div>
-               <select class="custom-select" id="inputGroupSelect01">
-               <!--TODO zet hier nog effectieve opties-->
-                  <option selected>Kies...</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-               </select>
-               </div>
-            </div>
-            <input type="submit" value="Opslaan" id="saveinformation"/>
          </form>
       </div>
-   <div class="lastusers">
-      <h2>Laatste gebruikers</h2>
-      <!--TODO zet hier nog effectieve opties-->
-      <ul>
-         <li>[time] - [user1]</li>
-         <li>[time] - [user2]</li>
-         <li>[time] - [user3]</li>
-         <li>[time] - [user4]</li>
-         <li>[time] - [user5]</li>
-      </ul>
+   <div class="lastusers card">
+      <h5 class="card-header">
+         Last Users
+      </h5>
+      <table class="table table-bordered">
+         <thead>
+            <tr>
+               <th scope="col">#</th>
+               <th scope="col">Gebruiker</th>
+               <th scope="col">Tijd</th>
+            </tr>
+         </thead>
+         <tbody>
+            <tr>
+               <th scope="row">1</th>
+               <td>Mark</td>
+               <td>12:30</td>
+            </tr>
+            <tr>
+               <th scope="row">2</th>
+               <td>Johan</td>
+               <td>11:45</td>
+            </tr>
+            <tr>
+               <th scope="row">3</th>
+               <td>Francis</td>
+               <td>11:30</td>
+            </tr>
+            <tr>
+               <th scope="row">4</th>
+               <td>Jef</td>
+               <td>11:15</td>
+            </tr>
+         </tbody>
+      </table>
    </div>
-   <div class="options">
-      <h2>Options</h2>
+   <div class="options card">
+      <h5 class="card-header">Options</h5>
+      <div class="optionsform">
          <form>
-            <div class="input-group mb-1">
-               <div class="input-group-prepend">
-                  <span class="input-group-text" id="basic-addon1">Omschrijving</span>
-               </div>
-               <input type="text" class="form-control" placeholder="Omschrijving" aria-label="Username" aria-describedby="basic-addon1">
-               </div>
-            <div class="input-group mb-1">
-               <div class="input-group mb-1">
-               <div class="input-group-prepend">
-                  <label class="input-group-text" for="inputGroupSelect01">Entry Device</label>
-               </div>
-               <select class="custom-select" id="inputGroupSelect01">
-                  <!--TODO zet hier nog effectieve opties-->
-                  <option selected>Kies...</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-               </select>
-               </div>
+            <div class="form-group">
+               <label for="">Naam</label>
+               <input type="text" class="form-control" placeholder="Naam">
             </div>
-            <div class="input-group mb-1">
-               <div class="input-group mb-1">
-               <div class="input-group-prepend">
-                  <label class="input-group-text" for="inputGroupSelect01">Deur Relay</label>
-               </div>
-               <select class="custom-select" id="inputGroupSelect01">
-                  <!--TODO zet hier nog effectieve opties-->
-                  <option selected>Kies...</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
-               </select>
-               </div>
+            <div class="form-group">
+               <label for="">Omschrijving</label>
+               <textarea class="form-control" placeholder="Omschrijving" rows="3"></textarea>
             </div>
+            <div class="form-group">
+               <label>Entry Device</label>
+               <select class="form-control">
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+               </select>
+            </div>
+            <div class="form-group">
+               <label>Deur Relay</label>
+               <select class="form-control">
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+               </select>
+            </div>
+            <input type="submit" value="Opslaan" id="saveinformation" class="btn btn-primary"/>
          </form>
+      </div>
    </div>
    </div>
    </div>
 </template>
 
+<script>
+export default {
+   name: "DoorDetails",
+   data() {
+      return {
+         door: {id: 1, name: 'K2.09', opened: false}
+      }
+   },
+   methods: {
+      lock() {
+         this.door.opened = false
+      },
+      unlock() {
+         this.door.opened = true
+      }
+   }
+}
+</script>
+
 <style scoped>
+.detail {
+   font-family: 'Oswald';
+}
+
+input, textarea, select, option {
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 2.5em;
+  padding-right: 2.5em;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  background: #fff;
+  box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
+}
+
+h1 {
+  color: rgba(58,96,208,1);
+  margin: 0;
+  font-family: 'Oswald';
+  text-transform: uppercase;
+}
+
 .deurdetail{
    display: grid;
-   grid-template-columns: 33% 33% 33%;
+   grid-template-columns: 1fr 33% 33%;
    text-align: left;
-   row-gap: 20%;
+   row-gap: 9%;
    column-gap: 5%;
    margin-left: 2.5em;
    margin-right: 2.5em;
@@ -108,26 +178,14 @@
 
 .lastusers{
    background-color: #fff;
-   width: 100%;
-   height: 100%;
    border-radius: .35rem;
-   display: flex;
-   align-items: center;
-   justify-content: center;
-   flex-direction: column;
    box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
    grid-area: lastusers;
 }
 
 .opentimegroup{
    background-color: #fff;
-   width: 100%;
-   height: 100%;
    border-radius: .35rem;
-   display: flex;
-   align-items: center;
-   justify-content: center;
-   flex-direction: column;
    box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
    grid-area: opentimegroup;
 }
@@ -143,28 +201,101 @@
    flex-direction: column;
    box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
    grid-area: status;
+   display: flex;
+   justify-content: space-evenly;
+}
+
+.lock i {
+   font-size: 3em;
+   margin-bottom: 0.25em;
+}
+
+.lock {
+   display: flex;
+   align-items: center;
+   flex-direction: column;
+}
+
+.lock small {
+   font-size: 1.25em;
+}
+
+.statuscontainer {
+   display: flex;
+   align-items: center;
+   flex-direction: column;
+}
+
+.statuscontainer p {
+   font-size: 1.15em;
+}
+
+.opentimeform {
+   margin-left: 1em;
+   margin-top: 1em;
+   width: 70%;
+}
+
+h2 {
+   color: rgba(58,96,208,1)
+}
+
+h5 {
+   color: rgba(58,96,208,1)
+}
+
+.opentimeform div input {
+   margin-bottom: 0.5em;
+}
+
+.opentimeform input[type=submit] {
+   float: right;
+   margin-bottom: 0.5em;
+}
+
+#saveinformation {
+   margin-top: 1em;
 }
 
 .options{
    background-color: #fff;
-   width: 100%;
-   height: 100%;
    border-radius: .35rem;
    display: flex;
-   align-items: center;
-   justify-content: center;
-   flex-direction: column;
    box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
    grid-area: options;
-}
-
-select{
-   border-radius:.35rem;
-   margin-left: 1em;
 }
 
 .statusbuttons{
    display:flex;
    justify-content: space-between;
+}
+
+textarea {
+   resize: none;
+}
+
+.optionsform form{
+   width: 70%;
+}
+
+.optionsform form input[type=submit] {
+   float: right;
+}
+
+.optionsform form input, .optionsform form textarea, .optionsform form select {
+   margin-bottom: 0.5em;
+}
+
+.optionsform {
+   margin-left: 1em;
+   margin-top: 1em;
+}
+
+.is-opened {
+    border-left: 0.25rem solid green;
+}
+
+.is-locked {
+    border-left: 0.25rem solid red;
 }
 </style>

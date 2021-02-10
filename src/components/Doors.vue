@@ -1,6 +1,6 @@
 <template>
   <div class="doors" >
-    <div v-for="door in doors" v-bind:key="door.name">
+    <div v-for="door in doors" v-bind:key="door.id">
       <Door v-bind:door="door"/>
     </div>
   </div>
