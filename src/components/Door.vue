@@ -4,13 +4,13 @@
             <p>{{door.name}}</p>
         </div>
         <div class="icons">
-            <div v-on:click="unlock">
+            <div v-on:click="unlock" v-if="!door.opened" class="lock">
                 <i class="fas fa-lock-open"></i>
             </div>
-            <div v-on:click="lock">
+            <div v-on:click="lock" v-if="door.opened" class="lock">
                 <i class="fas fa-lock"></i>
             </div>
-            <div v-on:click="open">
+            <div v-on:click="open" class="clock">
                 <i class="fas fa-clock"></i>
             </div>
         </div>
@@ -134,5 +134,9 @@ label {
 .form-group {
     margin-block-end: 1em;
     margin-block-start: 1em;
+}
+
+.lock {
+    min-width: 36px
 }
 </style>

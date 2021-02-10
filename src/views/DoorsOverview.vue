@@ -3,25 +3,29 @@
     <div class="head">
       <h1>Doors</h1>
       <form action="">
-        <input type="text" placeholder="Zoek op...">
+        <input type="text" placeholder="Zoek op..." v-model="searchterm" @input="search">
         <button type="submit">
           <i class="fas fa-search fa-sm">
           </i>
         </button>
       </form>
     </div>
-    <Doors v-bind:doors="doors"/>
+    <Doors v-bind:doors="visibleDoors"/>
+    <Pagination v-bind:doors="filteredDoors" v-bind:currentPage="currentPage" v-bind:pageSize="pageSize" v-on:page:update="updatePage" class="pages" v-if="this.searchterm.length > 0"/>
+    <Pagination v-bind:doors="doors" v-bind:currentPage="currentPage" v-bind:pageSize="pageSize" v-on:page:update="updatePage" class="pages" v-if="this.searchterm.length === 0"/>
   </div>
 </template>
 
 <script>
 import Doors from '@/components/Doors'
+import Pagination from '@/components/Pagination'
 import login from '../variables'
 
 export default {
   name: 'DoorsOverview',
   components: {
-    Doors
+    Doors,
+    Pagination
   },
   data() {
     return {
@@ -35,11 +39,43 @@ export default {
         {name: 'K2.15', opened: false},
         {name: 'K2.16', opened: true},
         {name: 'K2.17', opened: true},
+        {name: 'K2.18', opened: true},
+        {name: 'K2.19', opened: true}
       ],
-      session_id: ''
+      sessionId: '',
+      filteredDoors: [],
+      currentPage: 0,
+      pageSize: 9,
+      visibleDoors: [],
+      searchterm: ''
+    }
+  },
+  methods: {
+    updateVisibleDoors(doors) {
+      this.visibleDoors = doors.slice(this.currentPage * this.pageSize, (this.currentPage * this.pageSize) + this.pageSize)
+      if(this.visibleDoors.length == 0 && this.currentPage > 0) {
+        this.updatePage(this.currentPage - 1)
+      }
+    },
+    updatePage(pageNumber) {
+      this.currentPage = pageNumber
+      if (this.searchterm.length > 0) {
+        this.updateVisibleDoors(this.filteredDoors)
+      } else {
+        this.updateVisibleDoors(this.doors);
+      }
+    },
+    search() {
+      this.filteredDoors = this.doors.filter(this.containsString)
+      this.updateVisibleDoors(this.filteredDoors)
+    },
+    containsString(value) {
+      return value.name.match(this.searchterm)
     }
   },
   created(){
+    this.filteredDoors = this.doors
+    this.updateVisibleDoors(this.doors)
     let callback = function(session){
       console.log(session)
     }
@@ -96,5 +132,9 @@ button {
 h1 {
   color: rgba(58,96,208,1);
   margin: 0;
+}
+
+.pages {
+  margin-top: 0.5em;
 }
 </style>
