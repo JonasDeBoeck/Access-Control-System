@@ -21,7 +21,6 @@ import Doors from '@/components/Doors'
 import Pagination from '@/components/Pagination'
 import login from '../variables'
 
-
 export default {
   name: 'DoorsOverview',
   components: {
