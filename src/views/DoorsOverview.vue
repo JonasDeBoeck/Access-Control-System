@@ -13,14 +13,15 @@
     <Doors v-bind:doors="visibleDoors"/>
     <Pagination v-bind:doors="filteredDoors" v-bind:currentPage="currentPage" v-bind:pageSize="pageSize" v-on:page:update="updatePage" class="pages" v-if="this.searchterm.length > 0"/>
     <Pagination v-bind:doors="doors" v-bind:currentPage="currentPage" v-bind:pageSize="pageSize" v-on:page:update="updatePage" class="pages" v-if="this.searchterm.length === 0"/>
+    <p>{{realDoors}}</p>
   </div>
 </template>
 
 <script>
 import Doors from '@/components/Doors'
 import Pagination from '@/components/Pagination'
-import login from '../variables'
-import axios from 'axios'
+import * as f from '../variables'
+
 
 export default {
   name: 'DoorsOverview',
@@ -77,18 +78,7 @@ export default {
     }
   },
   created(){
-    this.filteredDoors = this.doors
-    this.updateVisibleDoors(this.doors)
-    let callback = function(session){
-      let headers = {
-        headers: {
-            "bs-session-id": session
-        }
-      }
-      axios.get("http://localhost:8080/api/doors",headers).then(result => console.log(result.data['DoorCollection']['rows']))
-      console.log(this.realDoors)
-    }
-    login.login("admin","dIET34#ucll", callback)
+    f.default.login("admin","dIET34#ucll").then(session => f.default.getDoors(session).then(doors => this.realDoors = doors.data))
   }
 }
 </script>
