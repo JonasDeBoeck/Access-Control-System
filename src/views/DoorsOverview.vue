@@ -13,7 +13,6 @@
     <Doors v-bind:doors="visibleDoors"/>
     <Pagination v-bind:doors="filteredDoors" v-bind:currentPage="currentPage" v-bind:pageSize="pageSize" v-on:page:update="updatePage" class="pages" v-if="this.searchterm.length > 0"/>
     <Pagination v-bind:doors="doors" v-bind:currentPage="currentPage" v-bind:pageSize="pageSize" v-on:page:update="updatePage" class="pages" v-if="this.searchterm.length === 0"/>
-  
   </div>
 </template>
 
@@ -65,11 +64,12 @@ export default {
     }
   },
   async created(){
-    const key = await f.default.login("admin","dIET34#ucll")
+    const key = await f.default.login("admin","t")
     const result = await f.default.getDoorsForOverview(key)
     this.doors = result;
     this.filteredDoors = this.doors
     this.updateVisibleDoors(this.doors)
+    console.log(this.doors)
     console.log(result)
   }
 }
