@@ -64,14 +64,14 @@ export default {
     methods: {
         async lock() {
             this.door.unlocked = false
-            let key = await api.default.login("admin", "t");
-            api.default.lockDoor(this.door.id, key);
+            // let key = await api.default.login("admin", "t");
+            api.default.lockDoor(this.door.id, this.$session.get("bs-session-id"));
         },
 
         async unlock() {
             this.door.unlocked = true
-            let key = await api.default.login("admin", "t");
-            api.default.unlockDoor(this.door.id, key);
+            // let key = await api.default.login("admin", "t");
+            api.default.unlockDoor(this.door.id, this.$session.get("bs-session-id"));
         },
         open() {
             this.$vm2.open('time')
