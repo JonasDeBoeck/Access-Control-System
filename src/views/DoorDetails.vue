@@ -29,11 +29,11 @@
             <div class="opentimeform">
                <div class="form-group">
                   <label>Minuten</label>
-                  <input type="number" min=0 class="form-control" placeholder="Minuten">
+                  <input type="number" min=0 class="form-control" v-bind:placeholder= "this.door.open_duration_min">
                </div>
                <div class="form-group">
                   <label>Seconden</label>
-                  <input type="number" min=0 class="form-control" placeholder="Seconden">
+                  <input type="number" min=0 class="form-control"  v-bind:placeholder= "this.door.open_duration_sec">
                </div>
                <input type="submit" value="Opslaan" id="saveinformation" class="btn btn-primary"/>
             </div>
@@ -122,10 +122,17 @@ export default {
    name: "DoorDetails",
    data() {
       return {
-         door: {id: 1, name: 'K2.09', opened: false},
+         door: {id: 1, name: 'K2.09', opened: false, open_duration_min: 0, open_duration_sec: 0},
          details: {
             Door: {
-               description: ""
+               description: "",
+               entry_device_id: {
+                  name: ""
+               },
+               relay_output_id: {
+                  name: "",
+                  device_id: ""
+               }
             }
          }
       }
@@ -135,7 +142,10 @@ export default {
       const door_id = this.$route.params.id
       const detail = await f.default.getDoorDetail(door_id, key)
       this.details = detail
-      console.log(this.details)
+      const doorDetailStatus = await f.default.getDoorDetailStatus(door_id, key)
+      this.door.opened = doorDetailStatus
+      this.door.open_duration_min = Math.floor(this.details.Door.open_duration/60)
+      this.door.open_duration_sec =  this.details.Door.open_duration % 60;
       },
    methods: {
       lock() {
