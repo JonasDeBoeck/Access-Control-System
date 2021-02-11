@@ -116,8 +116,10 @@ async function lockDoor(door_id, session) {
           ]
         }
     }
-    const response = await axios.post("http://localhost:8080/api/door/lock", JSON.stringify(data), headers);
+    const response = await axios.post("http://localhost:8080/api/doors/lock", data, headers);
+    const res = await axios.post("http://localhost:8080/api/doors/release", data, headers);
     console.log(response);
+    console.log(res)
     return response.data;
 }
 
