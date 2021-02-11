@@ -61,7 +61,7 @@ async function getDoorsForOverview(session){
     const statusResult = []
     rowsDoorsStatus.forEach(row => statusResult.push({
         id : parseInt(row.door_id.id),
-        unlocked : row.unlocked
+        unlocked : row.unlocked === "true"
     }))
     for(let i=0; i < result.length; i++){
         let door = result[i]
