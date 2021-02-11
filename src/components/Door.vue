@@ -1,14 +1,14 @@
 <template>
-    <div class="door" v-bind:class="{'is-opened':door.opened, 'is-locked':!door.opened}">
+    <div class="door" v-bind:class="{'is-opened': door.unlocked, 'is-locked':!door.unlocked}">
         <div>
             <p class="name">{{door.name}}</p>
         </div>
         <div class="icons">
-            <div v-on:click="unlock" v-if="!door.opened" class="lock">
+            <div v-on:click="unlock" v-if="!door.unlocked" class="lock">
                 <i class="fas fa-lock-open"></i>
                 <small>Open</small>
             </div>
-            <div v-on:click="lock" v-if="door.opened" class="lock">
+            <div v-on:click="lock" v-if="door.unlocked" class="lock">
                 <i class="fas fa-lock"></i>
                 <small>Sluit</small>
             </div>
@@ -57,20 +57,21 @@ export default {
         return {
             hours: 0,
             minutes: 0,
-            seconds: 0
+            seconds: 0,
+            unlocked: this.door.unlocked === "true"
         }
     },
     methods: {
         async lock() {
-            this.door.opened = false
-            let key = await api.default.login("admin", "t");
-            api.default.lockDoor(this.door.id, key);
+            this.door.unlocked = false
+            // let key = await api.default.login("admin", "t");
+            api.default.lockDoor(this.door.id, this.$session.get("bs-session-id"));
         },
 
         async unlock() {
-            this.door.opened = true
-            let key = await api.default.login("admin", "t");
-            api.default.unlockDoor(this.door.id, key);
+            this.door.unlocked = true
+            // let key = await api.default.login("admin", "t");
+            api.default.unlockDoor(this.door.id, this.$session.get("bs-session-id"));
         },
         open() {
             this.$vm2.open('time')

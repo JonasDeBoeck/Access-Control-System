@@ -61,14 +61,21 @@ export default {
     },
     containsString(value) {
       return value.name.match(this.searchterm)
+    },
+    async pollStatusses(){
+      // let session = await f.default.login("admin","t")
+      let doors = await f.default.getDoorsForOverview(this.$session.get("bs-session-id"))
+      this.visibleDoors = doors;
+      setTimeout(this.pollStatusses,3000)
     }
   },
   async created(){
-    const key = await f.default.login("admin","t")
-    const result = await f.default.getDoorsForOverview(key)
+    // const key = await f.default.login("admin","t")
+    const result = await f.default.getDoorsForOverview(this.$session.get("bs-session-id"))
     this.doors = result;
     this.filteredDoors = this.doors
     this.updateVisibleDoors(this.doors)
+    this.pollStatusses()
   }
 }
 </script>
