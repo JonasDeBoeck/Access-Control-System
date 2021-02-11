@@ -131,12 +131,10 @@ export default {
         background: #fff;
         box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
     }
-
     .border3 {
         border-width:2px !important;
         border-radius: 10px;
     }
-
     .input-group>span {
         max-width: 10vw;
         min-width: 5vw;
@@ -149,21 +147,17 @@ export default {
         margin-top: -2px;
         line-height: 1.5;
     }
-
     #multiselect >>> .multiselect__single{
         display: none;
     }
-
     .selecter{
         width: 12vw;
         max-height: 2vh;
     }
-
     label {
         margin-left: 5px;
         margin-right: 5px;
     }
-
     .icons{
         display: flex;
         margin: 1em;

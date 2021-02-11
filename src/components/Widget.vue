@@ -10,14 +10,14 @@
                     <p v-for="door in widget.doors" v-bind:key="door.id">{{door.name}}</p>
                 </div>
             </div>
+            <div class="buttons">
+            <div class="button">
+                <button class="button" style="background: #94cc6e"><router-link :to="{name: 'WidgetDetails', params: {id: this.widget.id}}" tag="div"><i class="fas fa-edit "></i></router-link></button>
+            </div>
+            <div class="button">
+                <button @click="remove" class="button" style="background: #d65e5e"><i class="fas fa-trash-alt"></i></button>
+            </div>
         </div>
-        <div class="buttons">
-            <div class="button">
-                <button class="button" style="background: #6295d9"><router-link :to="{name: 'WidgetDetails', params: {id: this.widget.id}}" tag="div"><i class="fas fa-edit fa-2x"></i></router-link></button>
-            </div>
-            <div class="button">
-                <button @click="remove" class="button" style="background: #db2c2c"><i class="fas fa-trash-alt fa-2x"></i></button>
-            </div>
         </div>
     </div>
 </template>
@@ -48,20 +48,27 @@ export default {
 
 <style scoped>
     .widget {
-        border-left: 5px solid;
-        border-bottom: 5px solid;
+        /* border-left: 5px solid;
+        border-bottom: 5px solid; */
+        /* padding: 10px; */
+        border: 5px solid;
         border-color: var(--background);
         width: 100%;
         height: 100%;
-        border-radius: .35rem;
+        border-radius: 1.25rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
+        box-shadow: 0 .15rem 1.5rem 0 rgba(58, 59, 69, .5);
     }
 
     .iconcontainer{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
         flex-basis: 20%;
+        background: var(--background);
     }
 
     .content{
@@ -87,13 +94,20 @@ export default {
         display:flex;
         justify-content: center;
         align-items: center;
-        width: 4vw;
-        height: 4vw;
+        width: 4vh;
+        height: 4vh;
         border-radius:50%;
+        /* padding:10px; */
+        /* border-radius: 10px; */
+        /* margin-bottom: 1em; */
         border: none;
     }
+    /* .fas{
+        color: white;
+    } */
     .buttons{
         display:flex;
-        justify-content: space-evenly;
+        flex-direction: column;
+        align-items: space-evenly;
     }
 </style>
