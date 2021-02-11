@@ -84,6 +84,16 @@
                <input type="text" class="form-control" v-bind:placeholder= "this.details.Door.name">
             </div>
             <div class="form-group">
+               <label>Entry Device</label>
+               <select class="form-control">
+                  <option>{{this.details.Door.entry_device_id.name}}</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+               </select>
+            </div>
+            <div class="form-group">
                <label for="">Omschrijving</label>
                <textarea class="form-control" v-bind:placeholder= "this.details.Door.description" rows="3"></textarea>
             </div>
@@ -142,8 +152,9 @@ export default {
       this.door.id = this.$route.params.id
       const detail = await f.default.getDoorDetail(this.door.id, key)
       this.details = detail
-      const doorDetailStatus = await f.default.getDoorDetailStatus(this.door.id, key)
-      this.door.opened = doorDetailStatus
+      // const doorDetailStatus = await f.default.getDoorDetailStatus(this.door.id, key)
+      // this.door.opened = doorDetailStatus
+      this.pollStatus(this.door_id)
       this.door.open_duration_min = Math.floor(this.details.Door.open_duration/60)
       this.door.open_duration_sec =  this.details.Door.open_duration % 60;
       },
@@ -158,6 +169,12 @@ export default {
             this.door.opened = true
             let key = await f.default.login("admin", "t");
             f.default.unlockDoor(this.door.id, key);
+      },
+
+      async pollStatus(){
+         let detail = await f.default.getDoorDetailStatus(this.door.id, this.$session.get("bs-session-id"))
+         this.door.open = detail
+         setTimeout(this.pollStatus,3000)
       }
    }
 }
