@@ -45,6 +45,7 @@ export default {
           colour: '#03fcdb',
           name: "test Widget",
           icon: "open-door",
+          id: 1,
           doors: [
             {
               name: "K2.09",
@@ -64,6 +65,7 @@ export default {
           colour: '#db96eb',
           name: "open slagboom 90s",
           icon: "parking",
+          id: 2,
           doors: [
             {
               name: "slagboom",
@@ -80,6 +82,7 @@ export default {
           colour: '#a7eba2',
           name: "open leeraarskamer 90s",
           icon: "elevator",
+          id: 3,
           doors: [
             {
               name: "k0.1",
