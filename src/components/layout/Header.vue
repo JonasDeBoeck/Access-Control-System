@@ -15,6 +15,7 @@
                     <hr class="sidebar-divider">
                 </nav>
                 <button @click="login" :disabled="loggedIn">Login</button>
+                <button @click="logout">Logout</button>
             </div>
         </div>
     </header>
@@ -34,6 +35,9 @@ export default {
             let key = await api.default.login("admin",'t')
             this.$session.set("bs-session-id",key)
             this.loggedIn = true;
+        },
+        logout(){
+            this.$session.remove("bs-session-id")
         }
     }
 }
@@ -42,7 +46,7 @@ export default {
 <style scoped>
 
 .header {
-    background: rgb(78,115,223);
+    background: #4e73df;
     background: linear-gradient(135deg, rgba(78,115,223,1) 50%, rgba(58,96,208,1) 100%);
     height: 100%;
     display: flex;
