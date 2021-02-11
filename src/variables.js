@@ -55,12 +55,12 @@ async function getDoorsForOverview(session){
     const rowsDoorsStatus = doorsStatus['DoorStatusCollection']['rows']
     const result = []
     rowsDoors.forEach(row => result.push({
-        id : row.id,
+        id : parseInt(row.id),
         name : row.name
     }))
     const statusResult = []
     rowsDoorsStatus.forEach(row => statusResult.push({
-        id : row.door_id.id,
+        id : parseInt(row.door_id.id),
         unlocked : row.unlocked
     }))
     for(let i=0; i < result.length; i++){
@@ -76,7 +76,6 @@ async function getDoorsForOverview(session){
 }
 
 async function unlockDoor(door_id, session) {
-
     let headers = {
         headers: {
             "bs-session-id": session
@@ -84,16 +83,17 @@ async function unlockDoor(door_id, session) {
     }
 
     let data = {
-        "DoorCollection": {
-          "total": 1,
-          "rows": [
+        DoorCollection: {
+          total: 1,
+          rows: [
             {
-              "id": door_id
+              id: door_id
             }
           ]
         }
-    }
-    const response = await axios.post("http://localhost:8080/api/door/unlock", JSON.stringify(data), headers);
+      }
+    console.log(door_id)
+    const response = await axios.post("http://localhost:8080/api/doors/open", data, headers);
     console.log(response);
     return response.data;
 }
