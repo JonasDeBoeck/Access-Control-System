@@ -121,6 +121,17 @@ async function lockDoor(door_id, session) {
     return response.data;
 }
 
+async function getDoorDetail(door_id, session){
+    let headers = {
+        headers: {
+            "bs-session-id": session
+        }
+    }
+    const response = await axios.get("http://localhost:8080/api/doors/"+door_id, headers)
+    const result = response.data
+    return result
+}
+
 
 export default {
     login,
@@ -129,4 +140,5 @@ export default {
     getDoorsForOverview,
     unlockDoor,
     lockDoor,
+    getDoorDetail
 }

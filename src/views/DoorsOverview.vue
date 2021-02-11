@@ -70,7 +70,6 @@ export default {
     this.doors = result;
     this.filteredDoors = this.doors
     this.updateVisibleDoors(this.doors)
-    console.log(result)
   }
 }
 </script>

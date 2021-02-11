@@ -12,12 +12,12 @@
       </div>
          <div class= "statusbuttons">
             <div v-on:click="unlock" v-if="!door.opened" class="lock">
-                <i class="fas fa-lock-open"></i>
-                <small>Open</small>
+               <i class="fas fa-lock-open"></i>
+               <small>Open</small>
             </div>
             <div v-on:click="lock" v-if="door.opened" class="lock">
-                <i class="fas fa-lock"></i>
-                <small>Sluit</small>
+               <i class="fas fa-lock"></i>
+               <small>Sluit</small>
             </div>
          </div>
       </div>
@@ -81,16 +81,16 @@
          <form>
             <div class="form-group">
                <label for="">Naam</label>
-               <input type="text" class="form-control" placeholder="Naam">
+               <input type="text" class="form-control" v-bind:placeholder= "this.details.Door.name">
             </div>
             <div class="form-group">
                <label for="">Omschrijving</label>
-               <textarea class="form-control" placeholder="Omschrijving" rows="3"></textarea>
+               <textarea class="form-control" v-bind:placeholder= "this.details.Door.description" rows="3"></textarea>
             </div>
             <div class="form-group">
                <label>Entry Device</label>
                <select class="form-control">
-                  <option>1</option>
+                  <option>{{this.details.Door.entry_device_id.name}}</option>
                   <option>2</option>
                   <option>3</option>
                   <option>4</option>
@@ -100,7 +100,7 @@
             <div class="form-group">
                <label>Deur Relay</label>
                <select class="form-control">
-                  <option>1</option>
+                  <option>{{this.details.Door.relay_output_id.device_id.name}}</option>
                   <option>2</option>
                   <option>3</option>
                   <option>4</option>
@@ -116,13 +116,27 @@
 </template>
 
 <script>
+import * as f from '../variables'
+
 export default {
    name: "DoorDetails",
    data() {
       return {
-         door: {id: 1, name: 'K2.09', opened: false}
+         door: {id: 1, name: 'K2.09', opened: false},
+         details: {
+            Door: {
+               description: ""
+            }
+         }
       }
    },
+   async created() {
+      const key = await f.default.login("admin","dIET34#ucll")
+      const door_id = this.$route.params.id
+      const detail = await f.default.getDoorDetail(door_id, key)
+      this.details = detail
+      console.log(this.details)
+      },
    methods: {
       lock() {
          this.door.opened = false
@@ -144,22 +158,22 @@ input, textarea, select, option {
 }
 
 .head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-left: 2.5em;
-  padding-right: 2.5em;
-  padding-top: 1em;
-  padding-bottom: 1em;
-  background: #fff;
-  box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   padding-left: 2.5em;
+   padding-right: 2.5em;
+   padding-top: 1em;
+   padding-bottom: 1em;
+   background: #fff;
+   box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
 }
 
 h1 {
-  color: rgba(58,96,208,1);
-  margin: 0;
-  font-family: 'Oswald';
-  text-transform: uppercase;
+   color: rgba(58,96,208,1);
+   margin: 0;
+   font-family: 'Oswald';
+   text-transform: uppercase;
 }
 
 .deurdetail{
