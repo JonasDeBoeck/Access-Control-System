@@ -132,6 +132,33 @@ async function getDoorDetail(door_id, session){
     return result
 }
 
+async function getDoorDetailStatus(door_id, session){
+    let headers = {
+        headers: {
+            "bs-session-id": session
+        }
+    }
+    let data = {
+        "monitoring_permission": true
+    }
+    const response = await axios.post("http://localhost:8080/api/doors/status", JSON.stringify(data), headers)
+    const result = response.data
+    const rowsStatus = result.DoorStatusCollection.rows
+    let unlocked = "false"
+    for(let i=0; i < rowsStatus.length; i++){
+        if(rowsStatus[i].door_id.id === door_id){
+            unlocked = rowsStatus[i].unlocked
+        }
+    }
+    if(unlocked === "false"){
+        unlocked = false
+    }
+    else{
+        unlocked = true
+    }
+    return unlocked
+}
+
 
 export default {
     login,
@@ -140,5 +167,6 @@ export default {
     getDoorsForOverview,
     unlockDoor,
     lockDoor,
-    getDoorDetail
+    getDoorDetail,
+    getDoorDetailStatus
 }

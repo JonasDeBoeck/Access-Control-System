@@ -64,7 +64,7 @@ export default {
     }
   },
   async created(){
-    const key = await f.default.login("admin","t")
+    const key = await f.default.login("admin","dIET34#ucll")
     const result = await f.default.getDoorsForOverview(key)
     this.doors = result;
     this.filteredDoors = this.doors

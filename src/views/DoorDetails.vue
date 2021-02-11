@@ -125,7 +125,14 @@ export default {
          door: {id: 1, name: 'K2.09', opened: false},
          details: {
             Door: {
-               description: ""
+               description: "",
+               entry_device_id: {
+                  name: ""
+               },
+               relay_output_id: {
+                  name: "",
+                  device_id: ""
+               }
             }
          }
       }
@@ -135,7 +142,8 @@ export default {
       const door_id = this.$route.params.id
       const detail = await f.default.getDoorDetail(door_id, key)
       this.details = detail
-      console.log(this.details)
+      const doorDetailStatus = await f.default.getDoorDetailStatus(door_id, key)
+      this.door.opened = doorDetailStatus
       },
    methods: {
       lock() {
