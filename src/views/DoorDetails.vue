@@ -138,21 +138,26 @@ export default {
       }
    },
    async created() {
-      const key = await f.default.login("admin","dIET34#ucll")
-      const door_id = this.$route.params.id
-      const detail = await f.default.getDoorDetail(door_id, key)
+      const key = await f.default.login("admin","t")
+      this.door.id = this.$route.params.id
+      const detail = await f.default.getDoorDetail(this.door.id, key)
       this.details = detail
-      const doorDetailStatus = await f.default.getDoorDetailStatus(door_id, key)
+      const doorDetailStatus = await f.default.getDoorDetailStatus(this.door.id, key)
       this.door.opened = doorDetailStatus
       this.door.open_duration_min = Math.floor(this.details.Door.open_duration/60)
       this.door.open_duration_sec =  this.details.Door.open_duration % 60;
       },
    methods: {
-      lock() {
-         this.door.opened = false
+      async lock() {
+            this.door.opened = false
+            let key = await f.default.login("admin", "t");
+            f.default.lockDoor(this.door.id, key);
       },
-      unlock() {
-         this.door.opened = true
+
+      async unlock() {
+            this.door.opened = true
+            let key = await f.default.login("admin", "t");
+            f.default.unlockDoor(this.door.id, key);
       }
    }
 }
