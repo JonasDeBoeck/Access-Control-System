@@ -13,8 +13,7 @@
     <Doors v-bind:doors="visibleDoors"/>
     <Pagination v-bind:doors="filteredDoors" v-bind:currentPage="currentPage" v-bind:pageSize="pageSize" v-on:page:update="updatePage" class="pages" v-if="this.searchterm.length > 0"/>
     <Pagination v-bind:doors="doors" v-bind:currentPage="currentPage" v-bind:pageSize="pageSize" v-on:page:update="updatePage" class="pages" v-if="this.searchterm.length === 0"/>
-    <p>{{realDoors}}</p>
-    <p>{{status}}</p>
+  
   </div>
 </template>
 
