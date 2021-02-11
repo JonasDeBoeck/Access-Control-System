@@ -3,7 +3,7 @@
     <h1>Widgets</h1>
     <div class="content">
       <div class="widgets">
-        <Widget v-for="widget in widgets" v-bind:key="widget.name" v-bind:widget="widget"/>
+        <Widget v-for="widget in widgets" v-bind:key="widget.name" v-bind:widget="widget" v-on:del-widget="deleteWidget"/>
       </div>
       <AddWidget class="form" v-on:add-widget="addWidget"/>
     </div>
@@ -101,6 +101,15 @@ export default {
     methods:{
       addWidget(widget){
         this.widgets.push(widget)
+      },
+      deleteWidget(id){
+        console.log(id)
+        for (let widget of this.widgets){
+          if (widget.id === id){
+            let index = this.widgets.indexOf(widget)
+            this.widgets.splice(index,1)
+          }
+        }
       }
     }
 }

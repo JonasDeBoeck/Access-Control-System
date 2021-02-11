@@ -48,9 +48,9 @@
     </div>
     
     <div class="icons">
-        <button class="icon" @click="this.icon = 'open-door'" value="open-door"><img src="@/assets/icons/open-door.png" alt=""></button>
-        <button class="icon" @click="this.icon = 'elevator'" value="elevator"><img src="@/assets/icons/elevator.png" alt=""></button> 
-        <button class="icon" @click="this.icon = 'parking'" value="parking"><img src="@/assets/icons/parking.png" alt=""></button>
+        <button class="icon" @click="setIcon" value="open-door"><img src="@/assets/icons/open-door.png" alt=""></button>
+        <button class="icon" @click="setIcon" value="elevator"><img src="@/assets/icons/elevator.png" alt=""></button> 
+        <button class="icon" @click="setIcon" value="parking"><img src="@/assets/icons/parking.png" alt=""></button>
     </div>
     
     <button @click="addWidget" class="btn btn-primary">Voeg toe</button>
@@ -94,6 +94,7 @@ export default {
     methods: {
         addWidget(){
             // make object
+            console.log(this.icon)
             let widget = {
                 name: this.widgetname,
                 doors: this.selectedDoors,
@@ -109,8 +110,11 @@ export default {
         },
         changeColour(colour){
             let hex = colour.hex;
-            console.log(hex)
             this.colour = hex;
+        },
+        setIcon(e){
+            let value = e.target.parentNode.value
+            this.icon = value;
         }
     }
 }
@@ -120,8 +124,6 @@ export default {
 
 </style>
 <style scoped>
-
-
     #add_widget{
         max-width: 30vw !important;
         align-self: flex-end;

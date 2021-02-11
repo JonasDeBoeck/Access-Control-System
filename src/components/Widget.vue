@@ -16,7 +16,7 @@
                 <button class="button" style="background: #6295d9"><router-link :to="{name: 'WidgetDetails', params: {id: this.widget.id}}" tag="div"><i class="fas fa-edit fa-2x"></i></router-link></button>
             </div>
             <div class="button">
-                <button @click="this.removeWidget(widget.id)" class="button" style="background: #db2c2c"><i class="fas fa-trash-alt fa-2x"></i></button>
+                <button @click="remove" class="button" style="background: #db2c2c"><i class="fas fa-trash-alt fa-2x"></i></button>
             </div>
         </div>
     </div>
@@ -39,9 +39,9 @@ export default {
         }
     },
     methods: {
-        removeWidget(id){
-            console.log(id)
-        }
+       remove(){
+           this.$emit("del-widget",this.widget.id)
+       }
     }
 }
 </script>
