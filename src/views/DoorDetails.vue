@@ -173,7 +173,7 @@ export default {
 
       async pollStatus(){
          let detail = await f.default.getDoorDetailStatus(this.door.id, this.$session.get("bs-session-id"))
-         this.door.open = detail
+         this.door.opened = detail
          setTimeout(this.pollStatus,3000)
       }
    }
