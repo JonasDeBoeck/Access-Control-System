@@ -133,7 +133,6 @@ async function getDoorDetail(door_id, session){
     const result = response.data
     return result
 }
-
 async function getDoorDetailStatus(door_id, session){
     let headers = {
         headers: {
