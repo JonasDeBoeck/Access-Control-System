@@ -45,7 +45,11 @@
     </div>
 </template>
 
+
 <script>
+
+import * as api from '../variables'
+
 export default {
     name: "Door",
     props: ["door"],
@@ -57,12 +61,16 @@ export default {
         }
     },
     methods: {
-        lock() {
+        async lock() {
             this.door.opened = false
+            let key = await api.default.login("admin", "t");
+            api.default.lockDoor(this.door.id, key);
         },
 
-        unlock() {
+        async unlock() {
             this.door.opened = true
+            let key = await api.default.login("admin", "t");
+            api.default.unlockDoor(this.door.id, key);
         },
         open() {
             this.$vm2.open('time')

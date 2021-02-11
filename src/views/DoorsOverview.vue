@@ -44,9 +44,7 @@ export default {
         {id: 10, name: 'K2.18', opened: true},
         {id: 11, name: 'K2.19', opened: true}
       ],
-      sessionId: '',
-      status: [],
-      realDoors: [],
+      sessionId: '',    
       filteredDoors: [],
       currentPage: 0,
       pageSize: 9,

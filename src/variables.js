@@ -75,9 +75,58 @@ async function getDoorsForOverview(session){
     return result
 }
 
+async function unlockDoor(door_id, session) {
+
+    let headers = {
+        headers: {
+            "bs-session-id": session
+        }
+    }
+
+    let data = {
+        "DoorCollection": {
+          "total": 1,
+          "rows": [
+            {
+              "id": door_id
+            }
+          ]
+        }
+    }
+    const response = await axios.post("http://localhost:8080/api/door/unlock", JSON.stringify(data), headers);
+    console.log(response);
+    return response.data;
+}
+
+async function lockDoor(door_id, session) {
+
+    let headers = {
+        headers: {
+            "bs-session-id": session
+        }
+    }
+
+    let data = {
+        "DoorCollection": {
+          "total": 1,
+          "rows": [
+            {
+              "id": door_id
+            }
+          ]
+        }
+    }
+    const response = await axios.post("http://localhost:8080/api/door/lock", JSON.stringify(data), headers);
+    console.log(response);
+    return response.data;
+}
+
+
 export default {
     login,
     getDoors,
     getDoorsStatus,
-    getDoorsForOverview
+    getDoorsForOverview,
+    unlockDoor,
+    lockDoor,
 }
