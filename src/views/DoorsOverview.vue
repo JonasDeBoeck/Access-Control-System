@@ -32,17 +32,7 @@ export default {
   data() {
     return {
       doors: [
-        {id: 1, name: 'K2.09', opened: false},
-        {id: 2, name: 'K2.10', opened: true},
-        {id: 3, name: 'K2.11', opened: false},
-        {id: 4, name: 'K2.12', opened: false},
-        {id: 5, name: 'K2.13', opened: false},
-        {id: 6, name: 'K2.14', opened: false},
-        {id: 7, name: 'K2.15', opened: false},
-        {id: 8, name: 'K2.16', opened: true},
-        {id: 9, name: 'K2.17', opened: true},
-        {id: 10, name: 'K2.18', opened: true},
-        {id: 11, name: 'K2.19', opened: true}
+      
       ],
       sessionId: '',    
       filteredDoors: [],
@@ -76,10 +66,11 @@ export default {
     }
   },
   async created(){
-    this.filteredDoors = this.doors
-    this.updateVisibleDoors(this.doors)
     const key = await f.default.login("admin","dIET34#ucll")
     const result = await f.default.getDoorsForOverview(key)
+    this.doors = result;
+    this.filteredDoors = this.doors
+    this.updateVisibleDoors(this.doors)
     console.log(result)
   }
 }
