@@ -29,13 +29,13 @@
             <div class="opentimeform">
                <div class="form-group">
                   <label>Minuten</label>
-                  <input type="number" min=0 class="form-control" v-bind:placeholder= "this.door.open_duration_min">
+                  <input type="number" min=0 class="form-control" v-model= "door.open_duration_min">
                </div>
                <div class="form-group">
                   <label>Seconden</label>
-                  <input type="number" min=0 class="form-control"  v-bind:placeholder= "this.door.open_duration_sec">
+                  <input type="number" v-model="door.open_duration_sec" min=0 max=60 class="form-control">
                </div>
-               <input type="submit" value="Opslaan" id="saveinformation" class="btn btn-primary"/>
+               <input type="submit" v-on:click="updateOpen_Duration" value="Opslaan" id="saveinformation" class="btn btn-primary"/>
             </div>
          </form>
       </div>
@@ -76,48 +76,29 @@
       </table>
    </div>
    <div class="options card">
-      <h5 class="card-header">Options</h5>
+      <h5 class="card-header">Informatie</h5>
       <div class="optionsform">
          <form>
             <div class="form-group">
                <label for="">Naam</label>
-               <input type="text" class="form-control" v-bind:placeholder= "this.details.Door.name">
+               <input type="text" readonly class="form-control" v-bind:placeholder= "this.details.Door.name">
             </div>
             <div class="form-group">
-               <label>Entry Device</label>
-               <select class="form-control">
-                  <option>{{this.details.Door.entry_device_id.name}}</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
-               </select>
+               <label for="">Groep</label>
+               <input type="text" class="form-control" readonly v-bind:placeholder= "details.Door.door_group_id.name">
             </div>
             <div class="form-group">
                <label for="">Omschrijving</label>
-               <textarea class="form-control" v-bind:placeholder= "this.details.Door.description" rows="3"></textarea>
+               <textarea class="form-control" readonly v-bind:placeholder= "this.details.Door.description" rows="3"></textarea>
             </div>
             <div class="form-group">
-               <label>Entry Device</label>
-               <select class="form-control">
-                  <option>{{this.details.Door.entry_device_id.name}}</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
-               </select>
+               <label for="">Entry Device</label>
+               <input type="text" class="form-control" readonly v-bind:placeholder= "details.Door.entry_device_id.name">
             </div>
             <div class="form-group">
-               <label>Deur Relay</label>
-               <select class="form-control">
-                  <option>{{this.details.Door.relay_output_id.device_id.name}}</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
-               </select>
+               <label for="">Entry Device</label>
+               <input type="text" class="form-control" readonly v-bind:placeholder= "details.Door.relay_output_id.device_id.name">
             </div>
-            <input type="submit" value="Opslaan" id="saveinformation" class="btn btn-primary"/>
          </form>
       </div>
    </div>
@@ -132,7 +113,7 @@ export default {
    name: "DoorDetails",
    data() {
       return {
-         door: {id: 1, name: 'K2.09', opened: false, open_duration_min: 0, open_duration_sec: 0},
+         door: {id: 1, name: 'K2.09', opened: false, open_duration_min: 0, open_duration_sec: 0, group: "groep"},
          details: {
             Door: {
                description: "",
@@ -142,21 +123,27 @@ export default {
                relay_output_id: {
                   name: "",
                   device_id: ""
+               },
+               door_group_id: {
+                  name: ""
                }
             }
          }
+         // groups: {
+         //    rows: []
+         // }
       }
    },
    async created() {
-      const key = await f.default.login("admin","t")
       this.door.id = this.$route.params.id
-      const detail = await f.default.getDoorDetail(this.door.id, key)
+      let detail = await f.default.getDoorDetail(this.door.id, this.$session.get("bs-session-id"))
       this.details = detail
-      // const doorDetailStatus = await f.default.getDoorDetailStatus(this.door.id, key)
-      // this.door.opened = doorDetailStatus
-      this.pollStatus(this.door_id)
       this.door.open_duration_min = Math.floor(this.details.Door.open_duration/60)
-      this.door.open_duration_sec =  this.details.Door.open_duration % 60;
+      this.door.open_duration_sec =  this.details.Door.open_duration % 60
+      this.pollStatus(this.door_id)
+      // this.groups.rows = await f.default.getAllAccesGroups(this.$session.get("bs-session-id"))
+      // const test = this.groups.rows
+      // console.log(test)
       },
    methods: {
       async lock() {
@@ -172,9 +159,19 @@ export default {
       },
 
       async pollStatus(){
-         let detail = await f.default.getDoorDetailStatus(this.door.id, this.$session.get("bs-session-id"))
-         this.door.opened = detail
+         let detail = await f.default.getDoorDetail(this.door.id, this.$session.get("bs-session-id"))
+         let detailStatus = await f.default.getDoorDetailStatus(this.door.id, this.$session.get("bs-session-id"))
+         this.door.opened = detailStatus
+         this.details = detail
          setTimeout(this.pollStatus,3000)
+      },
+
+      async updateOpen_Duration(){
+         let seconds = this.door.open_duration_sec
+         let minutes = this.door.open_duration_min
+         let totalSeconds = (minutes * 60)
+         totalSeconds += seconds*1
+         f.default.updateDoorOpen_Duration(this.door.id, totalSeconds, this.$session.get("bs-session-id"))
       }
    }
 }

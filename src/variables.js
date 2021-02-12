@@ -182,6 +182,7 @@ async function getDoorDetail(door_id, session){
     const result = response.data
     return result
 }
+
 async function getDoorDetailStatus(door_id, session){
     let headers = {
         headers: {
@@ -209,6 +210,37 @@ async function getDoorDetailStatus(door_id, session){
     return unlocked
 }
 
+async function updateDoorOpen_Duration(door_id, newDuration, session){
+    let headers = {
+        headers: {
+            "bs-session-id": session
+        }
+    }
+    let data = {
+        "Door": {
+            "open_duration": newDuration
+        }
+    }
+    await axios.put("http://localhost:8080/api/doors/"+door_id, data, headers)
+}
+
+// async function getAllAccesGroups(session){
+//     let headers = {
+//         headers: {
+//             "bs-session-id": session
+//         }
+//     }
+//     const result = await axios.get("http://localhost:8080/api/access_groups", headers)
+//     console.log(result.data.AccessGroupCollection.rows)
+//     let arrayResult = []
+//     for(let i=0; i < arrayResult.length; i++){
+//         arrayResult.push({
+//             id: result[i].id,
+//             name: result[i].name
+//         })
+//     }
+//     return arrayResult
+// }
 
 export default {
     login,
@@ -220,5 +252,6 @@ export default {
     getDoorDetail,
     getDoorDetailStatus,
     unlockDoors,
-    lockDoors
+    lockDoors,
+    updateDoorOpen_Duration
 }
