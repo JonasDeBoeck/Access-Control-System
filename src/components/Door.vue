@@ -66,12 +66,28 @@ export default {
             this.door.unlocked = false
             // let key = await api.default.login("admin", "t");
             api.default.lockDoor(this.door.id, this.$session.get("bs-session-id"));
+            this.$toasted.show(`${this.door.name} succesvol gesloten!`, {
+                theme: "toasted-primary",
+                position: "top-right",
+                duration: 1000,
+                icon: 'lock',
+                iconPack: 'fontawesome',
+                type: 'error'
+            })
         },
 
         async unlock() {
             this.door.unlocked = true
             // let key = await api.default.login("admin", "t");
             api.default.unlockDoor(this.door.id, this.$session.get("bs-session-id"));
+            this.$toasted.show(`${this.door.name} succesvol geopend!`, {
+                theme: "toasted-primary",
+                position: "top-right",
+                duration: 1000,
+                icon: 'lock-open',
+                iconPack: 'fontawesome',
+                type: 'success'
+            })
         },
         open() {
             this.$vm2.open('time')
