@@ -182,7 +182,15 @@ async function updateDoorOpen_Duration(door_id, newDuration, session){
 //         }
 //     }
 //     const result = await axios.get("http://localhost:8080/api/access_groups", headers)
-//     return result
+//     console.log(result.data.AccessGroupCollection.rows)
+//     let arrayResult = []
+//     for(let i=0; i < arrayResult.length; i++){
+//         arrayResult.push({
+//             id: result[i].id,
+//             name: result[i].name
+//         })
+//     }
+//     return arrayResult
 // }
 
 export default {
