@@ -20,97 +20,35 @@
 </template>
 
 <script>
-import * as f from '../variables'
 import AddWidget from '../components/AddWidget.vue'
 import Widget from '../components/Widget.vue'
+import * as db from '../database'
 export default {
   name: 'WidgetsOverview',
   components:{
     AddWidget,
     Widget
   },
-  created() {
-    f.default.login("admin","t").then(session => f.default.getDoors(session).then(doors => console.log(doors)))
+  async created() {
+    let response = await db.default.getAllWidgets()
+    this.widgets = response
+    console.log(this.widgets)
   },
   data(){
     return {
-      doors: [
-        {
-            name: "testdeur",
-            id: 1
-        },
-        {
-            name: "testlift",
-            id: 2
-        },
-        {
-            name: "testslagboom",
-            id: 3
-        }
-        ],
+      doors: [],
       selectedDoor: undefined,
       searchterm: "",
-      widgets: [
-        {
-          colour: '#03fcdb',
-          name: "test Widget",
-          icon: "open-door",
-          id: 1,
-          doors: [
-            {
-              name: "K2.09",
-              id: 1
-            },
-            {
-              name: "K2.10",
-              id: 2
-            }],
-            duration: {
-              hours: 0,
-              minutes: 1,
-              seconds: 30
-            }
-        },
-        {
-          colour: '#db96eb',
-          name: "open slagboom 90s",
-          icon: "parking",
-          id: 2,
-          doors: [
-            {
-              name: "slagboom",
-              id: 1
-            },
-            ],
-            duration: {
-              hours: 0,
-              minutes: 1,
-              seconds: 30
-            }
-        },
-        {
-          colour: '#a7eba2',
-          name: "open leeraarskamer 90s",
-          icon: "elevator",
-          id: 3,
-          doors: [
-            {
-              name: "k0.1",
-              id: 1
-            },
-            ],
-            duration: {
-              hours: 0,
-              minutes: 1,
-              seconds: 30
-            }
-        }
-      ]
+      widgets: []
       }
     },
     methods:{
-      addWidget(widget){
-        this.widgets.push(widget)
+      async addWidget(widget){
+        console.log(widget)
+        let response = await db.default.getAllWidgets()
+        this.widgets = response
+        console.log(this.widgets)
+        //this.widgets.push(widget)
       },
       deleteWidget(id){
         console.log(id)

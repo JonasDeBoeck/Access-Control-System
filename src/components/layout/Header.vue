@@ -35,10 +35,12 @@ export default {
             let key = await api.default.login("admin",'t')
             this.$session.set("bs-session-id",key)
             this.loggedIn = true;
+            console.log(this.$session.getAll())
         },
         logout(){
             this.$session.remove("bs-session-id")
             this.loggedIn = false;
+            console.log(this.$session.getAll())
         }
     },
     created(){

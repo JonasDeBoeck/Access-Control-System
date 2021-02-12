@@ -54,9 +54,9 @@
     </div>
     
     <div class="icons">
-        <button class="icon" @click="setIcon" value="open-door"><img src="@/assets/icons/open-door.png" alt=""></button>
-        <button class="icon" @click="setIcon" value="elevator"><img src="@/assets/icons/elevator.png" alt=""></button> 
-        <button class="icon" @click="setIcon" value="parking"><img src="@/assets/icons/parking.png" alt=""></button>
+        <button type="button" class="icon" @click="setIcon" value="open-door"><img src="@/assets/icons/open-door.png" alt=""></button>
+        <button type="button" class="icon" @click="setIcon" value="elevator"><img src="@/assets/icons/elevator.png" alt=""></button> 
+        <button type="button" class="icon" @click="setIcon" value="parking"><img src="@/assets/icons/parking.png" alt=""></button>
     </div>
 
     <div class="form-check">
@@ -82,6 +82,7 @@
 import Multiselect from "vue-multiselect"
 import ColourPicker  from 'vue-colour-picker'
 import * as api from '../variables'
+import * as db from '../database'
 export default {
     name: "AddWidget",
     components:{
@@ -92,8 +93,8 @@ export default {
     return {
       doors: [
         {
-          name: "testdeur",
-          id: 1
+            name: "testdeur",
+            id: 1
         },
         {
             name: "idk",
@@ -128,19 +129,18 @@ export default {
     methods: {
         addWidget(){
             // make object
-            console.log(this.icon)
             let widget = {
                 name: this.widgetname,
-                doors: this.selectedDoors,
-                colour: this.colour,
+                doors: this.selectedDoors.map(this.changeDoor),
+                color: this.colour,
                 icon: this.icon,
-                duration: {
-                    hours: this.hours,
-                    minutes: this.minutes,
-                    seconds: this.seconds
-                }
+                duration: this.hours * 3600 + this.minutes * 60 + this.seconds
             }
-            this.$emit("add-widget",widget)
+            //this.$emit("add-widget",widget)
+            db.default.insertWidget(widget)
+        },
+        changeDoor(door){
+            return {name: door.name}
         },
         changeColour(colour){
             let hex = colour.hex;
