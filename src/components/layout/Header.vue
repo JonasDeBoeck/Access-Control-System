@@ -14,15 +14,16 @@
                     <router-link to="/widgets" tag="li" class="links"><span><i class="fas fa-cogs"></i>Widgets<i class="fas fa-angle-left arrow" ></i></span></router-link>
                     <hr class="sidebar-divider">
                 </nav>
-                <button class="logbutton" @click="login" :disabled="loggedIn">Login</button>
-                <button class="logbutton" @click="logout">Logout</button>
+
+                <li to="/" class="logout" @click="logout"><span><i class="fas fa-sign-out-alt"></i>Log out</span></li>
+
             </div>
         </div>
     </header>
 </template>
 
 <script>
-import * as api from "../../variables"
+
 export default {
     name: "Header",
     data() {
@@ -31,14 +32,11 @@ export default {
         }
     },
     methods: {
-        async login() {
-            let key = await api.default.login("admin",'t')
-            this.$session.set("bs-session-id",key)
-            this.loggedIn = true;
-        },
         logout(){
+            console.log("pls");
             this.$session.remove("bs-session-id")
             this.loggedIn = false;
+            this.$router.push({path: '/'})
         }
     },
     created(){
@@ -65,6 +63,16 @@ export default {
     font-size: 1em;
     font-family: 'Oswald';
     text-transform: uppercase;
+}
+
+.logout {
+    color: lightgrey;
+    margin-right: 1.8em;
+}
+
+.logout:hover {
+    color: #fff;
+    cursor: pointer;
 }
  
 .links {
@@ -121,5 +129,6 @@ nav li.router-link-exact-active .arrow {
 .arrow {
     transition: transform .4s ease-in-out;  
 }
+
 
 </style>
