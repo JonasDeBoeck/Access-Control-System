@@ -49,6 +49,7 @@ export default {
         }
         ],
       selectedDoor: undefined,
+      searchterm: "",
       widgets: [
         {
           colour: '#03fcdb',
@@ -119,7 +120,8 @@ export default {
             this.widgets.splice(index,1)
           }
         }
-      }
+      },
+      search(){}
     }
 }
 </script>

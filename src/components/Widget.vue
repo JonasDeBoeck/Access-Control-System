@@ -1,25 +1,21 @@
 <template>
-    <div class="widget-complete">
-        <div class="widget" :style="cssVars">
-            <div class="iconcontainer">
-                <img class="icon" :src="require(`../assets/icons/${this.widget.icon}.png`)" alt="icoon">    
+    <div @click="executeWidget" class="widget" :style="cssVars">
+        <div class="iconcontainer">
+            <img class="icon" :src="require(`../assets/icons/${this.widget.icon}.png`)" alt="icoon">    
+        </div>
+        <div class="content">
+            <h2>{{widget.name}}</h2>
+            <div class="doors">
+                <p class="door" v-for="door in widget.doors" v-bind:key="door.id">{{door.name}}</p>
             </div>
-            <div class="content">
-                <h2>{{widget.name}}</h2>
-                <div class="doors">
-                    <p v-for="door in widget.doors" v-bind:key="door.id">{{door.name}}</p>
-                </div>
-            </div>
-            <div class="buttons">
-                
+        </div>
+        <div class="buttons"> 
             <div class="divbutton">
                 <button class="button" style="background: #94cc6e"><router-link :to="{name: 'WidgetDetails', params: {id: this.widget.id}}" tag="div"><i class="fas fa-edit "></i></router-link></button>
             </div>
-
             <div class="divbutton">
                 <button @click="remove" class="button" style="background: #d65e5e"><i class="fas fa-trash-alt"></i></button>
             </div>
-        </div>
         </div>
     </div>
 </template>
@@ -43,6 +39,9 @@ export default {
     methods: {
        remove(){
            this.$emit("del-widget",this.widget.id)
+       },
+       executeWidget(){
+           
        }
     }
 }
@@ -50,7 +49,6 @@ export default {
 
 <style scoped>
     .widget {
-       
         border: 3px solid;
         border-color: var(--background);
         width: 100%;
@@ -63,6 +61,10 @@ export default {
         margin-left: 2em;
     }
 
+    .widget:hover{
+        cursor: pointer;
+    }
+
     .iconcontainer{
         display: flex;
         justify-content: center;
@@ -73,7 +75,7 @@ export default {
         border-top-left-radius: 1em;
         border-bottom-left-radius: 1em;
         padding: 0.7em;
-        box-shadow: 0 .15rem 1.5rem 0 rgba(58, 59, 69, .5);
+        box-shadow: .15rem 0 1.5rem 0 rgba(58, 59, 69, .5);
     }
 
     .content{
@@ -129,5 +131,14 @@ export default {
 
     h2 {
         color:  rgba(58,96,208,1);
+    }
+
+    .doors{
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+    .door{
+        margin-right: 10px;
     }
 </style>

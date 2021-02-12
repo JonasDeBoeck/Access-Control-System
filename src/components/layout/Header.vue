@@ -14,8 +14,8 @@
                     <router-link to="/widgets" tag="li" class="links"><span><i class="fas fa-cogs"></i>Widgets<i class="fas fa-angle-left arrow" ></i></span></router-link>
                     <hr class="sidebar-divider">
                 </nav>
-                <button @click="login" :disabled="loggedIn">Login</button>
-                <button @click="logout">Logout</button>
+                <button class="logbutton" @click="login" :disabled="loggedIn">Login</button>
+                <button class="logbutton" @click="logout">Logout</button>
             </div>
         </div>
     </header>
@@ -38,7 +38,11 @@ export default {
         },
         logout(){
             this.$session.remove("bs-session-id")
+            this.loggedIn = false;
         }
+    },
+    created(){
+        console.log(this.$session.getAll())
     }
 }
 </script>
@@ -52,10 +56,6 @@ export default {
     display: flex;
     flex-direction: column;
     box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
-}
-
-.disabled{
-   
 }
 
 .nav {

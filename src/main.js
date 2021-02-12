@@ -6,12 +6,7 @@ import Multiselect from 'vue-multiselect'
 import Modal from "@burhanahmeed/vue-modal-2";
 import VueSession from 'vue-session'
 
-// persist so that the session id is stored between tabs
-var options = {
-  persist: true
-}
-
-Vue.use(VueSession, options)
+Vue.use(VueSession)
 Vue.config.productionTip = false
 Vue.component("v-select", vueSelect)
 Vue.component('multiselect', Multiselect)
