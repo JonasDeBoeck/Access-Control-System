@@ -11,10 +11,12 @@
                 </div>
             </div>
             <div class="buttons">
-            <div class="button">
+                
+            <div class="divbutton">
                 <button class="button" style="background: #94cc6e"><router-link :to="{name: 'WidgetDetails', params: {id: this.widget.id}}" tag="div"><i class="fas fa-edit "></i></router-link></button>
             </div>
-            <div class="button">
+
+            <div class="divbutton">
                 <button @click="remove" class="button" style="background: #d65e5e"><i class="fas fa-trash-alt"></i></button>
             </div>
         </div>
@@ -102,9 +104,10 @@ export default {
         /* margin-bottom: 1em; */
         border: none;
     }
-    /* .fas{
-        color: white;
-    } */
+    .divbutton{
+        margin: 10px;
+    }
+
     .buttons{
         display:flex;
         flex-direction: column;
