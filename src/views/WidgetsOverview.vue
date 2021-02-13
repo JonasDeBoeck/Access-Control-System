@@ -11,9 +11,10 @@
       </form>
     </div>
     <div class="content">
-      <div class="widgets">
-        <Widget v-for="widget in widgets" v-bind:key="widget.name" v-bind:widget="widget" v-on:del-widget="deleteWidget"/>
+      <div v-if="this.widgets.length > 0" class="widgets">
+        <Widget class="widget" v-for="widget in widgets" v-bind:key="widget.name" v-bind:widget="widget" v-on:del-widget="deleteWidget"/>
       </div>
+      <p class="error" v-if="this.widgets.length === 0">No widgets available</p>
       <AddWidget class="form" v-on:add-widget="addWidget"/>
     </div>
   </div>
@@ -71,13 +72,14 @@ export default {
   }
 
   .widgets{
+    font-family: 'Oswald';
     background: #F8F9FC;
     display: grid;
     grid-template-rows: 2fr 2fr 2fr;
     grid-template-columns: 1fr 1fr;
     row-gap: 20%;
-    column-gap: 5%;
-    margin-left: 2.5em;
+    column-gap: 2%;
+    /* margin-left: 2.5em; */
     margin-right: 2.5em;
     margin-top: 2.5em;
     height: 80%;
@@ -125,5 +127,32 @@ h1 {
   font-family: 'Oswald';
   text-transform: uppercase;
 }
+
+.error{
+  font-family: 'Oswald';
+  font-size: xx-large;
+  margin-top: 2em;
+  /*make flex item take up remaining space*/
+  flex-grow: 1; 
+}
+
+  @media only screen and (max-width: 1600px) {
+    .content{
+      flex-direction: column;
+    }
+    .widgets{
+      /* eerlijk geen idee waarom dit moet want ik flex ipv grid nu, maar anders werkt dat op firefox niet */
+      row-gap: 0%;
+      display: flex;
+      flex-direction: column;
+      margin-left: 2.5em
+    }
+    .form{
+      align-self: center !important;
+    }
+    .widget{
+      margin: 0.5em;
+    }
+  }
 </style>
 

@@ -200,6 +200,10 @@ export default {
         display: none;
     }
 
+    .selecter{
+        width: 10vw;
+    }
+
     .colorpicker >>> .color-input{
         display: none;
     }
@@ -220,12 +224,7 @@ export default {
     .colorpicker >>> #inputGroup-sizing-default > div{
         margin-top: 0.35em;
     }
-
     
-    .selecter{
-        width: 12vw;
-        max-height: 2vh;
-    }
     label {
         margin-left: 5px;
         margin-right: 5px;

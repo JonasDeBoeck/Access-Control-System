@@ -9,7 +9,7 @@
             <h2>Log in</h2>
             <input type="text" placeholder="Username" />
             <input type="password"  placeholder="Password" />
-            <button @click="login" :disabled="loggedIn">Log in</button>
+            <button type="button" @click="login" :disabled="loggedIn">Log in</button>
           </form>
         </div>
     </div>

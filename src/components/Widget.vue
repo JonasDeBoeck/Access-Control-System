@@ -9,12 +9,21 @@
                 <p class="door" v-for="door in widget.doors" v-bind:key="door.id">{{door.name}}</p>
             </div>
         </div>
-        <div class="buttons"> 
-            <div class="divbutton">
-                <button  class="button" style="background: #94cc6e"><router-link :to="{name: 'WidgetDetails', params: {id: this.widget.id}}" tag="div"><i class="fas fa-edit "></i></router-link></button>
+        <div class="icons">
+            <div class="time">
+                <div class="clock">
+                    <i class="far fa-clock"></i>
+                </div>
+                <p>{{this.hours}}:{{this.minutes}}:{{this.seconds}}</p>
             </div>
-            <div class="divbutton">
-                <button @click="remove" class="button" style="background: #d65e5e"><i class="fas fa-trash-alt"></i></button>
+            
+            <div class="buttons"> 
+                <div class="divbutton">
+                    <button  class="button" style="background: #94cc6e; margin-top: 10px"><router-link :to="{name: 'WidgetDetails', params: {id: this.widget.id}}" tag="div"><i class="fas fa-edit "></i></router-link></button>
+                </div>
+                <div class="divbutton">
+                    <button @click="remove" class="button" style="background: #d65e5e; margin-bottom: 10px"><i class="fas fa-trash-alt"></i></button>
+                </div>
             </div>
         </div>
     </div>
@@ -26,13 +35,15 @@ export default {
     props: ["widget"],
     data(){
         return {
-            
+            hours: '59',
+            minutes: '59',
+            seconds: '59'
         }
     },
     computed: {
         cssVars(){
             return {
-                '--background': this.widget.colour
+                '--background': this.widget.color
             }
         }
     },
@@ -42,7 +53,24 @@ export default {
        },
        executeWidget(){
 
+       },
+       updateSize(){
+        let widgets = document.getElementsByClassName("widget");
+        if (widgets.length > 0){
+            // - 6 vanwege de border, de border is 3px
+            let widgetHeight = widgets[0].offsetHeight - 6;
+            let iconContainers = document.getElementsByClassName("iconcontainer")
+            iconContainers.forEach(element => {
+                element.style.height = `${widgetHeight}px`;
+                console.log(element.style.height)
+            });
+        }
        }
+    },
+    created(){
+        this.updateSize()
+        // calculate hour, minute, seconds
+        window.onresize = this.updateSize
     }
 }
 </script>
@@ -59,10 +87,13 @@ export default {
         justify-content: space-between;
         box-shadow: 0 .15rem 1.5rem 0 rgba(58, 59, 69, .5);
         margin-left: 2em;
+        /* max-width: 27vw; */
     }
 
     .widget:hover{
         cursor: pointer;
+        /* transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); */
     }
 
     .iconcontainer{
@@ -89,14 +120,37 @@ export default {
         margin-left: 1.5em;
     }
 
-    .link{
-        flex-basis: 10%;
-    }
-
     .icon{ 
         margin: 10px;
         width: 45px;
         height: 45px;
+    }
+
+    .icons{
+        flex-basis: 15%;
+        display: flex;
+    }
+
+    .time{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .time > p {
+        margin: 0;
+    }
+
+    .clock{
+        align-self: center;
+        justify-self: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 4vh;
+        height: 4vh;
+        border-radius: 50%;
+        border: 2px solid #123456
     }
 
     .button{
@@ -140,5 +194,11 @@ export default {
     }
     .door{
         margin-right: 10px;
+    }
+
+    @media only screen and (max-width: 1600px) {
+        .iconcontainer{
+            height: 100%;
+        }
     }
 </style>
