@@ -1,7 +1,7 @@
 <template>
   <div class="door-overview">
     <div class="head">
-      <h1>Doors</h1>
+      <h1>Deuren</h1>
       <form action="">
         <input type="text" placeholder="Zoek op..." v-model="searchterm" @input="search">
         <button type="submit">

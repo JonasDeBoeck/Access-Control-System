@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <div class="head">
-      <h1>HOME</h1>
+      <h1>PORTAAL</h1>
     </div>
     <div v-if="!this.$session.has('bs-session-id')" class="wrapper">
         <div id="login" >
@@ -49,10 +49,15 @@ export default {
     padding-bottom: 1em;
     background: #fff;
     box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
-    font-family: 'Oswald';
-    color: #4e73df;
   }
 
+  h1 {
+    color: rgba(58,96,208,1);
+    margin: 0;
+    font-family: 'Oswald';
+    text-transform: uppercase;
+  }
+  
   .wrapper {
 
     display: flex;
