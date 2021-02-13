@@ -1,0 +1,236 @@
+<template>
+    <div>
+        <div class="head">
+        <h1>{{widget.name}}</h1>
+        <form action="">
+            <input type="text" placeholder="Zoek op..." v-model="searchterm" @input="search">
+            <button type="submit">
+            <i class="fas fa-search fa-sm">
+            </i>
+            </button>
+        </form>
+        </div>
+        <div class="content">
+            <div class="general detail">
+                <h5 class="card-header">
+                    Algemene informatie
+                </h5>
+                <form class="form">
+                    <div class="form-group">
+                        <label class="labels align" for="name">Name</label>
+                        <input type="text" class="form-control" id="name" v-bind:placeholder="widget.name">
+                    </div>
+                    <div class="input-group form-group mb-3 colorpicker">
+                        <label for="colorpicker" class="labels">Color</label>
+                        <div class="colorinput">
+                            <span class="input-group-text" id="colorpicker"><colour-picker
+                                v-model="widget.color"
+                                :value="widget.color"
+                                label="Pick Colour"
+                                picker="compact"
+                                :style="cssVars"
+                                v-on:accept="changeColour" />
+                            </span>
+                            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="colorpicker" v-model="widget.color">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="icons detail">
+
+            </div>
+            <div class="time detail">
+
+            </div>
+            <div class="doors detail">
+                <h5 class="card-header">
+                    Deuren selectie
+                </h5>
+                <form class="form">
+                    <div class="input-group mb-3 deuren">
+                        <div class="tag">
+                            <div class="input-group-prepend">
+                            <span id="selected_deur" class="input-group-text" for="inputGroupSelect01">Deuren</span>
+                            </div>
+                            <div id="multiselect">
+                                <div>
+                                    <multiselect class="selecter" :select-label="''" :taggable="true" :limit="0" v-model="widget.doors" :options="doors" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Pick some" label="name" track-by="id" :preselect-first="false">
+                                    </multiselect>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-check checkbox">
+                            <input @change="selectall" class="form-check-input" type="checkbox" value="" id="all">
+                            <label class="form-check-label" for="all">All</label>
+                        </div>
+
+                        <div class="selection" v-if="widget">
+                            <pre class="door" v-for="door in widget.doors" v-bind:key="door.id" >{{ door.name  }}</pre>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+</template>
+
+<script>
+import * as db from '../database'
+import ColourPicker  from 'vue-colour-picker'
+export default {
+    data(){
+        return{
+            widget: {},
+            searchterm: "",
+            colour: "",
+            doors: [{id:1,name:'testdeur'},{id:2,name:'testlift'}]
+        }
+    },
+    components: {
+        'colour-picker': ColourPicker  
+    },
+    async created() {
+        console.log("test")
+        const result = await db.default.getWidget(this.$route.params.id)
+        this.widget = result;
+        console.log(this.widget)
+    },
+    methods:{
+        search(){},
+        changeColour(){},
+        selectall(e){
+            if (e.target.checked){
+                this.widget.doors = this.doors
+            }
+            else{
+                this.widget.doors = []
+            }
+        }
+    },
+    computed: {
+        cssVars(){
+            return {
+                '--background': this.widget.color
+            }
+        }
+    },
+}
+</script>
+
+<style src="vue-multiselect/dist/vue-multiselect.min.css">
+    .vc-target{
+        background: #123456  !important;
+    }
+</style>
+
+<style scoped>
+    .head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-left: 2.5em;
+        padding-right: 2.5em;
+        padding-top: 1em;
+        padding-bottom: 1em;
+        background: #fff;
+        box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
+    }
+
+    h5 {
+        color: rgba(58,96,208,1)
+    }
+
+    .detail{
+        margin: 2em;
+        background: #fff;
+        box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
+    }
+
+    .form{
+        padding: 1em;
+    }
+
+    .content{
+        display: grid;
+        grid-template-columns: 2fr 2fr 2fr;
+        grid-template-rows: 1fr 1fr;
+    }
+
+    .labels{
+        float:left;
+    }
+
+    .align{
+        align-self: flex-start;
+    }
+
+    input, textarea, select, option, label {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .colorpicker{
+        display: flex;
+        flex-direction: column;
+    }
+    .colorinput{
+        display: flex;
+    }
+    .colorpicker >>> .color-input{
+        display: none;
+    }
+    .colorpicker >>> .current-color{
+        border-radius: 0.5em !important;
+        background-color: var(--background) !important;
+    }
+    .colorpicker >>> .form-label{
+        display: none;
+    }
+    .colorpicker >>> #inputGroup-sizing-default{
+        display: flex;
+        justify-content: center;
+        align-self: center;
+        padding: 0;
+        margin: 0;
+    }
+    .tag{
+        display: flex;
+    }
+
+    .deuren{
+        display: flex;
+        flex-direction: column;
+    }
+
+    #multiselect >>> .multiselect__single{
+        display: none;
+    }
+
+    #multiselect {
+        width: 100%;
+    }
+
+    .checkbox{
+        align-self: flex-start;
+    }
+
+    .selection{
+        padding: .3em;
+        display: flex;
+        /* justify-content: center; */
+        flex-wrap: wrap;
+        margin-top: 10px;
+        margin-bottom: 15px;
+        background:#eee;
+        border-radius: 5px;
+    }
+
+    .door{
+        margin-right: 5px;
+    }
+
+    .colorpicker >>> #inputGroup-sizing-default > div{
+        margin-top: 0.35em;
+    }
+</style>

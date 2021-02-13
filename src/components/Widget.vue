@@ -19,7 +19,7 @@
             
             <div class="buttons"> 
                 <div class="divbutton">
-                    <button  class="button" style="background: #94cc6e; margin-top: 10px"><router-link :to="{name: 'WidgetDetails', params: {id: this.widget.id}}" tag="div"><i class="fas fa-edit "></i></router-link></button>
+                    <button  class="button" style="background: #94cc6e; margin-top: 10px"> <router-link :to="{ name: 'WidgetDetails', params: {id: widget.id}}" >  <i class="fas fa-edit "></i> </router-link></button>
                 </div>
                 <div class="divbutton">
                     <button @click="remove" class="button" style="background: #d65e5e; margin-bottom: 10px"><i class="fas fa-trash-alt"></i></button>

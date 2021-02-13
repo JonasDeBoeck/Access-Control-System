@@ -92,32 +92,7 @@ export default {
     },
     data(){
     return {
-      doors: [
-        {
-            name: "testdeur",
-            id: 1
-        },
-        {
-            name: "idk",
-            id: 3
-        },
-        {
-            name: "lskdjfs",
-            id: 4
-        },
-        {
-          name: "testdeur",
-          id: 5
-        },
-        {
-            name: "idk",
-            id: 6
-        },
-        {
-            name: "lskdjfs",
-            id: 7
-        }
-        ],
+      doors: [],
         selectedDoors: [],
         hours: 0,
         minutes: 0,
@@ -167,7 +142,8 @@ export default {
     },
     async created(){
         let doors = await api.default.getDoorsForOverview(this.$session.get("bs-session-id"))
-        this.doors.concat(doors);
+        this.doors = doors;
+        console.log("doors")
         console.log(this.doors)
     }
 }

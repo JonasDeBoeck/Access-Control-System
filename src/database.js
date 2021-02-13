@@ -8,7 +8,11 @@ async function insertWidget(widget){
 
 async function getAllWidgets(){
     const response = await axios.get(`${databaseurl}/widgets`)
-    console.log(response)
+    return response.data;
+}
+
+async function getWidget(id){
+    const response = await axios.get(`${databaseurl}/widgets/${id}`)
     return response.data;
 }
 
@@ -20,5 +24,6 @@ async function removeWidget(id){
 export default {
     insertWidget,
     getAllWidgets,
-    removeWidget
+    removeWidget,
+    getWidget
 }

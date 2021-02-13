@@ -335,10 +335,10 @@ textarea {
 }
 
 .is-opened {
-    border-left: 0.25rem solid green;
+   border-left: 0.25rem solid green;
 }
 
 .is-locked {
-    border-left: 0.25rem solid red;
+   border-left: 0.25rem solid red;
 }
 </style>
