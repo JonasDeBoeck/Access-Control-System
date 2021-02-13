@@ -30,14 +30,15 @@
 </template>
 
 <script>
+import * as db from '../database'
 export default {
     name: "Widget",
     props: ["widget"],
     data(){
         return {
-            hours: '59',
-            minutes: '59',
-            seconds: '59'
+            hours: '00',
+            minutes: '00',
+            seconds: '00'
         }
     },
     computed: {
@@ -48,8 +49,10 @@ export default {
         }
     },
     methods: {
-       remove(){
-           this.$emit("del-widget",this.widget.id)
+       async remove(){
+            const result = await db.default.removeWidget(this.widget.id)
+            console.log(result)
+            this.$emit("del-widget")
        },
        executeWidget(){
 
@@ -62,15 +65,26 @@ export default {
             let iconContainers = document.getElementsByClassName("iconcontainer")
             iconContainers.forEach(element => {
                 element.style.height = `${widgetHeight}px`;
-                console.log(element.style.height)
             });
         }
        }
     },
     created(){
         this.updateSize()
-        // calculate hour, minute, seconds
         window.onresize = this.updateSize
+        window.onload = this.updateSize
+        // calculate hour, minute, seconds
+        let duration = this.widget.duration
+        console.log(duration)
+        let hours = Math.floor((duration / 3600))
+        duration = duration % 3600
+        console.log(duration)
+        let minutes = Math.floor((duration / 60));
+        duration = duration % 60;
+        console.log(duration)
+        this.hours = hours > 9 ? hours : `0${hours}`;
+        this.minutes = minutes > 9 ? minutes : `0${minutes}`;
+        this.seconds = duration > 9 ? duration : `0${duration}`;
     }
 }
 </script>

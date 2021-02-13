@@ -12,10 +12,10 @@
     </div>
     <div class="content">
       <div v-if="this.widgets.length > 0" class="widgets">
-        <Widget class="widget" v-for="widget in widgets" v-bind:key="widget.name" v-bind:widget="widget" v-on:del-widget="deleteWidget"/>
+        <Widget class="widget" v-for="widget in widgets" v-bind:key="widget.name" v-bind:widget="widget" v-on:del-widget="updateWidgets"/>
       </div>
       <p class="error" v-if="this.widgets.length === 0">No widgets available</p>
-      <AddWidget class="form" v-on:add-widget="addWidget"/>
+      <AddWidget class="form" v-on:add-widget="updateWidgets"/>
     </div>
   </div>
 </template>
@@ -44,21 +44,11 @@ export default {
       }
     },
     methods:{
-      async addWidget(widget){
-        console.log(widget)
+      async updateWidgets(){  
+        console.log("updating view")
         let response = await db.default.getAllWidgets()
         this.widgets = response
         console.log(this.widgets)
-        //this.widgets.push(widget)
-      },
-      deleteWidget(id){
-        console.log(id)
-        for (let widget of this.widgets){
-          if (widget.id === id){
-            let index = this.widgets.indexOf(widget)
-            this.widgets.splice(index,1)
-          }
-        }
       },
       search(){}
     }

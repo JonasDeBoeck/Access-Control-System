@@ -3,7 +3,7 @@
     <h2>Voeg Widget toe</h2>
 
     <div class="input-group mb-3">
-        <span class="input-group-text" id="inputGroup-sizing-default">Widget Naam</span>
+        <span class="input-group-text" id="inputGroup-sizing-default">Naam</span>
         <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" v-model="widgetname">
     </div>
     <div class="deurenselect">
@@ -15,16 +15,17 @@
                 <div>
                     <multiselect class="selecter" :select-label="''" :taggable="true" :limit="0" v-model="selectedDoors" :options="doors" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Pick some" label="name" track-by="id" :preselect-first="false">
                     </multiselect>
-                    <div class="doors" v-if="this.selectedDoors.length > 0">
-                        <pre class="door" v-for="door in selectedDoors" v-bind:key="door.id" >{{ door.name  }}</pre>
-                    </div>
                 </div>
             </div>
+            <div class="form-check checkbox">
+                <input @change="selectall" class="form-check-input" type="checkbox" value="" id="all">
+                <label class="form-check-label" for="all">All</label>
+            </div>
         </div>
-        <div class="form-check checkbox">
-            <input @change="selectall" class="form-check-input" type="checkbox" value="" id="all">
-            <label class="form-check-label" for="all">All</label>
+        <div class="doors" v-if="this.selectedDoors.length > 0">
+            <pre class="door" v-for="door in selectedDoors" v-bind:key="door.id" >{{ door.name  }}</pre>
         </div>
+        
     </div>
     
 
@@ -127,8 +128,12 @@ export default {
         }
     },
     methods: {
-        addWidget(){
+        async addWidget(){
             // make object
+            this.hours = parseInt(this.hours)
+            this.minutes = parseInt(this.minutes)
+            this.seconds = parseInt(this.seconds)
+
             let widget = {
                 name: this.widgetname,
                 doors: this.selectedDoors.map(this.changeDoor),
@@ -136,8 +141,9 @@ export default {
                 icon: this.icon,
                 duration: this.hours * 3600 + this.minutes * 60 + this.seconds
             }
-            //this.$emit("add-widget",widget)
-            db.default.insertWidget(widget)
+            const result = await db.default.insertWidget(widget)
+            console.log(result)
+            this.$emit('add-widget')
         },
         changeDoor(door){
             return {name: door.name}
@@ -174,7 +180,7 @@ export default {
 </style>
 <style scoped>
     #add_widget{
-        max-width: 30vw !important;
+        /* max-width: 30vw !important; */
         align-self: flex-end;
         margin: 2em;
         background: #fff;
@@ -184,13 +190,13 @@ export default {
         border-width:2px !important;
         border-radius: 10px;
     }
-    .input-group>span {
+    /* .input-group>span {
         max-width: 10vw;
         min-width: 5vw;
     }
     .input-group>input{
         max-width: 10vw;
-    }
+    } */
     #multiselect{
         margin-left: -5px;
         margin-top: -2px;
@@ -247,11 +253,11 @@ export default {
 
     .doors{
         padding: .3em;
-        max-width: 12vw;
         display: flex;
         /* justify-content: center; */
         flex-wrap: wrap;
         margin-top: 10px;
+        margin-bottom: 15px;
         background:#eee;
         border-radius: 5px;
     }
@@ -267,10 +273,11 @@ export default {
 
     .deurenselect{
         display: flex;
+        flex-direction: column;
         justify-content: space-between;
     }
-    .checkbox{
-        margin-left: 0.5em;
+    .form-check.checkbox{
+        margin-left: 1em !important;
     }
 
     #open:checked{
