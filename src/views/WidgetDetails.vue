@@ -1,7 +1,7 @@
 <template>
-    <div>
+    <div v-if="new_widget">
         <div class="head">
-        <h1>{{widget.name}}</h1>
+        <h1>{{new_widget.name}}</h1>
         <form action="">
             <input type="text" placeholder="Zoek op..." v-model="searchterm" @input="search">
             <button type="submit">
@@ -18,29 +18,54 @@
                 <form class="form">
                     <div class="form-group">
                         <label class="labels align" for="name">Name</label>
-                        <input type="text" class="form-control" id="name" v-bind:placeholder="widget.name">
+                        <input type="text" class="form-control" id="name" v-model="new_widget.name" v-bind:placeholder="new_widget.name">
                     </div>
                     <div class="input-group form-group mb-3 colorpicker">
                         <label for="colorpicker" class="labels">Color</label>
                         <div class="colorinput">
                             <span class="input-group-text" id="colorpicker"><colour-picker
-                                v-model="widget.color"
-                                :value="widget.color"
+                                v-model="new_widget.color"
+                                :value="new_widget.color"
                                 label="Pick Colour"
                                 picker="compact"
                                 :style="cssVars"
                                 v-on:accept="changeColour" />
                             </span>
-                            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="colorpicker" v-model="widget.color">
+                            <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="colorpicker" v-model="new_widget.color">
                         </div>
                     </div>
                 </form>
             </div>
-            <div class="icons detail">
-
-            </div>
             <div class="time detail">
-
+                <h5 class="card-header">
+                    Tijd instellen
+                </h5>
+                <form class="form">
+                    <div class="form-group">
+                        <label class="labels" for="hours">Uren</label>
+                        <input type="number" class="form-control" id="hours" v-model="hours" v-bind:placeholder="hours">
+                    </div>
+                    <div class="form-group">
+                        <label class="labels" for="minutes">Minuten</label>
+                        <input type="number" class="form-control" id="minutes" v-model="minutes" v-bind:placeholder="minutes">
+                    </div>
+                    <div class="form-group">
+                        <label class="labels" for="seconds">Seconden</label>
+                        <input type="number" class="form-control" id="seconden" v-model="seconds" v-bind:placeholder="minutes">
+                    </div>
+                </form>
+            </div>
+            <div class="icons detail">
+                <h5 class="card-header">
+                    Icoon selecteren
+                </h5>
+                <form class="form">
+                    <div class="iconbuttons">
+                        <button type="button" class="icon" @click="setIcon" value="open-door"><img src="@/assets/icons/open-door.png" alt=""></button>
+                        <button type="button" class="icon" @click="setIcon" value="elevator"><img src="@/assets/icons/elevator.png" alt=""></button> 
+                        <button type="button" class="icon" @click="setIcon" value="parking"><img src="@/assets/icons/parking.png" alt=""></button>
+                    </div>
+                </form>
             </div>
             <div class="doors detail">
                 <h5 class="card-header">
@@ -54,7 +79,7 @@
                             </div>
                             <div id="multiselect">
                                 <div>
-                                    <multiselect class="selecter" :select-label="''" :taggable="true" :limit="0" v-model="widget.doors" :options="doors" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Pick some" label="name" track-by="id" :preselect-first="false">
+                                    <multiselect class="selecter" :select-label="''" :taggable="true" :limit="0" v-model="new_widget.doors" :options="doors" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Pick some" label="name" track-by="id" :preselect-first="false">
                                     </multiselect>
                                 </div>
                             </div>
@@ -65,13 +90,14 @@
                             <label class="form-check-label" for="all">All</label>
                         </div>
 
-                        <div class="selection" v-if="widget">
-                            <pre class="door" v-for="door in widget.doors" v-bind:key="door.id" >{{ door.name  }}</pre>
+                        <div class="selection" v-if="new_widget && new_widget.doors.length > 0">
+                            <pre class="door" v-for="door in new_widget.doors" v-bind:key="door.id" >{{ door.name  }}</pre>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
+        <button @click="save" type="button" class="btn btn-primary">Opslaan</button>
     </div>
     
 </template>
@@ -82,10 +108,15 @@ import ColourPicker  from 'vue-colour-picker'
 export default {
     data(){
         return{
-            widget: {},
+            widget: undefined,
+            new_widget: undefined,
             searchterm: "",
             colour: "",
-            doors: [{id:1,name:'testdeur'},{id:2,name:'testlift'}]
+            doors: [{id:1,name:'testdeur'},{id:2,name:'testlift'}],
+            hours:0,
+            minutes:0,
+            seconds:0,
+            buttons: []
         }
     },
     components: {
@@ -95,7 +126,15 @@ export default {
         console.log("test")
         const result = await db.default.getWidget(this.$route.params.id)
         this.widget = result;
-        console.log(this.widget)
+        this.new_widget = result;
+        let duration = this.widget.duration
+        this.hours = Math.floor(duration / 3600)
+        duration -= (this.hours*3600)
+        this.minutes = Math.floor(duration/60)
+        duration -= this.minutes*60
+        this.seconds = duration
+        this.buttons = document.getElementsByClassName('icon')
+        console.log(this.new_widget)
     },
     methods:{
         search(){},
@@ -107,6 +146,21 @@ export default {
             else{
                 this.widget.doors = []
             }
+        },
+        setIcon(e){
+            this.buttons.forEach(element => {
+                element.classList.remove('active')
+            });
+            e.target.parentNode.classList.add('active')
+            this.new_widget.icon = e.target.parentNode.value
+        },
+        save(){
+            this.hours = parseInt(this.hours)
+            this.minutes = parseInt(this.minutes)
+            this.seconds = parseInt(this.seconds)
+            this.new_widget.duration = (this.hours*3600) + (this.minutes*60) + this.seconds
+            console.log(this.new_widget)
+            db.default.updateWidget(this.new_widget)
         }
     },
     computed: {
@@ -182,7 +236,7 @@ export default {
     }
     .colorpicker >>> .current-color{
         border-radius: 0.5em !important;
-        background-color: var(--background) !important;
+        background: var(--background) !important;
     }
     .colorpicker >>> .form-label{
         display: none;
@@ -232,5 +286,39 @@ export default {
 
     .colorpicker >>> #inputGroup-sizing-default > div{
         margin-top: 0.35em;
+    }
+
+    .icon{
+        border-radius: 0.5em;
+        border:none;
+        outline: none;
+    }
+
+    .icon:hover{
+        border: 2px solid #4e73df;
+    }
+
+    .active{
+        border-radius: 0.5em;
+        border: 2px solid #4e73df;
+    }
+
+    .icons{
+        display: flex;
+        flex-direction: column;
+    }
+
+    .icons > .form {
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .iconbuttons{
+        width: 75%;
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 2em;
     }
 </style>

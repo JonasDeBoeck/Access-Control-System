@@ -17,7 +17,12 @@ async function getWidget(id){
 }
 
 async function removeWidget(id){
-    const response = await axios.delete(`${databaseurl}/delete/${id}`).catch(err => console.log(err.response))
+    const response = await axios.delete(`${databaseurl}/delete/${id}`)
+    return response
+}
+
+async function updateWidget(widget){
+    const response = await axios.put(`${databaseurl}/update/${widget.id}`,widget)
     return response
 }
 
@@ -25,5 +30,6 @@ export default {
     insertWidget,
     getAllWidgets,
     removeWidget,
-    getWidget
+    getWidget,
+    updateWidget
 }
