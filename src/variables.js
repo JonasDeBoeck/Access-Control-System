@@ -112,7 +112,7 @@ async function unlockDoors(doorids,session){
 
     let data = {
         DoorCollection: {
-          total: 1,
+          total: doorids.length,
           rows: rows_array
         }
       }
@@ -134,7 +134,7 @@ async function lockDoors(door_ids, session) {
 
     let data = {
         "DoorCollection": {
-          "total": 1,
+          "total": door_ids.length,
           "rows": rows_array
         }
     }
