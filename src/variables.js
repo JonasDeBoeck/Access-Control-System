@@ -230,7 +230,9 @@ async function getAccessLevelForDoor(door_id, session){
             "bs-session-id": session
         }
     }
+    let access_level_array = []
     let access_level_id_array = []
+    let access_level_name_array = []
     let requestResult = await axios.get("http://localhost:8080/api/access_levels", headers)
     let rows = requestResult.data.AccessLevelCollection.rows
     for(let i = 0; i< rows.length; i++){
@@ -244,13 +246,19 @@ async function getAccessLevelForDoor(door_id, session){
                         let door = doors[j]
                         if(door.id == door_id){
                             access_level_id_array.push(access_level.id)
+                            access_level_name_array.push({
+                                id: access_level.id,
+                                name: access_level.name
+                            })
                         }
                     }
                 }
             }
         }
     }
-    return access_level_id_array
+    access_level_array.push(access_level_id_array)
+    access_level_array.push(access_level_name_array)
+    return access_level_array
 }
 
 async function findAccessGroupNamesForAccessLevel(access_level_id_array, session){
@@ -282,10 +290,15 @@ async function findAccessGroupNamesForAccessLevel(access_level_id_array, session
     return access_group_name_array
 }
 
-async function getAccesGroupNamesForDoor(door_id, session){
-    let access_level_id_array = await getAccessLevelForDoor(door_id, session)
+async function getAccesGroupNamesAndLevelsForDoor(door_id, session){
+    let access_level_array = await getAccessLevelForDoor(door_id, session)
+    let access_level_id_array = access_level_array[0]
+    let access_level_name_array = access_level_array[1]
+    let result_array = []
     let access_group_name_array = await findAccessGroupNamesForAccessLevel(access_level_id_array, session)
-    return access_group_name_array
+    result_array.push(access_group_name_array)
+    result_array.push(access_level_name_array)
+    return result_array
 }
 
 
@@ -319,5 +332,5 @@ export default {
     unlockDoors,
     lockDoors,
     updateDoorOpen_Duration,
-    getAccesGroupNamesForDoor
+    getAccesGroupNamesAndLevelsForDoor
 }

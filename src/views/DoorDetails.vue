@@ -57,6 +57,20 @@
             </tr>
          </tbody>
       </table>
+      <table class="table table-bordered">
+         <thead>
+            <tr>
+               <th scope="col">#</th>
+               <th scope="col">Access Level Name</th>
+            </tr>
+         </thead>
+         <tbody>
+            <tr v-for="access_level in door.access_levels" v-bind:key="access_level.id">
+               <td>{{number_access_group + 1}}</td>
+               <td>{{access_level.name}}</td>
+            </tr>
+         </tbody>
+      </table>
    </div>
    <div class="options card">
       <h5 class="card-header">Informatie</h5>
@@ -86,6 +100,7 @@
       </div>
    </div>
    </div>
+   <p>{{door.access_levels}}</p>
    </div>
 </template>
 
@@ -97,7 +112,8 @@ export default {
    data() {
       return {
          door: {id: 1, name: 'K2.09', opened: false, open_duration_min: 0, open_duration_sec: 0, group: "groep",
-         access_groups: []
+         access_groups: [],
+         access_levels: []
          },
          details: {
             Door: {
@@ -126,7 +142,9 @@ export default {
       this.details = detail
       this.door.open_duration_min = Math.floor(this.details.Door.open_duration/60)
       this.door.open_duration_sec =  this.details.Door.open_duration % 60
-      this.door.access_groups = await f.default.getAccesGroupNamesForDoor(this.door.id, this.$session.get("bs-session-id"))
+      let result_array = await f.default.getAccesGroupNamesAndLevelsForDoor(this.door.id, this.$session.get("bs-session-id"))
+      this.door.access_groups = result_array[0]
+      this.door.access_levels = result_array[1]
       this.pollStatus(this.door_id)
       // this.groups.rows = await f.default.getAllAccesGroups(this.$session.get("bs-session-id"))
       // const test = this.groups.rows
