@@ -101,7 +101,6 @@
       </div>
    </div>
    </div>
-   <p>{{door.access_levels}}</p>
    </div>
 </template>
 
