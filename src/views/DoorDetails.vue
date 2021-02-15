@@ -2,7 +2,7 @@
    <div class="detail">
    <div class="head">
       <h1>Deur details</h1>
-    </div>
+   </div>
    <div class="deurdetail">
       <div class="status" v-bind:class="{'is-opened':door.opened, 'is-locked':!door.opened}">
       <div class="statuscontainer">
@@ -78,7 +78,7 @@
          <form>
             <div class="form-group">
                <label for="">Naam</label>
-               <input type="text" readonly class="form-control" v-bind:placeholder= "this.details.Door.name">
+               <input type="text" class="form-control" v-model= "door.name">
             </div>
             <div class="form-group">
                <label for="">Groep</label>
@@ -86,16 +86,17 @@
             </div>
             <div class="form-group">
                <label for="">Omschrijving</label>
-               <textarea class="form-control" readonly v-bind:placeholder= "this.details.Door.description" rows="3"></textarea>
+               <textarea class="form-control" v-model= "door.description" rows="3"></textarea>
             </div>
             <div class="form-group">
                <label for="">Entry Device</label>
                <input type="text" class="form-control" readonly v-bind:placeholder= "details.Door.entry_device_id.name">
             </div>
             <div class="form-group">
-               <label for="">Entry Device</label>
+               <label for="">Relay Output</label>
                <input type="text" class="form-control" readonly v-bind:placeholder= "details.Door.relay_output_id.device_id.name">
             </div>
+            <input type="submit" v-on:click="updateNameDesc" value="Opslaan" id="saveNameDesc" class="btn btn-primary"/>
          </form>
       </div>
    </div>
@@ -111,9 +112,10 @@ export default {
    name: "DoorDetails",
    data() {
       return {
-         door: {id: 1, name: 'K2.09', opened: false, open_duration_min: 0, open_duration_sec: 0, group: "groep",
+         door: {id: 1, name: '', opened: false, open_duration_min: 0, open_duration_sec: 0, group: "groep",
          access_groups: [],
-         access_levels: []
+         access_levels: [],
+         description: ''
          },
          details: {
             Door: {
@@ -140,6 +142,8 @@ export default {
       this.door.id = this.$route.params.id
       let detail = await f.default.getDoorDetail(this.door.id, this.$session.get("bs-session-id"))
       this.details = detail
+      this.door.name = detail.Door.name
+      this.door.description = detail.Door.description
       this.door.open_duration_min = Math.floor(this.details.Door.open_duration/60)
       this.door.open_duration_sec =  this.details.Door.open_duration % 60
       let result_array = await f.default.getAccesGroupNamesAndLevelsForDoor(this.door.id, this.$session.get("bs-session-id"))
@@ -177,6 +181,12 @@ export default {
          let totalSeconds = (minutes * 60)
          totalSeconds += seconds*1
          f.default.updateDoorOpen_Duration(this.door.id, totalSeconds, this.$session.get("bs-session-id"))
+      },
+
+      async updateNameDesc(){
+         let name = this.door.name
+         let description = this.door.description
+         f.default.updateDoorNameAndDesc(this.door.id, name, description, this.$session.get("bs-session-id"))
       }
    }
 }

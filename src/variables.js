@@ -301,6 +301,21 @@ async function getAccesGroupNamesAndLevelsForDoor(door_id, session){
     return result_array
 }
 
+async function updateDoorNameAndDesc(door_id, name, description, session){
+    let headers = {
+        headers: {
+            "bs-session-id": session
+        }
+    }
+    let data = {
+        "Door": {
+            "name": name,
+            "description": description
+        }
+    }
+    await axios.put("http://localhost:8080/api/doors/"+door_id, data, headers)
+}
+
 
 // async function getAllAccesGroups(session){
 //     let headers = {
@@ -332,5 +347,6 @@ export default {
     unlockDoors,
     lockDoors,
     updateDoorOpen_Duration,
-    getAccesGroupNamesAndLevelsForDoor
+    getAccesGroupNamesAndLevelsForDoor,
+    updateDoorNameAndDesc
 }
