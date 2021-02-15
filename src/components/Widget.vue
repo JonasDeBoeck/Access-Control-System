@@ -55,7 +55,10 @@ export default {
             this.$emit("del-widget")
        },
        executeWidget(){
+        //    let event = {
 
+        //    }
+        //    db.default.insertEvent()
        },
        updateSize(){
         let widgets = document.getElementsByClassName("widget");

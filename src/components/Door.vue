@@ -18,13 +18,13 @@
             <router-link :to="{name: 'DoorDetails', params: {id: this.door.id}}" tag="div"><i class="fas fa-edit" id="edit"></i></router-link>
         </div>
         <vue-modal-2 name="time" @on-close="close" 
-        noHeader
-        wrapperBg="rgba(0, 0, 0, 0.10)"
-        :footerOptions="{btn1: 'Annuleer', 
-                        btn2: 'Bevestig', 
-                        btn1OnClick: () => { close(); },
-                        btn2OnClick: () => { setTime(); }
-                        }">
+            noHeader
+            wrapperBg="rgba(0, 0, 0, 0.10)"
+            :footerOptions="{btn1: 'Annuleer', 
+                            btn2: 'Bevestig', 
+                            btn1OnClick: () => { close(); },
+                            btn2OnClick: () => { setTime(); }
+                            }">
         <div class="wrapper">
             <div class="time_form">
                 <p class="form-group">
@@ -49,7 +49,7 @@
 <script>
 
 import * as api from '../variables'
-
+import * as db from '../database'
 export default {
     name: "Door",
     props: ["door"],
@@ -100,6 +100,13 @@ export default {
             let seconds = (this.hours * 3600) + (this.minutes * 60) + this.seconds
             console.log(seconds)
             this.$vm2.close('time')
+            let event = {
+                doors: [this.door],
+                state: true,
+                duration: seconds,
+            }
+            console.log(event)
+            db.default.insertEvent(event)
         },
         resetInputs() {
             this.hours = 0;
