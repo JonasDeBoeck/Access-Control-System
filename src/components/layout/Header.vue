@@ -5,13 +5,21 @@
             <h1>ACS 🔒</h1>
             </div>
             <hr class="sidebar-divider">
-            <div class="nav">
-                <nav>
+            <div class="nav" :key="loggedIn">
+                <nav v-if="this.$session.has('bs-session-id')">
                     <router-link to="/" tag="li" class="links"><span id="portal"><i class="fas fa-home"></i>Portaal<i class="fas fa-angle-left arrow"></i></span></router-link>
                     <hr class="sidebar-divider">
                     <router-link to="/doors" tag="li" class="links"><span><i class="fas fa-door-open"></i>deuren<i class="fas fa-angle-left arrow"></i></span></router-link>
                     <hr class="sidebar-divider">
                     <router-link to="/widgets" tag="li" class="links"><span><i class="fas fa-cogs"></i>Widgets<i class="fas fa-angle-left arrow" ></i></span></router-link>
+                    <hr class="sidebar-divider">
+                </nav>
+                <nav v-if="!this.$session.has('bs-session-id')">
+                    <router-link to="/" tag="li" class="links"><span id="portal"><i class="fas fa-home"></i>Portaal<i class="fas fa-angle-left arrow"></i></span></router-link>
+                    <hr class="sidebar-divider">
+                    <router-link @click.native="notAuthenticated" to="" tag="li" class="links" style="color: lightgray"><span><i class="fas fa-door-open"></i>deuren<i class="fas fa-angle-left arrow"></i></span></router-link>
+                    <hr class="sidebar-divider">
+                    <router-link @click.native="notAuthenticated" to="" tag="li" class="links" style="color: lightgray"><span><i class="fas fa-cogs"></i>Widgets<i class="fas fa-angle-left arrow" ></i></span></router-link>
                     <hr class="sidebar-divider">
                 </nav>
 
@@ -28,15 +36,28 @@ export default {
     name: "Header",
     data() {
         return {
-            loggedIn: this.$session.has("bs-session-id")
+            loggedIn: this.$session.has("bs-session-id"),
         };
     },
     methods: {
         logout(){
             this.$session.remove("bs-session-id");
-            this.loggedIn = false;
             this.$router.push({path: '/'});
-        }
+            this.reloadNavigation()
+        },
+        reloadNavigation() {
+            this.loggedIn = false;
+        },
+        notAuthenticated() {
+            this.$toasted.show(`Gelieve u eerst te authenticeren.`, {
+                theme: "toasted-primary",
+                position: "top-right",
+                duration: 1000,
+                icon: 'times-circle',
+                iconPack: 'fontawesome',
+                type: 'error'
+            })
+        },
     },
     created(){
         console.log(this.$session.getAll())
@@ -45,7 +66,6 @@ export default {
 </script>
 
 <style scoped>
-
 .header {
     background: #4e73df;
     background: linear-gradient(135deg, rgba(78,115,223,1) 50%, rgba(58,96,208,1) 100%);
