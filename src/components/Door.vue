@@ -64,7 +64,6 @@ export default {
     methods: {
         async lock() {
             this.door.unlocked = false
-            // let key = await api.default.login("admin", "t");
             api.default.lockDoor(this.door.id, this.$session.get("bs-session-id"));
             this.$toasted.show(`${this.door.name} succesvol gesloten!`, {
                 theme: "toasted-primary",
@@ -78,7 +77,6 @@ export default {
 
         async unlock() {
             this.door.unlocked = true
-            // let key = await api.default.login("admin", "t");
             api.default.unlockDoor(this.door.id, this.$session.get("bs-session-id"));
             this.$toasted.show(`${this.door.name} succesvol geopend!`, {
                 theme: "toasted-primary",
@@ -89,6 +87,7 @@ export default {
                 type: 'success'
             })
         },
+        // Open close modals
         open() {
             this.$vm2.open('time')
         },
@@ -96,6 +95,7 @@ export default {
             this.resetInputs()
             this.$vm2.close('time')
         },
+        // Open door for certain time
         setTime() {
             let seconds = (this.hours * 3600) + (this.minutes * 60) + this.seconds
             console.log(seconds)

@@ -21,27 +21,28 @@
             </div>
          </div>
       </div>
-      <div class="card opentimegroup">
-         <h5 class="card-header">
-            Tijd instellen
-         </h5>
-         <form>
-            <div class="opentimeform">
-               <div class="form-group">
-                  <label>Minuten</label>
-                  <input type="number" min=0 class="form-control" v-model= "door.open_duration_min">
+      <div class="dichtWrapper"  v-bind:class="{'is-nietdicht':door.nietdicht}">
+         <h2>
+            Dicht?
+         </h2>
+         <div class="lock">
+            <div v-on:click="lock" v-if="door.nietdicht" class="open">
+               <img class="icon" :src="require(`../assets/icons/open-door-oh-no.png`)" alt="icoon">
+               <div>
+                  <small>Deur is niet dicht</small>
                </div>
-               <div class="form-group">
-                  <label>Seconden</label>
-                  <input type="number" v-model="door.open_duration_sec" min=0 max=60 class="form-control">
-               </div>
-               <input type="submit" v-on:click="updateOpen_Duration" value="Opslaan" id="saveinformation" class="btn btn-primary"/>
             </div>
-         </form>
+            <div v-on:click="lock" v-if="!door.nietdicht" class="dicht">
+               <img class="icon" :src="require(`../assets/icons/closed-door.png`)" alt="icoon">
+               <div>
+                  <small>Deur is dicht</small>
+               </div>
+            </div>
+         </div>
       </div>
    <div class="lastusers card">
       <h5 class="card-header">
-         Access Groups
+         Access Groups - Levels
       </h5>
       <table class="table table-bordered">
          <thead>
@@ -113,7 +114,8 @@ export default {
          door: {id: 1, name: '', opened: false, open_duration_min: 0, open_duration_sec: 0, group: "groep",
          access_groups: [],
          access_levels: [],
-         description: ''
+         description: '',
+         nietdicht: true
          },
          details: {
             Door: {
@@ -141,6 +143,7 @@ export default {
       let detail = await f.default.getDoorDetail(this.door.id, this.$session.get("bs-session-id"))
       this.details = detail
       this.door.name = detail.Door.name
+      this.door.nietdicht = detail.Door.opened
       this.door.description = detail.Door.description
       this.door.open_duration_min = Math.floor(this.details.Door.open_duration/60)
       this.door.open_duration_sec =  this.details.Door.open_duration % 60
@@ -167,15 +170,9 @@ export default {
          let detail = await f.default.getDoorDetail(this.door.id, this.$session.get("bs-session-id"))
          let detailStatus = await f.default.getDoorDetailStatus(this.door.id, this.$session.get("bs-session-id"))
          this.door.opened = detailStatus
+         this.door.nietdicht = detail.Door.opened
          this.details = detail
          setTimeout(this.pollStatus,3000)
-      },
-      async updateOpen_Duration(){
-         let seconds = this.door.open_duration_sec
-         let minutes = this.door.open_duration_min
-         let totalSeconds = (minutes * 60)
-         totalSeconds += seconds*1
-         f.default.updateDoorOpen_Duration(this.door.id, totalSeconds, this.$session.get("bs-session-id"))
       },
       async updateNameDesc(){
          let name = this.door.name
@@ -229,12 +226,6 @@ h1 {
    box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
    grid-area: lastusers;
 }
-.opentimegroup{
-   background-color: #fff;
-   border-radius: .35rem;
-   box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
-   grid-area: opentimegroup;
-}
 .status{
    background-color: #fff;
    width: 100%;
@@ -246,6 +237,20 @@ h1 {
    flex-direction: column;
    box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
    grid-area: status;
+   display: flex;
+   justify-content: space-evenly;
+}
+
+.dichtWrapper{
+   background-color: #fff;
+   width: 100%;
+   height: 100%;
+   border-radius: .35rem;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   flex-direction: column;
+   box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
    display: flex;
    justify-content: space-evenly;
 }
@@ -322,5 +327,15 @@ textarea {
 }
 .is-locked {
    border-left: 0.25rem solid red;
+}
+.is-nietdicht {
+   border-left: 0.25rem solid orange;
+}
+.open img {
+   padding-left:20%;
+}
+
+.dicht img {
+   padding-left: 15%;
 }
 </style>

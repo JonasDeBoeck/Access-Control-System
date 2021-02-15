@@ -92,13 +92,13 @@ export default {
     },
     data(){
     return {
-      doors: [],
+        doors: [],
         selectedDoors: [],
         hours: 0,
         minutes: 0,
         seconds: 0,
         widgetname: "",
-        colour: '#000000',
+        colour: "#000000",
         icon: ""
         }
     },

@@ -57,6 +57,7 @@ export default {
        executeWidget(){
         //    let event = {
 
+<<<<<<< HEAD
         //    }
         //    db.default.insertEvent()
        },
@@ -70,12 +71,11 @@ export default {
                 element.style.height = `${widgetHeight}px`;
             });
         }
+=======
+>>>>>>> e9be270bf90e70ff46f7d10cb03ef63bfd8ef5c9
        }
     },
     created(){
-        this.updateSize()
-        window.onresize = this.updateSize
-        window.onload = this.updateSize
         // calculate hour, minute, seconds
         let duration = this.widget.duration
         console.log(duration)
