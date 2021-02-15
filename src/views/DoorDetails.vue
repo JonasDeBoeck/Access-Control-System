@@ -41,36 +41,19 @@
       </div>
    <div class="lastusers card">
       <h5 class="card-header">
-         Last Users
+         Access Groups
       </h5>
       <table class="table table-bordered">
          <thead>
             <tr>
                <th scope="col">#</th>
-               <th scope="col">Gebruiker</th>
-               <th scope="col">Tijd</th>
+               <th scope="col">Access Group Name</th>
             </tr>
          </thead>
          <tbody>
-            <tr>
-               <th scope="row">1</th>
-               <td>Mark</td>
-               <td>12:30</td>
-            </tr>
-            <tr>
-               <th scope="row">2</th>
-               <td>Johan</td>
-               <td>11:45</td>
-            </tr>
-            <tr>
-               <th scope="row">3</th>
-               <td>Francis</td>
-               <td>11:30</td>
-            </tr>
-            <tr>
-               <th scope="row">4</th>
-               <td>Jef</td>
-               <td>11:15</td>
+            <tr v-for="access_group in door.access_groups" v-bind:key="access_group.id">
+               <td>{{number_access_group + 1}}</td>
+               <td>{{access_group.name}}</td>
             </tr>
          </tbody>
       </table>
@@ -103,6 +86,8 @@
       </div>
    </div>
    </div>
+   <p>{{door.access_groups}}</p>
+   <p>{{door.id}}</p>
    </div>
 </template>
 
@@ -113,7 +98,9 @@ export default {
    name: "DoorDetails",
    data() {
       return {
-         door: {id: 1, name: 'K2.09', opened: false, open_duration_min: 0, open_duration_sec: 0, group: "groep"},
+         door: {id: 1, name: 'K2.09', opened: false, open_duration_min: 0, open_duration_sec: 0, group: "groep",
+         access_groups: []
+         },
          details: {
             Door: {
                description: "",
@@ -128,7 +115,8 @@ export default {
                   name: ""
                }
             }
-         }
+         },
+         number_access_group : 0
          // groups: {
          //    rows: []
          // }
@@ -140,6 +128,7 @@ export default {
       this.details = detail
       this.door.open_duration_min = Math.floor(this.details.Door.open_duration/60)
       this.door.open_duration_sec =  this.details.Door.open_duration % 60
+      this.door.access_groups = await f.default.getAccesGroupNamesForDoor(this.door.id, this.$session.get("bs-session-id"))
       this.pollStatus(this.door_id)
       // this.groups.rows = await f.default.getAllAccesGroups(this.$session.get("bs-session-id"))
       // const test = this.groups.rows
