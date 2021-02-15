@@ -86,8 +86,6 @@
       </div>
    </div>
    </div>
-   <p>{{door.access_groups}}</p>
-   <p>{{door.id}}</p>
    </div>
 </template>
 
