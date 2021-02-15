@@ -207,7 +207,6 @@ async function getDoorDetailStatus(door_id, session){
     else{
         unlocked = true
     }
-    console.log(unlocked)
     return unlocked
 }
 
