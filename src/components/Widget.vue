@@ -56,23 +56,9 @@ export default {
        },
        executeWidget(){
 
-       },
-       updateSize(){
-        let widgets = document.getElementsByClassName("widget");
-        if (widgets.length > 0){
-            // - 6 vanwege de border, de border is 3px
-            let widgetHeight = widgets[0].offsetHeight - 6;
-            let iconContainers = document.getElementsByClassName("iconcontainer")
-            iconContainers.forEach(element => {
-                element.style.height = `${widgetHeight}px`;
-            });
-        }
        }
     },
     created(){
-        this.updateSize()
-        window.onresize = this.updateSize
-        window.onload = this.updateSize
         // calculate hour, minute, seconds
         let duration = this.widget.duration
         console.log(duration)

@@ -3,8 +3,8 @@
     <div class="head">
       <h1>Widgets</h1>
       <form action="">
-        <input type="text" placeholder="Zoek op..." v-model="searchterm" @input="search">
-        <button type="submit">
+        <input type="text" placeholder="Zoek op..." v-model="searchTerm" @input="search">
+        <button type="button">
           <i class="fas fa-search fa-sm">
           </i>
         </button>
@@ -12,7 +12,7 @@
     </div>
     <div class="content">
       <div v-if="this.widgets.length > 0" class="widgets">
-        <Widget class="widget" v-for="widget in widgets" v-bind:key="widget.name" v-bind:widget="widget" v-on:del-widget="updateWidgets"/>
+          <Widget class="widget" v-for="widget in filteredWidgets" v-bind:key="widget.name" v-bind:widget="widget" v-on:del-widget="updateWidgets"/>
       </div>
       <p class="error" v-if="this.widgets.length === 0">No widgets available</p>
       <AddWidget class="form" v-on:add-widget="updateWidgets"/>
@@ -32,14 +32,17 @@ export default {
   },
   async created() {
     let response = await db.default.getAllWidgets()
+    console.log(response)
     this.widgets = response
+    this.filteredWidgets = this.widgets
     console.log(this.widgets)
   },
   data(){
     return {
       doors: [],
       selectedDoor: undefined,
-      searchterm: "",
+      searchTerm: '',
+      filteredWidgets: [],
       widgets: []
       }
     },
@@ -48,9 +51,16 @@ export default {
         console.log("updating view")
         let response = await db.default.getAllWidgets()
         this.widgets = response
+        this.filteredWidgets = this.widgets
         console.log(this.widgets)
       },
-      search(){}
+      search() {
+        console.log(this.searchTerm)
+        this.filteredWidgets = this.widgets.filter(this.containsString)
+      },
+      containsString(value) {
+        return value.name.match(this.searchTerm)
+      }
     }
 }
 </script>
