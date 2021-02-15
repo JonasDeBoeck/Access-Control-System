@@ -104,6 +104,7 @@
 
 <script>
 import * as db from '../database'
+import * as api from '../variables'
 import ColourPicker  from 'vue-colour-picker'
 export default {
     data(){
@@ -112,7 +113,7 @@ export default {
             new_widget: undefined,
             searchterm: "",
             colour: "",
-            doors: [{id:1,name:'testdeur'},{id:2,name:'testlift'}],
+            doors: [],
             hours:0,
             minutes:0,
             seconds:0,
@@ -127,6 +128,8 @@ export default {
         const result = await db.default.getWidget(this.$route.params.id)
         this.widget = result;
         this.new_widget = result;
+        const doors = await api.default.getDoorsForOverview(this.$session.get('bs-session-id'))
+        this.doors = doors;
         let duration = this.widget.duration
         this.hours = Math.floor(duration / 3600)
         duration -= (this.hours*3600)
@@ -134,7 +137,6 @@ export default {
         duration -= this.minutes*60
         this.seconds = duration
         this.buttons = document.getElementsByClassName('icon')
-        console.log(this.new_widget)
     },
     methods:{
         search(){},
@@ -154,13 +156,15 @@ export default {
             e.target.parentNode.classList.add('active')
             this.new_widget.icon = e.target.parentNode.value
         },
-        save(){
+        async save(){
             this.hours = parseInt(this.hours)
             this.minutes = parseInt(this.minutes)
             this.seconds = parseInt(this.seconds)
             this.new_widget.duration = (this.hours*3600) + (this.minutes*60) + this.seconds
             console.log(this.new_widget)
-            db.default.updateWidget(this.new_widget)
+            const result = await db.default.updateWidget(this.new_widget)
+            console.log(result)
+            this.$router.push({path: '/widgets'})
         }
     },
     computed: {
