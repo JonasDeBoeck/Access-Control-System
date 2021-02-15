@@ -15,7 +15,7 @@
             <div v-on:click="open" class="clock">
                 <i class="fas fa-clock"></i>
             </div>
-            <router-link :to="{name: 'DoorDetails', params: {id: this.door.id}}" tag="div"><i class="fas fa-edit"></i></router-link>
+            <router-link :to="{name: 'DoorDetails', params: {id: this.door.id}}" tag="div"><i class="fas fa-edit" id="edit"></i></router-link>
         </div>
         <vue-modal-2 name="time" @on-close="close" 
         noHeader
@@ -171,6 +171,18 @@ label {
     flex-direction: column;
     justify-content: center;
     cursor: pointer;
+}
+
+.lock i:hover {
+    transform: scale(1.15);
+}
+
+.clock i:hover {
+    transform: scale(1.15);
+}
+
+#edit:hover {
+    transform: scale(1.15);
 }
 
 .clock {
