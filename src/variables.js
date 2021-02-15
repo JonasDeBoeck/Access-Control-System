@@ -207,6 +207,7 @@ async function getDoorDetailStatus(door_id, session){
     else{
         unlocked = true
     }
+    console.log(unlocked)
     return unlocked
 }
 
@@ -221,7 +222,7 @@ async function updateDoorOpen_Duration(door_id, newDuration, session){
             "open_duration": newDuration
         }
     }
-    await axios.put("http://localhost:8080/api/doors/"+door_id, data, headers)
+    await axios.put(`http://${hostname}/api/doors/`+door_id, data, headers)
 }
 
 async function getAccessLevelForDoor(door_id, session){
@@ -233,7 +234,7 @@ async function getAccessLevelForDoor(door_id, session){
     let access_level_array = []
     let access_level_id_array = []
     let access_level_name_array = []
-    let requestResult = await axios.get("http://localhost:8080/api/access_levels", headers)
+    let requestResult = await axios.get(`http://${hostname}/api/access_levels`, headers)
     let rows = requestResult.data.AccessLevelCollection.rows
     for(let i = 0; i< rows.length; i++){
         let access_level = rows[i]
@@ -268,7 +269,7 @@ async function findAccessGroupNamesForAccessLevel(access_level_id_array, session
         }
     }
     let access_group_name_array = []
-    let requestResult = await axios.get("http://localhost:8080/api/access_groups", headers)
+    let requestResult = await axios.get(`http://${hostname}/api/access_groups`, headers)
     let access_groups = requestResult.data.AccessGroupCollection.rows
     for(let i=0; i<access_groups.length; i++){
         let access_group = access_groups[i]
@@ -313,7 +314,7 @@ async function updateDoorNameAndDesc(door_id, name, description, session){
             "description": description
         }
     }
-    await axios.put("http://localhost:8080/api/doors/"+door_id, data, headers)
+    await axios.put(`http://${hostname}/api/doors/`+door_id, data, headers)
 }
 
 
