@@ -16,7 +16,8 @@
         </form>
       </div>
     </div>
-    <Doors v-bind:doors="visibleDoors"/>
+    <div class="loader" v-if="visibleDoors.length === 0"><pacman-loader :color="color"></pacman-loader></div>
+    <Doors v-if="visibleDoors.length > 0" v-bind:doors="visibleDoors"/>
     <Pagination v-bind:doors="filteredDoors" v-bind:currentPage="currentPage" v-bind:pageSize="pageSize" v-on:page:update="updatePage" class="pages" v-if="this.searchterm.length > 0"/>
     <Pagination v-bind:doors="doors" v-bind:currentPage="currentPage" v-bind:pageSize="pageSize" v-on:page:update="updatePage" class="pages" v-if="this.searchterm.length === 0"/>
   </div>
@@ -50,7 +51,10 @@ export default {
       // Alle doorgroups
       doorGroups: [],
       // De gekozen filter
-      chosenFilter: 'Kies een deurgroep'
+      chosenFilter: 'Kies een deurgroep',
+
+      color: ' rgba(78,115,223,1)',
+
     }
   },
   methods: {
@@ -186,5 +190,12 @@ h1 {
 
 .filters div:nth-of-type(1) {
   margin-right: 1em;
+}
+
+.loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 90%;
 }
 </style>
