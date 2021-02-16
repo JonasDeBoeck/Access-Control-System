@@ -57,22 +57,6 @@ export default {
        executeWidget(){
         //    let event = {
 
-<<<<<<< HEAD
-        //    }
-        //    db.default.insertEvent()
-       },
-       updateSize(){
-        let widgets = document.getElementsByClassName("widget");
-        if (widgets.length > 0){
-            // - 6 vanwege de border, de border is 3px
-            let widgetHeight = widgets[0].offsetHeight - 6;
-            let iconContainers = document.getElementsByClassName("iconcontainer")
-            iconContainers.forEach(element => {
-                element.style.height = `${widgetHeight}px`;
-            });
-        }
-=======
->>>>>>> e9be270bf90e70ff46f7d10cb03ef63bfd8ef5c9
        }
     },
     created(){
