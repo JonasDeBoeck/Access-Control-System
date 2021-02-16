@@ -1,5 +1,8 @@
 <template>
     <div class="door" v-bind:class="{'is-opened': door.unlocked, 'is-locked':!door.unlocked}">
+        <div class="alert-open-door" v-if="door.nietdicht">
+            <img class="icon" :src="require(`../assets/icons/open-door-oh-no.png`)" alt="icoon">
+        </div>
         <div>
             <p class="name">{{door.name}}</p>
         </div>
@@ -58,7 +61,8 @@ export default {
             hours: 0,
             minutes: 0,
             seconds: 0,
-            unlocked: this.door.unlocked === "true"
+            unlocked: this.door.unlocked === "true",
+            nietdicht: this.door.nietdicht === "true"
         }
     },
     methods: {
@@ -120,7 +124,7 @@ export default {
 <style scoped>
 .door {
     background-color: #fff;
-    width: 100%;
+    width: 80%;
     height: 100%;
     border-radius: .35rem;
     display: flex;
@@ -128,13 +132,15 @@ export default {
     justify-content: center;
     flex-direction: column;
     box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
+    position: relative;
 }
 
 .icons {
     width: 100%;
     display: flex;
     justify-content: space-evenly;
-    
+    margin-top: 5%;
+    margin-bottom: 5%;
 }
 
 i {
@@ -204,5 +210,20 @@ small {
 .name {
     font-family: 'Oswald';
     text-transform: uppercase;
+}
+
+.alert-open-door {
+    position: absolute;
+    right: 10px;
+    top: 15px;
+}
+
+.alert-open-door img {
+    width: 66%;
+}
+
+.name {
+    margin: 15px;
+    font-size: 20px;
 }
 </style>

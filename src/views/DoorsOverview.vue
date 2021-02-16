@@ -2,15 +2,22 @@
   <div class="door-overview">
     <div class="head">
       <h1>Deuren</h1>
-      <form action="">
-        <input type="text" placeholder="Zoek op..." v-model="searchterm" @input="search">
-        <button type="button">
-          <i class="fas fa-search fa-sm">
-          </i>
-        </button>
-      </form>
+      <div class="filters">
+        <div>
+          <b-dropdown :text="chosenFilter" variant="primary">
+            <b-dropdown-item v-for="group in doorGroups" v-bind:key="group.id" @click="filterGroups(group)">{{group.name}}</b-dropdown-item>
+          </b-dropdown>
+        </div>
+        <form action="">
+          <input type="text" placeholder="Zoek op..." v-model="searchterm" @input="search">
+          <button type="button">
+            <i class="fas fa-search fa-sm"></i>
+          </button>
+        </form>
+      </div>
     </div>
-    <Doors v-bind:doors="visibleDoors"/>
+    <div class="loader" v-if="visibleDoors.length === 0"><pacman-loader :color="color"></pacman-loader></div>
+    <Doors v-if="visibleDoors.length > 0" v-bind:doors="visibleDoors"/>
     <Pagination v-bind:doors="filteredDoors" v-bind:currentPage="currentPage" v-bind:pageSize="pageSize" v-on:page:update="updatePage" class="pages" v-if="this.searchterm.length > 0"/>
     <Pagination v-bind:doors="doors" v-bind:currentPage="currentPage" v-bind:pageSize="pageSize" v-on:page:update="updatePage" class="pages" v-if="this.searchterm.length === 0"/>
   </div>
@@ -40,7 +47,14 @@ export default {
       // Deuren die effectief zichtbaar zijn
       visibleDoors: [],
       // Zoek term
-      searchterm: ''
+      searchterm: '',
+      // Alle doorgroups
+      doorGroups: [],
+      // De gekozen filter
+      chosenFilter: 'Kies een deurgroep',
+
+      color: ' rgba(78,115,223,1)',
+
     }
   },
   methods: {
@@ -71,21 +85,49 @@ export default {
     async pollStatusses(){
       // Poll deurstatussen
       let doors = await f.default.getDoorsForOverview(this.$session.get("bs-session-id"))
-      if (this.searchterm.length === 0) {
-        this.doors = doors;
-        this.visibleDoors = this.doors;
-      } else {
-        this.doors = doors;
-        this.visibleDoors = doors.filter(this.containsString)
+      this.doors = doors;
+      // Update de status van de deuren
+      this.visibleDoors.forEach(door => {
+        this.doors.forEach(d => {
+          if (door.id === d.id) {
+            door.unlocked = d.unlocked
+          }
+        })
+      })
+      // Als er in de poll nieuwe deuren steken, voeg deze toe
+      if (this.doors.length > this.visibleDoors.length) {
+        let newDoors = this.doors.slice(this.visibleDoors.length - 1, this.doors.length - 1)
+        newDoors.forEach(d => {
+          this.visibleDoors.push(d)
+        })
       }
       setTimeout(this.pollStatusses,3000)
+    },
+    filterGroups(group) {
+      // Filter de deuren op basis van de deurgroep
+      this.chosenFilter = group.name
+      if (group.doors === undefined) {
+        this.visibleDoors = []
+      } else {
+        let filtered = []
+        this.doors.forEach(door => {
+          group.doors.forEach(d => {
+            if(door.id == d.id) {
+              filtered.push(door)
+            }
+          })
+      })
+      this.visibleDoors = filtered
+      console.log(this.visibleDoors)
+      }
     }
   },
-  async created(){
+  async created() {
     // const key = await f.default.login("admin","t")
     const result = await f.default.getDoorsForOverview(this.$session.get("bs-session-id"))
     this.doors = result;
     this.filteredDoors = this.doors
+    this.doorGroups = await f.default.getDoorGroups(this.$session.get("bs-session-id"))
     this.updateVisibleDoors(this.doors)
     this.pollStatusses()
   }
@@ -139,5 +181,21 @@ h1 {
 }
 .pages {
   margin-top: 0.5em;
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+}
+
+.filters div:nth-of-type(1) {
+  margin-right: 1em;
+}
+
+.loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 90%;
 }
 </style>

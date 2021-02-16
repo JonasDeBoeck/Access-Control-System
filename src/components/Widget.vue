@@ -58,6 +58,7 @@ export default {
             this.$emit("del-widget")
        },
        executeWidget(){
+<<<<<<< HEAD
            let event = {
                doors: this.widget.doors,
                state: true,
@@ -69,6 +70,10 @@ export default {
        },
        cancelEvent(){
            db.default.cancelEvent(this.widget.event_id)
+=======
+        //    let event = {
+
+>>>>>>> c5bcd659bfec54d57c4e4f6afc0b0a36d0fd4820
        }
     },
     created(){

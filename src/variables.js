@@ -63,7 +63,8 @@ async function getDoorsForOverview(session){
     const statusResult = []
     rowsDoorsStatus.forEach(row => statusResult.push({
         id : parseInt(row.door_id.id),
-        unlocked : row.unlocked === "true"
+        unlocked : row.unlocked === "true",
+        nietdicht: row.opened === "true"
     }))
     for(let i=0; i < result.length; i++){
         let door = result[i]
@@ -316,6 +317,23 @@ async function updateDoorNameAndDesc(door_id, name, description, session){
     await axios.put(`http://${hostname}/api/doors/`+door_id, data, headers)
 }
 
+async function getDoorGroups(session) {
+    let headers = {
+        headers: {
+            "bs-session-id": session
+        }
+    }
+
+    let response = await axios.get(`http://${hostname}/api/door_groups`, headers)
+    let data = response.data['DoorGroupCollection']['rows']
+    let result = []
+    data.forEach(el => {
+        result.push({"id": el.id, "name": el.name, "description": el.description, "doors": el.doors});
+    })
+    result[0].doors = await getDoorsForOverview(session)
+    console.log(result)
+    return result
+}   
 
 // async function getAllAccesGroups(session){
 //     let headers = {
@@ -348,5 +366,6 @@ export default {
     lockDoors,
     updateDoorOpen_Duration,
     getAccesGroupNamesAndLevelsForDoor,
-    updateDoorNameAndDesc
+    updateDoorNameAndDesc,
+    getDoorGroups
 }
