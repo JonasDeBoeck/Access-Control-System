@@ -27,11 +27,11 @@ async function updateWidget(widget){
 }
 
 function insertEvent(event){
-    axios.post(`${databaseurl}/api/create/event`, event)
+    axios.post(`${databaseurl}/biostar/create/event`, event)
 }
 
 async function getEvents(){
-    const response = await axios.get(`${databaseurl}/api/events/`)
+    const response = await axios.get(`${databaseurl}/biostar/events/`)
     return response.data
 }
 
@@ -58,7 +58,7 @@ async function getAllWidgetsForOverview(){
     for (let widget of widgets){
         widget.active = false
         for (let event of events){
-            if (widget.id === event.widget.id){
+            if (event.widget !== undefined && widget.id === event.widget.id){
                 widget.active = true;
                 widget.event_id = event.id
             }

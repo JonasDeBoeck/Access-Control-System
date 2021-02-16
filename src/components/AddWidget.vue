@@ -160,6 +160,7 @@ export default {
         /* max-width: 30vw !important; */
         align-self: flex-end;
         margin: 2em;
+        margin-bottom: 100em;
         background: #fff;
         box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
     }

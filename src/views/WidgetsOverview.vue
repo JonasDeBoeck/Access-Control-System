@@ -80,12 +80,13 @@ export default {
     background: #F8F9FC;
     display: grid;
     grid-template-rows: 2fr 2fr 2fr;
-    grid-template-columns: 1fr 1fr;
-    row-gap: 20%;
-    column-gap: 2%;
+    grid-template-columns: 1fr 1fr 1fr;
+    row-gap: 5%;
+    column-gap: 50%;
     /* margin-left: 2.5em; */
     margin-right: 2.5em;
     margin-top: 2.5em;
+    margin-left: 5em;
     height: 80%;
   }
 
@@ -140,7 +141,7 @@ h1 {
   flex-grow: 1; 
 }
 
-  @media only screen and (max-width: 1600px) {
+  @media only screen and (max-width: 1100px) {
     .content{
       flex-direction: column;
     }
