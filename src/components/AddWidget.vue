@@ -129,6 +129,7 @@ export default {
         },
         setIcon(e){
             let value = e.target.parentNode.value
+            console.log(value)
             this.icon = value;
         },
         selectall(e){
