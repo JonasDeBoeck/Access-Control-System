@@ -27,7 +27,44 @@ async function updateWidget(widget){
 }
 
 function insertEvent(event){
-    axios.post(`${databaseurl}/biostar/create/event`, event)
+    axios.post(`${databaseurl}/api/create/event`, event)
+}
+
+async function getEvents(){
+    const response = await axios.get(`${databaseurl}/api/events/`)
+    return response.data
+}
+
+function cancelEvent(event){
+    let body = {
+        event_id: event.id
+    }
+    axios.post(`${databaseurl}/api/event/cancel`, body)
+}
+
+async function getAllWidgetsForOverview(){
+    let widgets = await getAllWidgets()
+    let events = await getEvents()
+    if (widgets === undefined){
+        return []
+    }
+    if (events.length === 0){
+        for (let widget of widgets){
+            widget.active = false
+            widget.event_id = -1
+        }
+        return widgets
+    }
+    for (let widget of widgets){
+        widget.active = false
+        for (let event of events){
+            if (widget.id === event.widget.id){
+                widget.active = true;
+                widget.event_id = event.id
+            }
+        }
+    }
+    return widgets
 }
 
 export default {
@@ -36,5 +73,8 @@ export default {
     removeWidget,
     getWidget,
     updateWidget,
-    insertEvent
+    insertEvent,
+    cancelEvent,
+    getEvents,
+    getAllWidgetsForOverview
 }

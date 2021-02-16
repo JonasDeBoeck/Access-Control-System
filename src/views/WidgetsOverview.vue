@@ -31,11 +31,12 @@ export default {
     Widget
   },
   async created() {
-    let response = await db.default.getAllWidgets()
-    console.log(response)
-    this.widgets = response
-    this.filteredWidgets = this.widgets
-    console.log(this.widgets)
+    // let response = await db.default.getAllWidgets()
+    // console.log(response)
+    // this.widgets = response
+    // this.filteredWidgets = this.widgets
+    // console.log(this.widgets)
+    this.pollWidgets()
   },
   data(){
     return {
@@ -48,18 +49,21 @@ export default {
     },
     methods:{
       async updateWidgets(){  
-        console.log("updating view")
         let response = await db.default.getAllWidgets()
         this.widgets = response
         this.filteredWidgets = this.widgets
-        console.log(this.widgets)
       },
       search() {
-        console.log(this.searchTerm)
         this.filteredWidgets = this.widgets.filter(this.containsString)
       },
       containsString(value) {
         return value.name.match(this.searchTerm)
+      },
+      async pollWidgets(){
+        let widgetsOverview = await db.default.getAllWidgetsForOverview()
+        this.widgets = widgetsOverview
+        this.filteredWidgets = this.widgets
+        setTimeout(this.pollWidgets,5000);
       }
     }
 }

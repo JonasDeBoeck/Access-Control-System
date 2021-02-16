@@ -1,12 +1,15 @@
 <template>
-    <div @click="executeWidget" class="widget" :style="cssVars">
-        <div class="iconcontainer">
+    <div class="widget" :style="cssVars">
+        <div @click="executeWidget" class="iconcontainer">
             <img class="icon" :src="require(`../assets/icons/${this.widget.icon}.png`)" alt="icoon">    
         </div>
-        <div class="content">
+        <div @click="executeWidget" class="content">
             <h2>{{widget.name}}</h2>
             <div class="doors">
                 <p class="door" v-for="door in widget.doors" v-bind:key="door.id">{{door.name}}</p>
+            </div>
+            <div v-if="widget.active" class="active">
+                <i class="fas fa-bolt"></i>
             </div>
         </div>
         <div class="icons">
@@ -55,36 +58,26 @@ export default {
             this.$emit("del-widget")
        },
        executeWidget(){
-        //    let event = {
-
-<<<<<<< HEAD
-        //    }
-        //    db.default.insertEvent()
+           let event = {
+               doors: this.widget.doors,
+               state: true,
+               duration: this.widget.duration,
+               widget: this.widget
+           }
+           db.default.insertEvent(event)
+           this.widget.active = true
        },
-       updateSize(){
-        let widgets = document.getElementsByClassName("widget");
-        if (widgets.length > 0){
-            // - 6 vanwege de border, de border is 3px
-            let widgetHeight = widgets[0].offsetHeight - 6;
-            let iconContainers = document.getElementsByClassName("iconcontainer")
-            iconContainers.forEach(element => {
-                element.style.height = `${widgetHeight}px`;
-            });
-        }
-=======
->>>>>>> e9be270bf90e70ff46f7d10cb03ef63bfd8ef5c9
+       cancelEvent(){
+           db.default.cancelEvent(this.widget.event_id)
        }
     },
     created(){
         // calculate hour, minute, seconds
         let duration = this.widget.duration
-        console.log(duration)
         let hours = Math.floor((duration / 3600))
         duration = duration % 3600
-        console.log(duration)
         let minutes = Math.floor((duration / 60));
         duration = duration % 60;
-        console.log(duration)
         this.hours = hours > 9 ? hours : `0${hours}`;
         this.minutes = minutes > 9 ? minutes : `0${minutes}`;
         this.seconds = duration > 9 ? duration : `0${duration}`;
@@ -107,11 +100,15 @@ export default {
         /* max-width: 27vw; */
     }
 
-    .widget:hover{
+    .iconcontainer, .content {
         cursor: pointer;
-        /* transform: translateY(-3px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); */
     }
+
+    /* .widget:hover{
+        cursor: pointer;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    } */
 
     .iconcontainer{
         display: flex;
@@ -211,6 +208,12 @@ export default {
     }
     .door{
         margin-right: 10px;
+    }
+
+    .fa-bolt{
+        color: green;
+        /* stroke: black;
+        stroke-width: 2px; */
     }
 
     @media only screen and (max-width: 1600px) {
