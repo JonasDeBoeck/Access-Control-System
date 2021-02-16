@@ -57,11 +57,7 @@ export default {
             this.$emit("del-widget")
        },
        executeWidget(){
-<<<<<<< Updated upstream
-         let event = {
-=======
            let event = {
->>>>>>> Stashed changes
                doors: this.widget.doors,
                state: true,
                duration: this.widget.duration,
