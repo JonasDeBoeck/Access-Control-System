@@ -1,5 +1,8 @@
 <template>
     <div class="door" v-bind:class="{'is-opened': door.unlocked, 'is-locked':!door.unlocked}">
+        <div class="alert-open-door" v-if="door.nietdicht">
+            <img class="icon" :src="require(`../assets/icons/open-door-oh-no.png`)" alt="icoon">
+        </div>
         <div>
             <p class="name">{{door.name}}</p>
         </div>
@@ -18,13 +21,13 @@
             <router-link :to="{name: 'DoorDetails', params: {id: this.door.id}}" tag="div"><i class="fas fa-edit" id="edit"></i></router-link>
         </div>
         <vue-modal-2 name="time" @on-close="close" 
-        noHeader
-        wrapperBg="rgba(0, 0, 0, 0.10)"
-        :footerOptions="{btn1: 'Annuleer', 
-                        btn2: 'Bevestig', 
-                        btn1OnClick: () => { close(); },
-                        btn2OnClick: () => { setTime(); }
-                        }">
+            noHeader
+            wrapperBg="rgba(0, 0, 0, 0.10)"
+            :footerOptions="{btn1: 'Annuleer', 
+                            btn2: 'Bevestig', 
+                            btn1OnClick: () => { close(); },
+                            btn2OnClick: () => { setTime(); }
+                            }">
         <div class="wrapper">
             <div class="time_form">
                 <p class="form-group">
@@ -49,7 +52,7 @@
 <script>
 
 import * as api from '../variables'
-
+import * as db from '../database'
 export default {
     name: "Door",
     props: ["door"],
@@ -58,7 +61,8 @@ export default {
             hours: 0,
             minutes: 0,
             seconds: 0,
-            unlocked: this.door.unlocked === "true"
+            unlocked: this.door.unlocked === "true",
+            nietdicht: this.door.nietdicht === "true"
         }
     },
     methods: {
@@ -100,6 +104,13 @@ export default {
             let seconds = (this.hours * 3600) + (this.minutes * 60) + this.seconds
             console.log(seconds)
             this.$vm2.close('time')
+            let event = {
+                doors: [this.door],
+                state: true,
+                duration: seconds,
+            }
+            console.log(event)
+            db.default.insertEvent(event)
         },
         resetInputs() {
             this.hours = 0;
@@ -113,7 +124,7 @@ export default {
 <style scoped>
 .door {
     background-color: #fff;
-    width: 100%;
+    width: 80%;
     height: 100%;
     border-radius: .35rem;
     display: flex;
@@ -121,13 +132,15 @@ export default {
     justify-content: center;
     flex-direction: column;
     box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
+    position: relative;
 }
 
 .icons {
     width: 100%;
     display: flex;
     justify-content: space-evenly;
-    
+    margin-top: 5%;
+    margin-bottom: 5%;
 }
 
 i {
@@ -197,5 +210,20 @@ small {
 .name {
     font-family: 'Oswald';
     text-transform: uppercase;
+}
+
+.alert-open-door {
+    position: absolute;
+    right: 10px;
+    top: 15px;
+}
+
+.alert-open-door img {
+    width: 66%;
+}
+
+.name {
+    margin: 15px;
+    font-size: 20px;
 }
 </style>

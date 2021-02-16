@@ -63,7 +63,8 @@ async function getDoorsForOverview(session){
     const statusResult = []
     rowsDoorsStatus.forEach(row => statusResult.push({
         id : parseInt(row.door_id.id),
-        unlocked : row.unlocked === "true"
+        unlocked : row.unlocked === "true",
+        nietdicht: row.opened === "true"
     }))
     for(let i=0; i < result.length; i++){
         let door = result[i]
@@ -112,7 +113,7 @@ async function unlockDoors(doorids,session){
 
     let data = {
         DoorCollection: {
-          total: 1,
+          total: doorids.length,
           rows: rows_array
         }
       }
@@ -134,7 +135,7 @@ async function lockDoors(door_ids, session) {
 
     let data = {
         "DoorCollection": {
-          "total": 1,
+          "total": door_ids.length,
           "rows": rows_array
         }
     }
@@ -207,7 +208,6 @@ async function getDoorDetailStatus(door_id, session){
     else{
         unlocked = true
     }
-    console.log(unlocked)
     return unlocked
 }
 

@@ -121,7 +121,7 @@ export default {
             this.$emit('add-widget')
         },
         changeDoor(door){
-            return {name: door.name}
+            return {id: door.id, name: door.name}
         },
         changeColour(colour){
             let hex = colour.hex;

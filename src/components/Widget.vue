@@ -55,6 +55,7 @@ export default {
             this.$emit("del-widget")
        },
        executeWidget(){
+        //    let event = {
 
        }
     },
