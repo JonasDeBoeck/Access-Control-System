@@ -104,14 +104,9 @@ export default {
 <style scoped>
 
     .widget {
-        /*border: 3px solid;
-        border-color: var(--background);*/
         width: 100%;
-        height: 100%;
         box-shadow: 0 .15rem 1.5rem 0 rgba(58, 59, 69, .5);
-        
-        /* max-width: 27vw; */
-        width: 170%
+        border-radius: 10px;
     }
 
 
@@ -171,6 +166,8 @@ export default {
         background-color: var(--background);
         padding: 0.2em;
         cursor: pointer;
+        border-bottom-right-radius: 10px;
+        border-bottom-left-radius: 10px;
     }
 
     .activate p{
