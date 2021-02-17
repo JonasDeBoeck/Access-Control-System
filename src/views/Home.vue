@@ -14,18 +14,10 @@
         </div>
     </div>
     <div v-if="this.$session.has('bs-session-id')" class="wrapper">
-      <div class="content">
         <h2>Top 5 meest gebruikte widgets</h2>
-        <div>
-        <div v-if="top5WidgetsUsed.length > 0" class="widgets">
-            <div class="widget" v-for="widget in top5WidgetsUsed" v-bind:key="widget.name" v-bind:widget="widget" v-on:del-widget="updateWidgets">
-              <div>
-                <p>{{widget}}</p>
-              </div>
-            </div>
-        </div>
-        </div>
-      </div>
+          <div v-if="top5WidgetsUsed.length > 0" class="widgets">
+              <Widget class="widget" v-for="widget in top5WidgetsUsed" v-bind:key="widget.name" v-bind:widget="widget"/>
+          </div>
     </div>
   </div>
 </template>
@@ -33,11 +25,15 @@
 <script>
 import * as db from '../database'
 import * as api from "../variables"
+import Widget from '@/components/Widget'
 
 export default {
     name: "Header",
     async created(){
       this.top5WidgetsUsed = await db.default.top5WidgetsUsed()
+    },
+    components:{
+      Widget
     },
     data() {
         return {
@@ -82,6 +78,7 @@ export default {
     display: flex;
     justify-content: center;
     margin-top: 4em;
+    flex-direction: column;
 
   }
 
@@ -161,6 +158,18 @@ export default {
     /*animation-fill-mode: both;*/
   }
 
+  .widgets {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    column-gap:5%;
+    margin: 5%;
+  }
+
+  .widget{
+    width: 100%;
+  }
+  
   @media screen and (max-width: 780px) {
     section{
       width:90%;
