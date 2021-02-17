@@ -68,6 +68,11 @@ async function getAllWidgetsForOverview(){
     return widgets
 }
 
+async function top5WidgetsUsed(){
+    let widgets = await axios.get(`${databaseurl}/api/widgets/top5used`)
+    return widgets.data
+}
+
 export default {
     insertWidget,
     getAllWidgets,
@@ -77,5 +82,6 @@ export default {
     insertEvent,
     cancelEvent,
     getEvents,
-    getAllWidgetsForOverview
+    getAllWidgetsForOverview,
+    top5WidgetsUsed
 }

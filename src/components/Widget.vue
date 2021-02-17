@@ -76,6 +76,10 @@ export default {
            if (this.duration > 0){
                 setTimeout(this.startCountDown,1000)
            }
+           else{
+               this.duration = this.widget.duration
+               this.setTime(this.duration)
+           }
        },
        cancelEvent(){
             db.default.cancelEvent(this.widget.event_id)
@@ -194,6 +198,10 @@ export default {
         /* stroke: black;
         stroke-width: 2px; */
     } 
+
+    .widget widget{
+        width: 50%;
+    }
 
     /*@media only screen and (max-width: 1600px) {
         .iconcontainer{

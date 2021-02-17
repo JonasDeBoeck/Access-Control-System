@@ -95,12 +95,12 @@ export default {
         })
       })
       // Als er in de poll nieuwe deuren steken, voeg deze toe
-      if (this.doors.length > this.visibleDoors.length) {
-        let newDoors = this.doors.slice(this.visibleDoors.length - 1, this.doors.length - 1)
-        newDoors.forEach(d => {
-          this.visibleDoors.push(d)
-        })
-      }
+      // if (this.doors.length > this.visibleDoors.length) {
+      //   let newDoors = this.doors.slice(this.visibleDoors.length - 1, this.doors.length - 1)
+      //   newDoors.forEach(d => {
+      //     this.visibleDoors.push(d)
+      //   })
+      // }
       setTimeout(this.pollStatusses,3000)
     },
     filterGroups(group) {

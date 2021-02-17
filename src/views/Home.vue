@@ -13,17 +13,36 @@
           </form>
         </div>
     </div>
+    <div v-if="this.$session.has('bs-session-id')" class="wrapper">
+      <div class="content">
+        <h2>Top 5 meest gebruikte widgets</h2>
+        <div>
+        <div v-if="top5WidgetsUsed.length > 0" class="widgets">
+            <div class="widget" v-for="widget in top5WidgetsUsed" v-bind:key="widget.name" v-bind:widget="widget" v-on:del-widget="updateWidgets">
+              <div>
+                <p>{{widget}}</p>
+              </div>
+            </div>
+        </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-
+import * as db from '../database'
 import * as api from "../variables"
+
 export default {
     name: "Header",
+    async created(){
+      this.top5WidgetsUsed = await db.default.top5WidgetsUsed()
+    },
     data() {
         return {
-            loggedIn: this.$session.has("bs-session-id")
+            loggedIn: this.$session.has("bs-session-id"),
+            top5WidgetsUsed: []
         }
     },
     methods: {
@@ -32,14 +51,13 @@ export default {
             this.$session.set("bs-session-id",key)
             this.loggedIn = true;
             window.location.reload()
-        },
+        }
     }
 }
 </script>
 
 
 <style scoped>
-
   .head {
     display: flex;
     align-items: center;
@@ -87,10 +105,10 @@ export default {
   }
 
   h2{
-    font-family: 'Oswald', sans-serif;
-    color:#ffffff;
-    margin-left:auto;
-    margin-right:auto;
+    color: rgba(58,96,208,1); 
+    margin: 0;
+    font-family: 'Oswald';
+    text-transform: uppercase;
   }
 
 
