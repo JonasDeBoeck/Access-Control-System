@@ -26,13 +26,9 @@ async function updateWidget(widget){
     return response
 }
 
-function insertEvent(event){
-<<<<<<< HEAD
-    const result = await axios.post(`${databaseurl}/biostar/create/event`, event)
+async function insertEvent(event){
+    const result = await axios.post(`${databaseurl}/api/create/event`, event)
     return result
-=======
-    axios.post(`${databaseurl}/api/create/event`, event)
->>>>>>> e10798537042ef604e996b8fb4b12421a371774e
 }
 
 async function getEvents(){

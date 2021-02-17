@@ -67,14 +67,14 @@ export default {
            let result = await db.default.insertEvent(event)
            if (result != undefined){
                 this.widget.active = true
-                startCountDown()
+                this.startCountDown()
            }  
        },
        startCountDown(){
            this.duration--
            this.setTime(this.duration)
            if (this.duration > 0){
-                setTimeout(startCountDown,1000)
+                setTimeout(this.startCountDown,1000)
            }
        },
        cancelEvent(){
