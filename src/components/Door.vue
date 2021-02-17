@@ -20,7 +20,7 @@
             </div>
             <router-link :to="{name: 'DoorDetails', params: {id: this.door.id}}" tag="div"><i class="fas fa-edit" id="edit"></i></router-link>
         </div>
-        <vue-modal-2 name="time" @on-close="close" 
+        <vue-modal-2 class="vue-modal-2" :name = "doorId" @on-close="close" 
             noHeader
             wrapperBg="rgba(0, 0, 0, 0.10)"
             :footerOptions="{btn1: 'Annuleer', 
@@ -62,8 +62,12 @@ export default {
             minutes: 0,
             seconds: 0,
             unlocked: this.door.unlocked === "true",
-            nietdicht: this.door.nietdicht === "true"
+            nietdicht: this.door.nietdicht === "true",
+            doorId: this.door.id.toString()
         }
+    },
+    created(){
+        console.log(this.door)
     },
     methods: {
         async lock() {
@@ -93,23 +97,23 @@ export default {
         },
         // Open close modals
         open() {
-            this.$vm2.open('time')
+            this.$vm2.open(this.doorId)
         },
         close() {
             this.resetInputs()
-            this.$vm2.close('time')
+            this.$vm2.close(this.doorId)
         },
         // Open door for certain time
         setTime() {
             let seconds = (this.hours * 3600) + (this.minutes * 60) + this.seconds
             console.log(seconds)
-            this.$vm2.close('time')
+            this.$vm2.close(this.doorId)
             let event = {
                 doors: [this.door],
                 state: true,
                 duration: seconds,
             }
-            console.log(event)
+            console.log(this.doorId)
             db.default.insertEvent(event)
         },
         resetInputs() {
@@ -225,5 +229,9 @@ small {
 .name {
     margin: 15px;
     font-size: 20px;
+}
+
+.vue-modal-2 {
+    z-index: 999;
 }
 </style>
