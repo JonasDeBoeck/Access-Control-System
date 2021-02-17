@@ -107,7 +107,7 @@ export default {
         setTime() {
             let seconds = (this.hours * 3600) + (this.minutes * 60) + this.seconds
             console.log(seconds)
-            this.$vm2.close('time')
+            this.$vm2.close(this.doorId)
             let event = {
                 doors: [this.door],
                 state: true,
