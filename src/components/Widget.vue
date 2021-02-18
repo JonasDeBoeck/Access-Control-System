@@ -110,6 +110,7 @@ export default {
         width: 100%;
         box-shadow: 0 .15rem 1.5rem 0 rgba(58, 59, 69, .5);
         border-radius: 10px;
+        position: relative;
     }
 
 
@@ -128,10 +129,6 @@ export default {
         padding: 0.7em;
         box-shadow: .15rem 0 1.5rem 0 rgba(58, 59, 69, .5);
     }*/
-
-    .iconcontainer {
-        padding: 2em;
-    }
 
     .content{
         display: flex;
@@ -153,13 +150,10 @@ export default {
         display: inline-block;
     }
 
-
-
     .buttons {
         display: flex;
         padding: 1em
     }
-
 
     .button {    
         flex-basis: 50%;
@@ -171,13 +165,15 @@ export default {
         cursor: pointer;
         border-bottom-right-radius: 10px;
         border-bottom-left-radius: 10px;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
     }
 
     .activate p{
         margin-top: 1em;
         cursor: pointer;
     }
-
 
     h2 {
         color:  rgba(58,96,208,1);
@@ -202,10 +198,4 @@ export default {
     .widget widget{
         width: 50%;
     }
-
-    /*@media only screen and (max-width: 1600px) {
-        .iconcontainer{
-            height: 100%;
-        }
-    }*/
 </style>

@@ -75,7 +75,7 @@
         <label class="form-check-label" for="flexSwitchCheckDefault">Open</label>
     </div> -->
 
-    <button @click="addWidget" class="btn btn-primary">Voeg toe</button>
+    <button @click="addWidget" class="btn btn-primary" type="button">Voeg toe</button>
 </form>
 </template>
 <script>

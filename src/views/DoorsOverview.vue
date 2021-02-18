@@ -18,8 +18,8 @@
     </div>
     <div class="loader" v-if="visibleDoors.length === 0"><pacman-loader :color="color"></pacman-loader></div>
     <Doors v-if="visibleDoors.length > 0" v-bind:doors="visibleDoors"/>
-    <Pagination v-bind:doors="filteredDoors" v-bind:currentPage="currentPage" v-bind:pageSize="pageSize" v-on:page:update="updatePage" class="pages" v-if="this.searchterm.length > 0"/>
-    <Pagination v-bind:doors="doors" v-bind:currentPage="currentPage" v-bind:pageSize="pageSize" v-on:page:update="updatePage" class="pages" v-if="this.searchterm.length === 0"/>
+    <Pagination v-bind:list="filteredDoors" v-bind:currentPage="currentPage" v-bind:pageSize="pageSize" v-on:page:update="updatePage" class="pages" v-if="this.searchterm.length > 0"/>
+    <Pagination v-bind:list="doors" v-bind:currentPage="currentPage" v-bind:pageSize="pageSize" v-on:page:update="updatePage" class="pages" v-if="this.searchterm.length === 0"/>
   </div>
 </template>
 
@@ -52,9 +52,7 @@ export default {
       doorGroups: [],
       // De gekozen filter
       chosenFilter: 'Kies een deurgroep',
-
-      color: ' rgba(78,115,223,1)',
-
+      color: ' rgba(78,115,223,1)'
     }
   },
   methods: {
@@ -179,6 +177,7 @@ h1 {
   font-family: 'Oswald';
   text-transform: uppercase;
 }
+
 .pages {
   margin-top: 0.5em;
 }
