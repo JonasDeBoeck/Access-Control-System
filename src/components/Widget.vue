@@ -40,7 +40,8 @@ export default {
         return {
             hours: '00',
             minutes: '00',
-            seconds: '00'
+            seconds: '00',
+            duration: this.widget.duration
         }
     },
     computed: {
@@ -56,30 +57,46 @@ export default {
             console.log(result)
             this.$emit("del-widget")
        },
-       executeWidget(){
+       async executeWidget(){
            let event = {
                doors: this.widget.doors,
                state: true,
                duration: this.widget.duration,
                widget: this.widget
            }
-           db.default.insertEvent(event)
-           this.widget.active = true
+           let result = await db.default.insertEvent(event)
+           if (result != undefined){
+                this.widget.active = true
+                this.startCountDown()
+           }  
+       },
+       startCountDown(){
+           this.duration--
+           this.setTime(this.duration)
+           if (this.duration > 0){
+                setTimeout(this.startCountDown,1000)
+           }
+           else{
+               this.duration = this.widget.duration
+               this.setTime(this.duration)
+           }
        },
        cancelEvent(){
-           db.default.cancelEvent(this.widget.event_id)
+            db.default.cancelEvent(this.widget.event_id)
+       },
+       setTime(duration){
+            let hours = Math.floor((duration / 3600))
+            duration = duration % 3600
+            let minutes = Math.floor((duration / 60));
+            duration = duration % 60;
+            this.hours = hours > 9 ? hours : `0${hours}`;
+            this.minutes = minutes > 9 ? minutes : `0${minutes}`;
+            this.seconds = duration > 9 ? duration : `0${duration}`;
        }
     },
     created(){
         // calculate hour, minute, seconds
-        let duration = this.widget.duration
-        let hours = Math.floor((duration / 3600))
-        duration = duration % 3600
-        let minutes = Math.floor((duration / 60));
-        duration = duration % 60;
-        this.hours = hours > 9 ? hours : `0${hours}`;
-        this.minutes = minutes > 9 ? minutes : `0${minutes}`;
-        this.seconds = duration > 9 ? duration : `0${duration}`;
+        this.setTime(this.widget.duration)
     }
 }
 </script>
@@ -87,14 +104,9 @@ export default {
 <style scoped>
 
     .widget {
-        /*border: 3px solid;
-        border-color: var(--background);*/
         width: 100%;
-        height: 100%;
         box-shadow: 0 .15rem 1.5rem 0 rgba(58, 59, 69, .5);
-        
-        /* max-width: 27vw; */
-        width: 170%
+        border-radius: 10px;
     }
 
 
@@ -154,6 +166,8 @@ export default {
         background-color: var(--background);
         padding: 0.2em;
         cursor: pointer;
+        border-bottom-right-radius: 10px;
+        border-bottom-left-radius: 10px;
     }
 
     .activate p{
@@ -181,6 +195,10 @@ export default {
         /* stroke: black;
         stroke-width: 2px; */
     } 
+
+    .widget widget{
+        width: 50%;
+    }
 
     /*@media only screen and (max-width: 1600px) {
         .iconcontainer{

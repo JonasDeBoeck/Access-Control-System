@@ -26,8 +26,14 @@ async function updateWidget(widget){
     return response
 }
 
+<<<<<<< HEAD
 function insertEvent(event){
     axios.post(`${databaseurl}/api/create/event`, event)
+=======
+async function insertEvent(event){
+    const result = await axios.post(`${databaseurl}/api/create/event`, event)
+    return result
+>>>>>>> 9f3e28e75656764e78ddf705347d09b32ef1d684
 }
 
 async function getEvents(){
@@ -67,6 +73,11 @@ async function getAllWidgetsForOverview(){
     return widgets
 }
 
+async function top5WidgetsUsed(){
+    let widgets = await axios.get(`${databaseurl}/api/widgets/top5used`)
+    return widgets.data
+}
+
 export default {
     insertWidget,
     getAllWidgets,
@@ -76,5 +87,6 @@ export default {
     insertEvent,
     cancelEvent,
     getEvents,
-    getAllWidgetsForOverview
+    getAllWidgetsForOverview,
+    top5WidgetsUsed
 }

@@ -157,24 +157,15 @@ export default {
 </style>
 <style scoped>
     #add_widget{
-        /* max-width: 30vw !important; */
-        align-self: flex-end;
-        margin: 2em;
-        margin-bottom: 100em;
         background: #fff;
         box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
+        height: 100%;
     }
     .border3 {
         border-width:2px !important;
         border-radius: 10px;
     }
-    /* .input-group>span {
-        max-width: 10vw;
-        min-width: 5vw;
-    }
-    .input-group>input{
-        max-width: 10vw;
-    } */
+    
     #multiselect{
         margin-left: -5px;
         margin-top: -2px;
