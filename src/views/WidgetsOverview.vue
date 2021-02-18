@@ -3,9 +3,8 @@
     <div class="head">
       <h1>Widgets</h1>
       <div class="headerOptions">
-        <button type="button" class="btn btn-success">Voeg een widget toe</button>
         <form action="">
-          <input type="text" placeholder="Zoek op..." v-model="searchTerm" @input="search">
+          <input type="text" placeholder="Zoek op..." v-model="searchterm" @input="search">
           <button type="button" class="searchButton">
             <i class="fas fa-search fa-sm">
             </i>
@@ -15,41 +14,52 @@
     </div>
     <div class="content">
       <div v-if="this.widgets.length > 0" class="widgets">  
-          <Widget class="widget" v-for="widget in filteredWidgets" v-bind:key="widget.name" v-bind:widget="widget" v-on:del-widget="updateWidgets"/>
+          <Widget class="widget" v-for="widget in visibleWidgets" v-bind:key="widget.name" v-bind:widget="widget" v-on:del-widget="updateWidgets"/>
       </div>
       <p class="error" v-if="this.widgets.length === 0">No widgets available</p>
       <div class="form">
         <AddWidget v-on:add-widget="updateWidgets"/>
       </div>
     </div>
+    <Pagination v-bind:list="widgets" v-bind:currentPage="currentPage" v-bind:pageSize="pageSize" v-on:page:update="updatePage" v-if="this.searchterm.length === 0" class="pages"/>
+    <Pagination v-bind:list="filteredWidgets" v-bind:currentPage="currentPage" v-bind:pageSize="pageSize" v-on:page:update="updatePage" v-if="this.searchterm.length > 0" class="pages"/>
   </div>
 </template>
 
 <script>
 import AddWidget from '../components/AddWidget.vue'
 import Widget from '../components/Widget.vue'
+import Pagination from '../components/Pagination.vue'
 import * as db from '../database'
 export default {
   name: 'WidgetsOverview',
   components:{
     AddWidget,
-    Widget
+    Widget,
+    Pagination
   },
   async created() {
-    // let response = await db.default.getAllWidgets()
-    // console.log(response)
-    // this.widgets = response
-    // this.filteredWidgets = this.widgets
-    // console.log(this.widgets)
+    this.widgets = await db.default.getAllWidgetsForOverview()
+    this.filteredWidgets = this.widgets
+    this.updateVisibleWidgets(this.widgets)
     this.pollWidgets()
   },
   data(){
     return {
       doors: [],
       selectedDoor: undefined,
-      searchTerm: '',
+      // Zoekterm
+      searchterm: '',
+      // Gefilterde widgets
       filteredWidgets: [],
-      widgets: []
+      // Originele lijst van widgets
+      widgets: [],
+      // Zichtbare widgets
+      visibleWidgets: [],
+      // Huidige pagina 
+      currentPage: 0,
+      // Aantal deuren per pagina
+      pageSize: 6,
       }
     },
     methods:{
@@ -57,17 +67,34 @@ export default {
         let response = await db.default.getAllWidgets()
         this.widgets = response
         this.filteredWidgets = this.widgets
+        this.updateVisibleWidgets(response)
+      },
+      updateVisibleWidgets(widgets) {
+        // Slice het deel van de lijst die nodig is en assign dit aan visibleDoors, update ook de currentPage
+        this.visibleWidgets = widgets.slice(this.currentPage * this.pageSize, (this.currentPage * this.pageSize) + this.pageSize)
+        if(this.visibleWidgets.length == 0 && this.currentPage > 0) {
+          this.updatePage(this.currentPage - 1)
+        }
+      },
+      updatePage(pageNumber) {
+        // Gebruik de originele of de gefilterde lijst voor de search
+        this.currentPage = pageNumber
+        if (this.searchterm.length > 0) {
+          this.updateVisibleWidgets(this.filteredWidgets)
+        } else {
+          this.updateVisibleWidgets(this.widgets);
+        }
       },
       search() {
         this.filteredWidgets = this.widgets.filter(this.containsString)
+        this.updateVisibleWidgets(this.filteredWidgets)
       },
       containsString(value) {
-        return value.name.match(this.searchTerm)
+        return value.name.match(this.searchterm)
       },
       async pollWidgets(){
         let widgetsOverview = await db.default.getAllWidgetsForOverview()
         this.widgets = widgetsOverview
-        this.filteredWidgets = this.widgets
         setTimeout(this.pollWidgets,5000);
       }
     }
@@ -75,6 +102,10 @@ export default {
 </script>
 
 <style scoped>
+  .pages {
+    margin-top: 0.5em;
+    height: 48px;
+  }
   .headerOptions {
     display: flex;
   }
@@ -143,12 +174,11 @@ export default {
   .widgets {
     grid-area: widgets;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr;
     justify-items: center;
     grid-column-gap: 2em;
     grid-row-gap: 1em;
-    height: 90%;
   }
 
   .form {
