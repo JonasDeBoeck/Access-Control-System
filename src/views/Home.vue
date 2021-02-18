@@ -46,7 +46,6 @@ export default {
             let key = await api.default.login("admin",'t')
             this.$session.set("bs-session-id",key)
             this.loggedIn = true;
-            window.location.reload()
         },
         async pollTopWidgets() {
           this.top5WidgetsUsed = await db.default.top5WidgetsUsed()
@@ -139,27 +138,6 @@ export default {
   button:hover {
       transform: translateY(-3px);
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-  }
-
-  @-webkit-keyframes shake{
-    from, to{
-      -webkit-transform: translate3d(0, 0, 0);
-      transform:translate3d(0,0,0);
-    }
-    10%,30%,50%,70%,90%{
-      -webkit-transform: translate3d(-10px, 0, 0);
-      transform:translate3d(-10px,0,0);
-    }
-    20%,40%,60%,80%{
-      -webkit-transform: translate3d(10px, 0, 0);
-      transform:translate(10px,0,0);
-    }
-  }
-
-  .shake{
-    animation-name: shake;
-    animation-duration:1s;
-    /*animation-fill-mode: both;*/
   }
 
   .widgets {
