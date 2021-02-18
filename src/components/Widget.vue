@@ -25,8 +25,11 @@
                 <div @click="remove" class="button" id="leftborder"><i class="fas fa-trash-alt"></i></div>   
             </div>
         </div>
-        <div @click="executeWidget" class="activate">
+        <div v-if="!widget.active" @click="executeWidget" class="activate">
             <p>Activeer Widget</p>
+        </div>
+        <div v-if="widget.active" @click="cancelEvent" class="activate">
+            <p>Cancel Widget</p>
         </div>
     </div>
 </template>

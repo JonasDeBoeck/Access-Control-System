@@ -36,11 +36,13 @@ async function getEvents(){
     return response.data
 }
 
-function cancelEvent(event){
+function cancelEvent(event_id){
     let body = {
-        event_id: event.id
+        "event_id": event_id
     }
-    axios.post(`${databaseurl}/api/event/cancel`, body)
+    console.log(body);
+    console.log(event);
+    axios.post(`${databaseurl}/api/events/cancel`, body)
 }
 
 async function getAllWidgetsForOverview(){
