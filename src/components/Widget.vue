@@ -199,10 +199,6 @@ export default {
         width: 100%;
     }
 
-    .door{
-       margin-bottom: 0;
-    }
-
     .fa-bolt{
         color: rgb(58, 208, 121);
         /* stroke: black;
