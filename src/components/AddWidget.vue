@@ -32,15 +32,15 @@
     <div class="time_form">
         <div class="input-group mb-3">
             <span class="input-group-text" id="inputGroup-sizing-default">Hours</span>
-            <input type="number" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" v-model="hours">
+            <input type="number" min=0 max=12 class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" v-model="hours">
         </div>
         <div class="input-group mb-3">
             <span class="input-group-text" id="inputGroup-sizing-default">Minutes</span>
-            <input type="number" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" v-model="minutes">
+            <input type="number" min=0 max=60 class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" v-model="minutes">
         </div>
         <div class="input-group mb-3">
             <span class="input-group-text" id="inputGroup-sizing-default">Seconds</span>
-            <input type="number" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" v-model="seconds">
+            <input type="number" min=0 max=60 class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" v-model="seconds">
         </div>
     </div>
 
