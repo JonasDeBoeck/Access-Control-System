@@ -30,7 +30,7 @@ import Widget from '@/components/Widget'
 export default {
     name: "Header",
     async created(){
-      this.top5WidgetsUsed = await db.default.top5WidgetsUsed()
+      this.pollTopWidgets()
     },
     components:{
       Widget
@@ -47,6 +47,10 @@ export default {
             this.$session.set("bs-session-id",key)
             this.loggedIn = true;
             window.location.reload()
+        },
+        async pollTopWidgets() {
+          this.top5WidgetsUsed = await db.default.top5WidgetsUsed()
+          setTimeout(this.pollTopWidgets,3000)
         }
     }
 }
@@ -163,11 +167,19 @@ export default {
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
     column-gap:5%;
+    row-gap: 10%;
     margin: 5%;
   }
 
   .widget{
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    height: 120%;
+  }
+
+  .door {
+    margin-right: 0;
   }
   
   @media screen and (max-width: 780px) {

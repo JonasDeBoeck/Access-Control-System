@@ -108,7 +108,6 @@ export default {
             this.hours = parseInt(this.hours)
             this.minutes = parseInt(this.minutes)
             this.seconds = parseInt(this.seconds)
-
             let widget = {
                 name: this.widgetname,
                 doors: this.selectedDoors.map(this.changeDoor),
@@ -174,11 +173,9 @@ export default {
     #multiselect >>> .multiselect__single{
         display: none;
     }
-
     .selecter{
         width: 10vw;
     }
-
     .colorpicker >>> .color-input{
         display: none;
     }
@@ -195,7 +192,6 @@ export default {
         padding: 0;
         margin: 0;
     }
-
     .colorpicker >>> #inputGroup-sizing-default > div{
         margin-top: 0.35em;
     }
@@ -219,7 +215,6 @@ export default {
         height: 84;
         border: none;
     }
-
     .doors{
         padding: .3em;
         display: flex;
@@ -230,16 +225,13 @@ export default {
         background:#eee;
         border-radius: 5px;
     }
-
     .options{
         display: flex;
         /* justify-content: flex-start; */
     }
-
     /* .form-check-input:checked{
         background-color: green;
     } */
-
     .deurenselect{
         display: flex;
         flex-direction: column;
@@ -248,15 +240,12 @@ export default {
     .form-check.checkbox{
         margin-left: 1em !important;
     }
-
     #open:checked{
         background: green;
     }
-
     #close:checked{
         background: red;
     }
-
     .door{
         margin-right: 5px;
     }
