@@ -19,6 +19,12 @@
               <Widget class="widget" v-for="widget in top5WidgetsUsed" v-bind:key="widget.name" v-bind:widget="widget"/>
           </div>
     </div>
+    <div v-if="this.$session.has('bs-session-id')" class="wrapper">
+      <h2>Actieve widgets</h2>
+       <div v-if=" activeWidgets.length > 0" class="widgets">
+              <Widget class="widget" v-for="widget in  activeWidgets" v-bind:key="widget.name" v-bind:widget="widget"/>
+          </div>
+    </div>
   </div>
 </template>
 
@@ -31,6 +37,7 @@ export default {
     name: "Header",
     async created(){
       this.pollTopWidgets()
+      this.pollActiveWidgets()
     },
     components:{
       Widget
@@ -38,7 +45,8 @@ export default {
     data() {
         return {
             loggedIn: this.$session.has("bs-session-id"),
-            top5WidgetsUsed: []
+            top5WidgetsUsed: [],
+            activeWidgets: []
         }
     },
     methods: {
@@ -50,6 +58,11 @@ export default {
         async pollTopWidgets() {
           this.top5WidgetsUsed = await db.default.top5WidgetsUsed()
           setTimeout(this.pollTopWidgets,3000)
+        },
+        async pollActiveWidgets() {
+          const temp = await db.default.getActiveWidgets()
+          this.activeWidgets = temp
+          setTimeout(this.pollActiveWidgets,3000)
         }
     }
 }
