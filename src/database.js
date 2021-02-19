@@ -48,6 +48,32 @@ function cancelEvent(event_id){
 async function getAllWidgetsForOverview(){
     let widgets = await getAllWidgets()
     let events = await getEvents()
+    return formatWidgets(widgets,events)
+    // if (widgets === undefined){
+    //     return []
+    // }
+    // if (events.length === 0){
+    //     for (let widget of widgets){
+    //         widget.active = false
+    //         widget.event_id = -1
+    //         widget.event_duration = widget.duration
+    //     }
+    //     return widgets
+    // }
+    // for (let widget of widgets){
+    //     widget.active = false
+    //     for (let event of events){
+    //         if (event.widget !== undefined && widget.id === event.widget.id){
+    //             widget.active = true;
+    //             widget.event_id = event.id
+    //             widget.event_duration = event.duration
+    //         }
+    //     }
+    // }
+    // return widgets
+}
+
+function formatWidgets(widgets,events){
     if (widgets === undefined){
         return []
     }
@@ -55,6 +81,7 @@ async function getAllWidgetsForOverview(){
         for (let widget of widgets){
             widget.active = false
             widget.event_id = -1
+            widget.event_duration = widget.duration
         }
         return widgets
     }
@@ -64,15 +91,17 @@ async function getAllWidgetsForOverview(){
             if (event.widget !== undefined && widget.id === event.widget.id){
                 widget.active = true;
                 widget.event_id = event.id
+                widget.event_duration = event.duration
             }
         }
     }
-    return widgets
+    return widgets;
 }
 
 async function top5WidgetsUsed(){
     let widgets = await axios.get(`${databaseurl}/api/widgets/top5used`)
-    return widgets.data
+    let events = await getEvents()
+    return formatWidgets(widgets.data,events)
 }
 
 async function getActiveWidgets(){

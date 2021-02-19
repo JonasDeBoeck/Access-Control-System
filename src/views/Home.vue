@@ -51,11 +51,11 @@ export default {
     },
     methods: {
         async login() {
+            console.log("login")
             let key = await api.default.login("admin",'t')
             this.$session.set("bs-session-id",key)
             this.loggedIn = true;
-            // Emit event naar parent zo dat header kan worden gereload
-            this.$emit("logIn")
+            console.log(this.$session.getAll())
         },
         async pollTopWidgets() {
           this.top5WidgetsUsed = await db.default.top5WidgetsUsed()

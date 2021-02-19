@@ -44,7 +44,7 @@ export default {
             hours: '00',
             minutes: '00',
             seconds: '00',
-            duration: this.widget.duration
+            duration: this.widget.event_duration
         }
     },
     computed: {
@@ -68,8 +68,10 @@ export default {
                widget: this.widget
            }
            let result = await db.default.insertEvent(event)
+           console.log(result)
            if (result != undefined){
                 this.widget.active = true
+                console.log("starting countdown")
                 this.startCountDown()
            }  
        },
@@ -80,6 +82,8 @@ export default {
                 setTimeout(this.startCountDown,1000)
            }
            else{
+               this.widget.active = false;
+               this.widget.event_id = -1;
                this.duration = this.widget.duration
                this.setTime(this.duration)
            }
@@ -100,6 +104,9 @@ export default {
     created(){
         // calculate hour, minute, seconds
         this.setTime(this.widget.duration)
+        if (this.widget.active){
+            this.startCountDown()
+        }
     }
 }
 </script>
