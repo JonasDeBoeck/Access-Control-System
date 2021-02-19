@@ -34,19 +34,14 @@
 
 export default {
     name: "Header",
-    data() {
-        return {
-            loggedIn: this.$session.has("bs-session-id"),
-        };
-    },
+    // loggedIn prop zorgt voor het reloaden van de header component
+    props: ["loggedIn"],
     methods: {
         logout(){
             this.$session.remove("bs-session-id");
             this.$router.push({path: '/'});
-            this.reloadNavigation()
-        },
-        reloadNavigation() {
-            this.loggedIn = false;
+            // Emit event naar parent om loggedIn aan te passen
+            this.$emit("logOut")
         },
         notAuthenticated() {
             this.$toasted.show(`Gelieve u eerst te authenticeren.`, {
@@ -58,9 +53,6 @@ export default {
                 type: 'error'
             })
         },
-    },
-    created(){
-        console.log(this.$session.getAll())
     }
 }
 </script>

@@ -92,13 +92,6 @@ export default {
           }
         })
       })
-      // Als er in de poll nieuwe deuren steken, voeg deze toe
-      // if (this.doors.length > this.visibleDoors.length) {
-      //   let newDoors = this.doors.slice(this.visibleDoors.length - 1, this.doors.length - 1)
-      //   newDoors.forEach(d => {
-      //     this.visibleDoors.push(d)
-      //   })
-      // }
       setTimeout(this.pollStatusses,3000)
     },
     filterGroups(group) {
@@ -121,7 +114,6 @@ export default {
     }
   },
   async created() {
-    // const key = await f.default.login("admin","t")
     const result = await f.default.getDoorsForOverview(this.$session.get("bs-session-id"))
     this.doors = result;
     this.filteredDoors = this.doors

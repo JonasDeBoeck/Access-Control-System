@@ -54,6 +54,8 @@ export default {
             let key = await api.default.login("admin",'t')
             this.$session.set("bs-session-id",key)
             this.loggedIn = true;
+            // Emit event naar parent zo dat header kan worden gereload
+            this.$emit("logIn")
         },
         async pollTopWidgets() {
           this.top5WidgetsUsed = await db.default.top5WidgetsUsed()
