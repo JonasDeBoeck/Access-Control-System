@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <Header/>
-    <router-view/>
+    <Header v-bind:loggedIn="loggedIn" v-on:logOut="logOut"/>
+    <router-view v-on:logIn="logIn"/>
   </div>
 </template>
 
@@ -11,7 +11,22 @@ export default {
   name: "App",
   components: {
     Header
-  }  
+  } ,
+  data() {
+    return {
+      // Houdt bij of een user is geauthenticeerd of niet
+      loggedIn: this.$session.has('bs-session-id')
+    }
+  }, 
+  methods: {
+    // Verander waarden loggedIn
+    logIn() {
+      this.loggedIn = true
+    },
+    logOut() {
+      this.loggedIn = false
+    }
+  }
 }
 </script>
 
