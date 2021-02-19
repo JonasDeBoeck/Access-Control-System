@@ -60,6 +60,14 @@ export default {
             const result = await db.default.removeWidget(this.widget.id)
             console.log(result)
             this.$emit("del-widget")
+            this.$toasted.show(`${this.widget.name} Succesvol verwijderd!`, {
+                theme: "toasted-primary",
+                position: "top-right",
+                duration: 1800,
+                icon: 'cogs',
+                iconPack: 'fontawesome',
+                type: 'success'
+            })
         },
         async executeWidget(){
             let event = {
@@ -76,6 +84,14 @@ export default {
                 console.log("starting countdown")
                 this.startCountDown()
             }  
+            this.$toasted.show(`${this.widgetname} Succesvol Gestart!`, {
+                theme: "toasted-primary",
+                position: "top-right",
+                duration: 1000,
+                icon: 'cogs',
+                iconPack: 'fontawesome',
+                type: 'success'
+            })
         },
         startCountDown(){
             this.duration--
@@ -95,6 +111,15 @@ export default {
             this.duration = this.widget.duration
             this.canceled = true
             db.default.cancelEvent(this.widget.event_id)
+
+            this.$toasted.show(`${this.widget.name} Succesvol gecancelled!`, {
+                theme: "toasted-primary",
+                position: "top-right",
+                duration: 1500,
+                icon: 'cogs',
+                iconPack: 'fontawesome',
+                type: 'success'
+            })
         },
         setTime(duration){
             let hours = Math.floor((duration / 3600))

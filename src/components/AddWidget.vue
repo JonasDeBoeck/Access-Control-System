@@ -118,6 +118,15 @@ export default {
             const result = await db.default.insertWidget(widget)
             console.log(result)
             this.$emit('add-widget')
+            
+            this.$toasted.show(`${this.widgetname} Succesvol toegevoegd!`, {
+                theme: "toasted-primary",
+                position: "top-right",
+                duration: 1000,
+                icon: 'cogs',
+                iconPack: 'fontawesome',
+                type: 'success'
+            })
         },
         changeDoor(door){
             return {id: door.id, name: door.name}
