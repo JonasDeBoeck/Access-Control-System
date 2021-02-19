@@ -55,6 +55,7 @@ export default {
             this.$session.set("bs-session-id",key)
             this.loggedIn = true;
             // Emit event naar parent zo dat header kan worden gereload
+            // Rafael heeft dit kapot gemaakt
             this.$emit("logIn")
         },
         async pollTopWidgets() {
