@@ -44,7 +44,8 @@ export default {
             hours: '00',
             minutes: '00',
             seconds: '00',
-            duration: this.widget.duration
+            duration: this.widget.event_duration,
+            canceled: false
         }
     },
     computed: {
@@ -55,39 +56,47 @@ export default {
         }
     },
     methods: {
-       async remove(){
+        async remove(){
             const result = await db.default.removeWidget(this.widget.id)
             console.log(result)
             this.$emit("del-widget")
-       },
-       async executeWidget(){
-           let event = {
-               doors: this.widget.doors,
-               state: true,
-               duration: this.widget.duration,
-               widget: this.widget
-           }
-           let result = await db.default.insertEvent(event)
-           if (result != undefined){
+        },
+        async executeWidget(){
+            let event = {
+                doors: this.widget.doors,
+                state: true,
+                duration: this.widget.duration,
+                widget: this.widget
+            }
+            let result = await db.default.insertEvent(event)
+            console.log(result)
+            if (result != undefined){
+                this.widget.event_id = result.data.id;
                 this.widget.active = true
+                console.log("starting countdown")
                 this.startCountDown()
-           }  
-       },
-       startCountDown(){
-           this.duration--
-           this.setTime(this.duration)
-           if (this.duration > 0){
+            }  
+        },
+        startCountDown(){
+            this.duration--
+            this.setTime(this.duration)
+            if (this.duration > 0 && !this.canceled){
                 setTimeout(this.startCountDown,1000)
-           }
-           else{
-               this.duration = this.widget.duration
-               this.setTime(this.duration)
-           }
-       },
-       cancelEvent(){
+            }
+            else{
+                this.canceled = false
+                this.widget.active = false;
+                this.widget.event_id = -1;
+                this.duration = this.widget.duration
+                this.setTime(this.duration)
+            }
+        },
+        cancelEvent(){
+            this.duration = this.widget.duration
+            this.canceled = true
             db.default.cancelEvent(this.widget.event_id)
-       },
-       setTime(duration){
+        },
+        setTime(duration){
             let hours = Math.floor((duration / 3600))
             duration = duration % 3600
             let minutes = Math.floor((duration / 60));
@@ -95,11 +104,14 @@ export default {
             this.hours = hours > 9 ? hours : `0${hours}`;
             this.minutes = minutes > 9 ? minutes : `0${minutes}`;
             this.seconds = duration > 9 ? duration : `0${duration}`;
-       }
+        }
     },
     created(){
         // calculate hour, minute, seconds
         this.setTime(this.widget.duration)
+        if (this.widget.active){
+            this.startCountDown()
+        }
     }
 }
 </script>

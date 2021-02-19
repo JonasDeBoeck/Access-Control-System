@@ -19,9 +19,9 @@
               <Widget class="widget" v-for="widget in top5WidgetsUsed" v-bind:key="widget.name" v-bind:widget="widget"/>
           </div>
     </div>
-    <div v-if="this.$session.has('bs-session-id')" class="wrapper">
+    <div v-if="this.$session.has('bs-session-id') &&  activeWidgets.length > 0" class="wrapper">
       <h2>Actieve widgets</h2>
-       <div v-if=" activeWidgets.length > 0" class="widgets">
+      <div class="widgets">
               <Widget class="widget" v-for="widget in  activeWidgets" v-bind:key="widget.name" v-bind:widget="widget"/>
           </div>
     </div>
@@ -51,12 +51,13 @@ export default {
     },
     methods: {
         async login() {
+            console.log("login")
             let key = await api.default.login("admin",'t')
             this.$session.set("bs-session-id",key)
             this.loggedIn = true;
             // Emit event naar parent zo dat header kan worden gereload
-            // Rafael heeft dit kapot gemaakt
             this.$emit("logIn")
+            console.log(this.$session.getAll())
         },
         async pollTopWidgets() {
           this.top5WidgetsUsed = await db.default.top5WidgetsUsed()
