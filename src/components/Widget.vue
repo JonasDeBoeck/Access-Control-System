@@ -71,6 +71,7 @@ export default {
             let result = await db.default.insertEvent(event)
             console.log(result)
             if (result != undefined){
+                this.widget.event_id = result.data.id;
                 this.widget.active = true
                 console.log("starting countdown")
                 this.startCountDown()
