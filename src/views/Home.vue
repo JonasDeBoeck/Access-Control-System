@@ -19,6 +19,12 @@
               <Widget class="widget" v-for="widget in top5WidgetsUsed" v-bind:key="widget.name" v-bind:widget="widget"/>
           </div>
     </div>
+    <div v-if="this.$session.has('bs-session-id')" class="wrapper">
+      <h2>Actieve widgets</h2>
+       <div v-if=" activeWidgets.length > 0" class="widgets">
+              <Widget class="widget" v-for="widget in  activeWidgets" v-bind:key="widget.name" v-bind:widget="widget"/>
+          </div>
+    </div>
   </div>
 </template>
 
@@ -30,7 +36,8 @@ import Widget from '@/components/Widget'
 export default {
     name: "Header",
     async created(){
-      this.top5WidgetsUsed = await db.default.top5WidgetsUsed()
+      this.pollTopWidgets()
+      this.pollActiveWidgets()
     },
     components:{
       Widget
@@ -38,7 +45,8 @@ export default {
     data() {
         return {
             loggedIn: this.$session.has("bs-session-id"),
-            top5WidgetsUsed: []
+            top5WidgetsUsed: [],
+            activeWidgets: []
         }
     },
     methods: {
@@ -46,7 +54,15 @@ export default {
             let key = await api.default.login("admin",'t')
             this.$session.set("bs-session-id",key)
             this.loggedIn = true;
-            window.location.reload()
+        },
+        async pollTopWidgets() {
+          this.top5WidgetsUsed = await db.default.top5WidgetsUsed()
+          setTimeout(this.pollTopWidgets,3000)
+        },
+        async pollActiveWidgets() {
+          const temp = await db.default.getActiveWidgets()
+          this.activeWidgets = temp
+          setTimeout(this.pollActiveWidgets,3000)
         }
     }
 }
@@ -137,37 +153,24 @@ export default {
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   }
 
-  @-webkit-keyframes shake{
-    from, to{
-      -webkit-transform: translate3d(0, 0, 0);
-      transform:translate3d(0,0,0);
-    }
-    10%,30%,50%,70%,90%{
-      -webkit-transform: translate3d(-10px, 0, 0);
-      transform:translate3d(-10px,0,0);
-    }
-    20%,40%,60%,80%{
-      -webkit-transform: translate3d(10px, 0, 0);
-      transform:translate(10px,0,0);
-    }
-  }
-
-  .shake{
-    animation-name: shake;
-    animation-duration:1s;
-    /*animation-fill-mode: both;*/
-  }
-
   .widgets {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
     column-gap:5%;
+    row-gap: 10%;
     margin: 5%;
   }
 
   .widget{
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    height: 120%;
+  }
+
+  .door {
+    margin-right: 0;
   }
   
   @media screen and (max-width: 780px) {

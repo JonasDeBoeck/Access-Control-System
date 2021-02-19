@@ -21,8 +21,8 @@
             </div>
             
             <div class="buttons"> 
-                <div  class="button" ><router-link :to="{ name: 'WidgetDetails', params: {id: widget.id}}" >  <i class="fas fa-edit "></i> </router-link></div>
-                <div @click="remove" class="button" id="leftborder"><i class="fas fa-trash-alt"></i></div>   
+                <div  class="button" id="kleur"><router-link :to="{ name: 'WidgetDetails', params: {id: widget.id}}" > <i class="fas fa-edit "></i> </router-link></div>
+                <div @click="remove" class="button"><i class="fas fa-trash-alt"></i></div>   
             </div>
         </div>
         <div v-if="!widget.active" @click="executeWidget" class="activate">
@@ -132,7 +132,7 @@ export default {
 
     .content{
         display: flex;
-        flex-direction:column;
+        flex-direction: column;
         justify-content: center;
         margin-right: 1em;
         font-family: 'Oswald';
@@ -152,11 +152,22 @@ export default {
 
     .buttons {
         display: flex;
-        padding: 1em
+        padding: 1em;
+       
+    }
+
+    #kleur {
+
+        color: black;
+
     }
 
     .button {    
         flex-basis: 50%;
+    }
+
+    .button:hover {
+        transform: scale(1.2);
     }
 
     .activate {
@@ -171,12 +182,15 @@ export default {
     }
 
     .activate p{
-        margin-top: 1em;
+        font-family: 'Oswald';
+        font-size: 1.2em;
+        margin-top: 0.5em;
         cursor: pointer;
     }
 
     h2 {
         color:  rgba(58,96,208,1);
+        bottom: 0;
     }
 
     .doors{
@@ -185,17 +199,47 @@ export default {
         width: 100%;
     }
 
-    .door{
-        margin-right: 10px;
-    }
-
     .fa-bolt{
-        color: green;
+        color: rgb(58, 208, 121);
         /* stroke: black;
         stroke-width: 2px; */
+        
+        /*box-shadow: 0 0 0 0 rgba(0,0,0,1);*/
+        transform: scale(1);
+        animation: pulse 1.5s infinite;  
     } 
 
-    .widget widget{
+    .active {
+        font-size: 1.1em;
+        margin-bottom: 1em;	  
+
+    }
+
+    .widget widget {
         width: 50%;
     }
+
+    .time {
+        font-size: 1.22em;
+    }
+
+
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+            /*box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);*/
+        }
+
+        70% {
+            transform: scale(1.4);
+            /*box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);*/
+        }
+
+        100% {
+            transform: scale(1);
+            /*box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);*/
+        }
+    }
+
+
 </style>

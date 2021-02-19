@@ -75,6 +75,17 @@ async function top5WidgetsUsed(){
     return widgets.data
 }
 
+async function getActiveWidgets(){
+    let widgets = await getAllWidgetsForOverview()
+    let result = []
+    widgets.forEach(widget => {
+        if(widget.active === true){
+            result.push(widget)
+        }
+    });
+    return result
+}
+
 export default {
     insertWidget,
     getAllWidgets,
@@ -85,5 +96,6 @@ export default {
     cancelEvent,
     getEvents,
     getAllWidgetsForOverview,
-    top5WidgetsUsed
+    top5WidgetsUsed,
+    getActiveWidgets
 }

@@ -15,18 +15,21 @@
                 <i class="fas fa-lock"></i>
                 <small>Sluit</small>
             </div>
-            <div v-on:click="open" class="clock">
+            <div v-on:click="openDurationPicker" class="stopwatch">
+                <i class="fas fa-stopwatch"></i>
+            </div>
+            <div v-on:click="openTimePicker" class="clock">
                 <i class="fas fa-clock"></i>
             </div>
             <router-link :to="{name: 'DoorDetails', params: {id: this.door.id}}" tag="div"><i class="fas fa-edit" id="edit"></i></router-link>
         </div>
-        <vue-modal-2 class="vue-modal-2" :name = "doorId" @on-close="close" 
+        <vue-modal-2 class="vue-modal-2" :name = "durationModal" @on-close="closeDurationPicker" 
             noHeader
             wrapperBg="rgba(0, 0, 0, 0.10)"
             :footerOptions="{btn1: 'Annuleer', 
                             btn2: 'Bevestig', 
-                            btn1OnClick: () => { close(); },
-                            btn2OnClick: () => { setTime(); }
+                            btn1OnClick: () => { closeDurationPicker(); },
+                            btn2OnClick: () => { setDuration(); }
                             }">
         <div class="wrapper">
             <div class="time_form">
@@ -45,16 +48,33 @@
             </div>
         </div>
         </vue-modal-2>
+        <vue-modal-2 class="vue-modal-2" :name = "timeModal" @on-close="closeTimePicker" 
+            noHeader
+            wrapperBg="rgba(0, 0, 0, 0.10)"
+            :footerOptions="{btn1: 'Annuleer', 
+                            btn2: 'Bevestig', 
+                            btn1OnClick: () => { closeTimePicker(); },
+                            btn2OnClick: () => { setTime(); }
+                            }">
+        <div class="wrapper">
+            <label>Selecteer een tijdstip</label>
+            <vue-clock-picker v-model="time" active-color="#3a60d0" input-class="form-control"></vue-clock-picker>
+        </div>
+        </vue-modal-2>
     </div>
 </template>
 
 
 <script>
-
 import * as api from '../variables'
 import * as db from '../database'
+import VueClockPicker from '@pencilpix/vue2-clock-picker';
+import '@pencilpix/vue2-clock-picker/dist/vue2-clock-picker.min.css';
 export default {
     name: "Door",
+    components: {
+        VueClockPicker
+    },
     props: ["door"],
     data() {
         return {
@@ -63,7 +83,9 @@ export default {
             seconds: 0,
             unlocked: this.door.unlocked === "true",
             nietdicht: this.door.nietdicht === "true",
-            doorId: this.door.id.toString()
+            timeModal: this.door.id.toString() + "time",
+            durationModal: this.door.id.toString() + "duration",
+            time: ''
         }
     },
     created(){
@@ -96,25 +118,45 @@ export default {
             })
         },
         // Open close modals
-        open() {
-            this.$vm2.open(this.doorId)
+        openDurationPicker() {
+            this.$vm2.open(this.durationModal)
         },
-        close() {
+        closeDurationPicker() {
             this.resetInputs()
-            this.$vm2.close(this.doorId)
+            this.$vm2.close(this.durationModal)
         },
         // Open door for certain time
-        setTime() {
+        setDuration() {
             let seconds = (this.hours * 3600) + (this.minutes * 60) + this.seconds
             console.log(seconds)
-            this.$vm2.close(this.doorId)
+            this.$vm2.close(this.durationModal)
             let event = {
                 doors: [this.door],
                 state: true,
                 duration: seconds,
             }
-            console.log(this.doorId)
             db.default.insertEvent(event)
+        },
+        openTimePicker() {
+            this.time = '';
+            this.$vm2.open(this.timeModal)
+        },
+        closeTimePicker() {
+            this.$vm2.close(this.timeModal)
+        },
+        setTime() {
+            let nowString = new Date().toString()
+            let endString = new Date().toString().replace(/\d\d:\d\d:\d\d/i, this.time + ":00")
+            let now = Date.parse(nowString)
+            let end = Date.parse(endString)
+            let duration = (end - now) / 1000
+            let event = {
+                doors: [this.door],
+                state: true,
+                duration: duration,
+            }
+            db.default.insertEvent(event)
+            this.$vm2.close(this.timeModal)
         },
         resetInputs() {
             this.hours = 0;
@@ -198,6 +240,10 @@ label {
     transform: scale(1.15);
 }
 
+.stopwatch i:hover {
+    transform: scale(1.15);
+}
+
 #edit:hover {
     transform: scale(1.15);
 }
@@ -233,5 +279,12 @@ small {
 
 .vue-modal-2 {
     z-index: 999;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1em;
+    margin-bottom: 1em;
 }
 </style>

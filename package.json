@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@burhanahmeed/vue-modal-2": "^1.1.4",
+    "@pencilpix/vue2-clock-picker": "^0.1.6",
     "@popperjs/core": "^2.6.0",
     "axios": "^0.21.1",
     "bootstrap": "^5.0.0-beta2",
