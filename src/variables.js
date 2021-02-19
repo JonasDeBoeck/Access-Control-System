@@ -87,14 +87,14 @@ async function unlockDoor(door_id, session) {
 
     let data = {
         DoorCollection: {
-          total: 1,
-          rows: [
+        total: 1,
+        rows: [
             {
-              id: door_id
+                id: door_id
             }
-          ]
+            ]
         }
-      }
+    }
     console.log(door_id)
     const response = await axios.post(`http://${hostname}/api/doors/open`, data, headers);
     console.log(response);
@@ -113,10 +113,10 @@ async function unlockDoors(doorids,session){
 
     let data = {
         DoorCollection: {
-          total: doorids.length,
-          rows: rows_array
-        }
-      }
+        total: doorids.length,
+        rows: rows_array
+    }
+    }
     const response = await axios.post(`http://${hostname}/api/doors/open`, data, headers);
     console.log(response);
     return response.data;
@@ -135,8 +135,8 @@ async function lockDoors(door_ids, session) {
 
     let data = {
         "DoorCollection": {
-          "total": door_ids.length,
-          "rows": rows_array
+        "total": door_ids.length,
+        "rows": rows_array
         }
     }
     const response = await axios.post(`http://${hostname}/api/doors/lock`, data, headers);
@@ -158,12 +158,12 @@ async function lockDoor(door_id, session) {
 
     let data = {
         "DoorCollection": {
-          "total": 1,
-          "rows": [
-            {
-              "id": door_id
-            }
-          ]
+        "total": 1,
+        "rows": [
+        {
+            "id": door_id
+        }
+        ]
         }
     }
     const response = await axios.post(`http://${hostname}/api/doors/lock`, data, headers);
