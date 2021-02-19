@@ -9,7 +9,7 @@ import Toasted from 'vue-toasted';
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-import SquareLoader from 'vue-spinner/src/SyncLoader.vue';
+import ClipLoader from 'vue-spinner/src/ClipLoader.vue';
 
 
 Vue.use(VueSession)
@@ -18,7 +18,7 @@ Vue.config.productionTip = false
 
 Vue.component("v-select", vueSelect)
 Vue.component('multiselect', Multiselect)
-Vue.component('pacman-loader', SquareLoader);
+Vue.component('pacman-loader', ClipLoader)
 Vue.use(Modal);
 Vue.use(Toasted)
 Vue.use(BootstrapVue)

@@ -105,13 +105,14 @@ async function unlockDoor(door_id, session) {
 
     let data = {
         DoorCollection: {
-          total: 1,
-          rows: [
+        total: 1,
+        rows: [
             {
-              id: door_id
+                id: door_id
             }
-          ]
+            ]
         }
+<<<<<<< HEAD
       }
     
     try{
@@ -124,6 +125,13 @@ async function unlockDoor(door_id, session) {
         errorHandling(error)
         return {error: "unauthorized"}
     } 
+=======
+    }
+    console.log(door_id)
+    const response = await axios.post(`http://${hostname}/api/doors/open`, data, headers);
+    console.log(response);
+    return response.data;
+>>>>>>> 213378d02c0388ded8570803b370e51049d8d8e6
 }
 
 async function unlockDoors(doorids,session){
@@ -138,6 +146,7 @@ async function unlockDoors(doorids,session){
 
     let data = {
         DoorCollection: {
+<<<<<<< HEAD
           total: doorids.length,
           rows: rows_array
         }
@@ -151,6 +160,15 @@ async function unlockDoors(doorids,session){
         errorHandling(error)
         return {error: "unauthorized"}
     }
+=======
+        total: doorids.length,
+        rows: rows_array
+    }
+    }
+    const response = await axios.post(`http://${hostname}/api/doors/open`, data, headers);
+    console.log(response);
+    return response.data;
+>>>>>>> 213378d02c0388ded8570803b370e51049d8d8e6
 }
 
 async function lockDoors(door_ids, session) {
@@ -166,8 +184,8 @@ async function lockDoors(door_ids, session) {
 
     let data = {
         "DoorCollection": {
-          "total": door_ids.length,
-          "rows": rows_array
+        "total": door_ids.length,
+        "rows": rows_array
         }
     }
     try{
@@ -192,12 +210,12 @@ async function lockDoor(door_id, session) {
 
     let data = {
         "DoorCollection": {
-          "total": 1,
-          "rows": [
-            {
-              "id": door_id
-            }
-          ]
+        "total": 1,
+        "rows": [
+        {
+            "id": door_id
+        }
+        ]
         }
     }
     try{

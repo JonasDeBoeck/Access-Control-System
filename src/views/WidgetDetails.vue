@@ -165,6 +165,15 @@ export default {
             const result = await db.default.updateWidget(this.new_widget)
             console.log(result)
             this.$router.push({path: '/widgets'})
+
+            this.$toasted.show(`${this.new_widget.name} Succesvol aangepast!`, {
+                theme: "toasted-primary",
+                position: "top-right",
+                duration: 1500,
+                icon: 'cogs',
+                iconPack: 'fontawesome',
+                type: 'success'
+            })
         }
     },
     computed: {
