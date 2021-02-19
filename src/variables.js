@@ -112,9 +112,7 @@ async function unlockDoor(door_id, session) {
             }
             ]
         }
-<<<<<<< HEAD
       }
-    
     try{
         console.log(door_id)
         const response = await axios.post(`http://${hostname}/api/doors/open`, data, headers);
@@ -125,13 +123,6 @@ async function unlockDoor(door_id, session) {
         errorHandling(error)
         return {error: "unauthorized"}
     } 
-=======
-    }
-    console.log(door_id)
-    const response = await axios.post(`http://${hostname}/api/doors/open`, data, headers);
-    console.log(response);
-    return response.data;
->>>>>>> 213378d02c0388ded8570803b370e51049d8d8e6
 }
 
 async function unlockDoors(doorids,session){
@@ -146,7 +137,6 @@ async function unlockDoors(doorids,session){
 
     let data = {
         DoorCollection: {
-<<<<<<< HEAD
           total: doorids.length,
           rows: rows_array
         }
@@ -160,15 +150,6 @@ async function unlockDoors(doorids,session){
         errorHandling(error)
         return {error: "unauthorized"}
     }
-=======
-        total: doorids.length,
-        rows: rows_array
-    }
-    }
-    const response = await axios.post(`http://${hostname}/api/doors/open`, data, headers);
-    console.log(response);
-    return response.data;
->>>>>>> 213378d02c0388ded8570803b370e51049d8d8e6
 }
 
 async function lockDoors(door_ids, session) {
