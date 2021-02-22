@@ -39,7 +39,7 @@ export default {
     methods: {
         logout(){
             this.$session.remove("bs-session-id");
-            this.$router.push({path: '/'});
+            this.$router.push({path: '/'}).catch(() => {location.reload()});
             // Emit event naar parent om loggedIn aan te passen
             this.$emit("logOut")
         },
