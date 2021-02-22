@@ -1,14 +1,14 @@
 <template>
     <div class="widget" :style="cssVars">
         <div @click="executeWidget" class="iconcontainer">
-            <img class="icon" :src="require(`../assets/icons/${this.widget.icon}.png`)" alt="icoon">
+            <img class="icon" :src="require(`../assets/icons/${this.widget.icon}.png`)" alt="icoon">    
         </div>
-        <div class="content ">
+        <div  class="content ">
             <h2>{{widget.name}}</h2>
             <div class="doors">
                 <p class="door" v-for="door in widget.doors" v-bind:key="door.id">{{door.name}}</p>
             </div>
-            <div v-if="widget.active" class="active">
+            <div v-bind:class="{'is-active': widget.active, 'not-active':!widget.active}" class="active">
                 <i class="fas fa-bolt"></i>
             </div>
         </div>
@@ -19,102 +19,153 @@
                 </div>
                 <p>{{this.hours}}:{{this.minutes}}:{{this.seconds}}</p>
             </div>
-
-            <div class="buttons">
-                <div class="button" id="kleur">
-                    <router-link :to="{ name: 'WidgetDetails', params: {id: widget.id}}"> <i class="fas fa-edit "></i>
-                    </router-link>
-                </div>
-                <div @click="remove" class="button"><i class="fas fa-trash-alt"></i></div>
+            
+            <div class="buttons"> 
+                <div  class="button" id="kleur"><router-link :to="{ name: 'WidgetDetails', params: {id: widget.id}}" > <i class="fas fa-edit "></i> </router-link></div>
+                <div @click="checkRemove" class="button"><i class="fas fa-trash-alt"></i></div>   
             </div>
         </div>
         <div v-if="!widget.active" @click="executeWidget" class="activate">
             <p>Activeer Widget</p>
         </div>
         <div v-if="widget.active" @click="cancelEvent" class="activate">
-            <p>Cancel Widget</p>
+            <p>Annuleer Widget</p>
         </div>
+        <vue-modal-2 class="vue-modal-2" :name = "warning" @on-close="closeWarning" 
+            noHeader
+            wrapperBg="rgba(0, 0, 0, 0.10)"
+            :footerOptions="{btn1: 'Annuleer', 
+                            btn2: 'Bevestig', 
+                            btn1OnClick: () => { closeWarning(); },
+                            btn2OnClick: () => { removeAndCancelWidget(); }
+                            }">
+            <div class="wrapper">
+                <div class="wrapper-icon">
+                    <i class="fas fa-exclamation-triangle fa-2x"></i>
+                </div>
+                <div class="wrapper-text">
+                    <p>Deze widget is actief, als je deze verwijderd wordt het event ook gecancelled</p>
+                </div>
+            </div>
+        </vue-modal-2>
+        <vue-modal-2 class="vue-modal-2" :name = "confirmation" @on-close="closeConfirmation" 
+            noHeader
+            wrapperBg="rgba(0, 0, 0, 0.10)"
+            :footerOptions="{btn1: 'Annuleer', 
+                            btn2: 'Bevestig', 
+                            btn1OnClick: () => { closeConfirmation(); },
+                            btn2OnClick: () => { remove(); }
+                            }">
+            <div class="wrapper">
+                <div class="wrapper-icon">
+                    <i class="fas fa-exclamation-circle fa-2x"></i>
+                </div>
+                <div class="wrapper-text">
+                    <p>Ben je zeker dat je deze widget wilt verwijderen</p>
+                </div>
+            </div>
+        </vue-modal-2>
     </div>
 </template>
 
 <script>
-    import * as db from '../database'
-    export default {
-        name: "Widget",
-        props: ["widget"],
-        data() {
+import * as db from '../database'
+export default {
+    name: "Widget",
+    props: ["widget"],
+    data(){
+        return {
+            hours: '00',
+            minutes: '00',
+            seconds: '00',
+            duration: this.widget.event_duration,
+            canceled: false,
+            confirmation: "confirmation" + this.widget.id.toString(),
+            warning: "warning " + this.widget.id.toString(),
+            active: false
+        }
+    },
+    computed: {
+        cssVars(){
             return {
-                hours: '00',
-                minutes: '00',
-                seconds: '00',
-                duration: this.widget.event_duration,
-                canceled: false
+                '--background': this.widget.color
+            }
+        }
+    },
+    methods: {
+        checkRemove(){
+            console.log("trying to remove widget")
+            console.log(this.widget)
+            if (this.widget.active){
+                this.$vm2.open(this.warning)
+            }
+            else{
+                this.$vm2.open(this.confirmation)
             }
         },
-        computed: {
-            cssVars() {
-                return {
-                    '--background': this.widget.color
-                }
-            }
+        async remove(){
+            const result = await db.default.removeWidget(this.widget.id)
+            console.log(result)
+            this.$emit("del-widget")
+            this.$toasted.show(`${this.widget.name} Succesvol verwijderd!`, {
+                theme: "toasted-primary",
+                position: "top-right",
+                duration: 1800,
+                icon: 'cogs',
+                iconPack: 'fontawesome',
+                type: 'success'
+            })
         },
-        methods: {
-            async remove() {
-                const result = await db.default.removeWidget(this.widget.id)
-                console.log(result)
-                this.$emit("del-widget")
-                this.$toasted.show(`${this.widget.name} Succesvol verwijderd!`, {
-                    theme: "toasted-primary",
-                    position: "top-right",
-                    duration: 1800,
-                    icon: 'cogs',
-                    iconPack: 'fontawesome',
-                    type: 'success'
+        async executeWidget(){
+            let event = {
+                doors: this.widget.doors,
+                state: true,
+                duration: this.widget.duration,
+                widget: this.widget
+            }
+            let result = await db.default.insertEvent(event)
+            console.log(result)
+            if (result != undefined){
+                this.widget.event_id = result.data.id;
+                this.widget.active = true
+                console.log("starting countdown")
+                this.startCountDown()
+
+                this.$toasted.show(`${this.widget.name} Succesvol Gestart!`, {
+                theme: "toasted-primary",
+                position: "top-right",
+                duration: 1000,
+                icon: 'cogs',
+                iconPack: 'fontawesome',
+                type: 'success'
                 })
-            },
-            async executeWidget() {
-                let event = {
-                    doors: this.widget.doors,
-                    state: true,
-                    duration: this.widget.duration,
-                    widget: this.widget
-                }
-                let result = await db.default.insertEvent(event)
-                console.log(result)
-                if (result != undefined) {
-                    this.widget.event_id = result.data.id;
-                    this.widget.active = true
-                    console.log("starting countdown")
-                    this.startCountDown()
-                }
-                this.$toasted.show(`${this.widgetname} Succesvol Gestart!`, {
-                    theme: "toasted-primary",
-                    position: "top-right",
-                    duration: 1000,
-                    icon: 'cogs',
-                    iconPack: 'fontawesome',
-                    type: 'success'
-                })
-            },
-            startCountDown() {
-                this.duration--
+                // force update rerender 
+                this.$forceUpdate();
+            }  
+        },
+        startCountDown(){
+            this.duration--
+            this.setTime(this.duration)
+            if (this.duration > 0 && !this.canceled){
+                setTimeout(this.startCountDown,1000)
+            }
+            else{
+                this.canceled = false
+                this.widget.active = false;
+                this.widget.event_id = -1;
+                this.duration = this.widget.duration
                 this.setTime(this.duration)
-                if (this.duration > 0 && !this.canceled) {
-                    setTimeout(this.startCountDown, 1000)
-                }
-                else {
-                    this.canceled = false
-                    this.widget.active = false;
-                    this.widget.event_id = -1;
-                    this.duration = this.widget.duration
-                    this.setTime(this.duration)
-                }
-            },
-            cancelEvent() {
+            }
+        },
+        async cancelEvent(){
+            if (this.widget.event_id === -1){
+                // event bestaat niet (meer)
+                this.$vm2.close(this.warning)
+            }
+            else{
                 this.duration = this.widget.duration
                 this.canceled = true
-                db.default.cancelEvent(this.widget.event_id)
-
+                await db.default.cancelEvent(this.widget.event_id)
                 this.$toasted.show(`${this.widget.name} Succesvol gecancelled!`, {
                     theme: "toasted-primary",
                     position: "top-right",
@@ -123,33 +174,54 @@
                     iconPack: 'fontawesome',
                     type: 'success'
                 })
-            },
-            setTime(duration) {
-                let hours = Math.floor((duration / 3600))
-                duration = duration % 3600
-                let minutes = Math.floor((duration / 60));
-                duration = duration % 60;
-                this.hours = hours > 9 ? hours : `0${hours}`;
-                this.minutes = minutes > 9 ? minutes : `0${minutes}`;
-                this.seconds = duration > 9 ? duration : `0${duration}`;
             }
+            
         },
-        created() {
-            // calculate hour, minute, seconds
-            this.setTime(this.widget.duration)
-            if (this.widget.active) {
-                this.startCountDown()
-            }
+        setTime(duration){
+            let hours = Math.floor((duration / 3600))
+            duration = duration % 3600
+            let minutes = Math.floor((duration / 60));
+            duration = duration % 60;
+            this.hours = hours > 9 ? hours : `0${hours}`;
+            this.minutes = minutes > 9 ? minutes : `0${minutes}`;
+            this.seconds = duration > 9 ? duration : `0${duration}`;
+        },
+        closeConfirmation(){
+            this.$vm2.close(this.confirmation)
+        },
+        async removeAndCancelWidget(){
+            await this.cancelEvent()
+            await this.remove()
+        },
+        closeWarning(){
+            this.$vm2.close(this.warning)
+        }
+    },
+    created(){
+        // calculate hour, minute, seconds
+        this.setTime(this.widget.duration)
+        if (this.widget.active){
+            this.startCountDown()
         }
     }
+}
 </script>
 
 <style scoped>
+
     .widget {
         width: 100%;
-        box-shadow: 0 .15rem 1.5rem 0 rgba(58, 59, 69, .5);
+         box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
+        transition: box-shadow 0.3s ease-in-out;
         border-radius: 10px;
-        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .widget:hover {
+        box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .5);
+        transition: box-shadow 0.3s ease-in-out;
     }
 
 
@@ -169,7 +241,7 @@
         box-shadow: .15rem 0 1.5rem 0 rgba(58, 59, 69, .5);
     }*/
 
-    .content {
+    .content{
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -179,10 +251,10 @@
     }
 
     .icons {
-        justify-content: space-between;
+       justify-content: space-between;
     }
 
-    .icon {
+    .icon{ 
         margin: 10px;
         width: 45px;
         height: 45px;
@@ -192,7 +264,7 @@
     .buttons {
         display: flex;
         padding: 1em;
-
+        bottom: 20px;
     }
 
     #kleur {
@@ -201,8 +273,9 @@
 
     }
 
-    .button {
+    .button {    
         flex-basis: 50%;
+        cursor: pointer;
     }
 
     .button:hover {
@@ -216,11 +289,9 @@
         border-bottom-right-radius: 10px;
         border-bottom-left-radius: 10px;
         width: 100%;
-        position: absolute;
-        bottom: 0;
     }
 
-    .activate p {
+    .activate p{
         font-family: 'Oswald';
         font-size: 1.2em;
         margin-top: 0.5em;
@@ -228,30 +299,33 @@
     }
 
     h2 {
-        color: rgba(58, 96, 208, 1);
+        color:  rgba(58,96,208,1);
         bottom: 0;
     }
 
-    .doors {
+    .doors{
         display: flex;
         justify-content: center;
         width: 100%;
     }
 
-    .fa-bolt {
+    .is-active{
         color: rgb(58, 208, 121);
         /* stroke: black;
         stroke-width: 2px; */
-
+        
         /*box-shadow: 0 0 0 0 rgba(0,0,0,1);*/
         transform: scale(1);
-        animation: pulse 1.5s infinite;
+        animation: pulse 1.5s infinite;  
     }
+
+    .not-active{
+        color: grey;
+    } 
 
     .active {
         font-size: 1.1em;
-        margin-bottom: 1em;
-
+        margin-bottom: 1em;	  
     }
 
     .widget widget {
@@ -262,12 +336,44 @@
         font-size: 1.22em;
     }
 
+    .wrapper{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .wrapper-icon{
+        flex-basis: 20%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .wrapper-text{
+        flex-basis: 80%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 1em 0px 1em 0px;
+    }
+
+    .fa-exclamation-circle{
+        color: #17a2b8;
+    }
+
+    .fa-exclamation-triangle{
+        color: #dc3545;
+    }
+
+    .fa-trash-alt{
+        color: #dc3545;
+    }
+
     @media only screen and (max-width: 992px) {
         .activate {
             position: initial;
         }
     }
-
 
     @keyframes pulse {
         0% {
@@ -285,4 +391,6 @@
             /*box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);*/
         }
     }
+
+
 </style>

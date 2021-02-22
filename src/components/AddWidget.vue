@@ -71,14 +71,14 @@
                     alt=""></button>
         </div>
 
-        <div class="form-check">
+        <!-- <div class="form-check">
             <input class="form-check-input" type="radio" name="flexRadioDefault" id="open">
             <label class="form-check-label" for="flexRadioDefault1">Open</label>
         </div>
         <div class="form-check">
             <input class="form-check-input" type="radio" name="flexRadioDefault" id="close" checked>
             <label class="form-check-label" for="flexRadioDefault2">Close</label>
-        </div>
+        </div> -->
 
         <!-- coole button -->
         <!-- <div class="form-check form-switch options">
@@ -110,7 +110,7 @@
                 seconds: 0,
                 widgetname: "",
                 colour: "#000000",
-                icon: "",
+                icon: "open-door",
                 form_errors_strings: []
             }
         },
@@ -178,6 +178,9 @@
                 let value = e.target.parentNode.value
                 console.log(value)
                 this.icon = value;
+                let icons = document.getElementsByClassName("icon")
+                icons.forEach(element => element.classList.remove("active-icon"))
+                icons.forEach(element => {if (element.value === value){element.classList.add("active-icon")}})
             },
             selectall(e) {
                 if (e.target.checked) {
@@ -273,6 +276,7 @@
         width: 84;
         height: 84;
         border: none;
+        box-sizing: border-box;
     }
 
     .doors {
@@ -284,6 +288,10 @@
         margin-bottom: 15px;
         background: #eee;
         border-radius: 5px;
+    }
+
+    .active-icon{
+        border: 2px solid #212529;
     }
 
     .options {
