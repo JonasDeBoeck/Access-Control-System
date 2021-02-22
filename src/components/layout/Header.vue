@@ -141,5 +141,16 @@ nav li.router-link-exact-active .arrow {
     transition: transform .4s ease-in-out;  
 }
 
+@media only screen and (max-width: 992px) {
+  .header {
+      height: auto;
+      display: block;
+      padding-top: 2em;
+      padding-bottom: 2em;
+  }
 
+  .wrapper {
+      margin-top: 0;
+  }
+}
 </style>

@@ -287,4 +287,10 @@ small {
     margin-top: 1em;
     margin-bottom: 1em;
 }
+
+@media only screen and (max-width: 992px) {
+  .door {
+    width: 100%;
+  }
+}
 </style>

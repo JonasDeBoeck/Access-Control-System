@@ -30,4 +30,11 @@ export default {
     margin-top: 2.5em;
     height: 80%;
   }
+
+  
+@media only screen and (max-width: 992px) {
+  .doors {
+    display: block;
+  }
+}
 </style>

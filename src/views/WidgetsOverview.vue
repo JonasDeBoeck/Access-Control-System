@@ -13,57 +13,60 @@
       </div>
     </div>
     <div class="content">
-      <div v-if="this.widgets.length > 0" class="widgets">  
-          <Widget class="widget" v-for="widget in visibleWidgets" v-bind:key="widget.name" v-bind:widget="widget" v-on:del-widget="updateWidgets"/>
+      <div class="form">
+        <AddWidget v-on:add-widget="updateWidgets" />
+      </div>
+      <div v-if="this.widgets.length > 0" class="widgets">
+        <Widget class="widget" v-for="widget in visibleWidgets" v-bind:key="widget.name" v-bind:widget="widget"
+          v-on:del-widget="updateWidgets" />
       </div>
       <p class="error" v-if="this.widgets.length === 0">No widgets available</p>
-      <div class="form">
-        <AddWidget v-on:add-widget="updateWidgets"/>
-      </div>
     </div>
-    <Pagination v-bind:list="widgets" v-bind:currentPage="currentPage" v-bind:pageSize="pageSize" v-on:page:update="updatePage" v-if="this.searchterm.length === 0" class="pages"/>
-    <Pagination v-bind:list="filteredWidgets" v-bind:currentPage="currentPage" v-bind:pageSize="pageSize" v-on:page:update="updatePage" v-if="this.searchterm.length > 0" class="pages"/>
+    <Pagination v-bind:list="widgets" v-bind:currentPage="currentPage" v-bind:pageSize="pageSize"
+      v-on:page:update="updatePage" v-if="this.searchterm.length === 0" class="pages" />
+    <Pagination v-bind:list="filteredWidgets" v-bind:currentPage="currentPage" v-bind:pageSize="pageSize"
+      v-on:page:update="updatePage" v-if="this.searchterm.length > 0" class="pages" />
   </div>
 </template>
 
 <script>
-import AddWidget from '../components/AddWidget.vue'
-import Widget from '../components/Widget.vue'
-import Pagination from '../components/Pagination.vue'
-import * as db from '../database'
-export default {
-  name: 'WidgetsOverview',
-  components:{
-    AddWidget,
-    Widget,
-    Pagination
-  },
-  async created() {
-    this.widgets = await db.default.getAllWidgetsForOverview()
-    this.filteredWidgets = this.widgets
-    this.updateVisibleWidgets(this.widgets)
-    this.pollWidgets()
-  },
-  data(){
-    return {
-      doors: [],
-      selectedDoor: undefined,
-      // Zoekterm
-      searchterm: '',
-      // Gefilterde widgets
-      filteredWidgets: [],
-      // Originele lijst van widgets
-      widgets: [],
-      // Zichtbare widgets
-      visibleWidgets: [],
-      // Huidige pagina 
-      currentPage: 0,
-      // Aantal deuren per pagina
-      pageSize: 6,
+  import AddWidget from '../components/AddWidget.vue'
+  import Widget from '../components/Widget.vue'
+  import Pagination from '../components/Pagination.vue'
+  import * as db from '../database'
+  export default {
+    name: 'WidgetsOverview',
+    components: {
+      AddWidget,
+      Widget,
+      Pagination
+    },
+    async created() {
+      this.widgets = await db.default.getAllWidgetsForOverview()
+      this.filteredWidgets = this.widgets
+      this.updateVisibleWidgets(this.widgets)
+      this.pollWidgets()
+    },
+    data() {
+      return {
+        doors: [],
+        selectedDoor: undefined,
+        // Zoekterm
+        searchterm: '',
+        // Gefilterde widgets
+        filteredWidgets: [],
+        // Originele lijst van widgets
+        widgets: [],
+        // Zichtbare widgets
+        visibleWidgets: [],
+        // Huidige pagina 
+        currentPage: 0,
+        // Aantal deuren per pagina
+        pageSize: 6,
       }
     },
-    methods:{
-      async updateWidgets(){  
+    methods: {
+      async updateWidgets() {
         let response = await db.default.getAllWidgets()
         this.widgets = response
         this.filteredWidgets = this.widgets
@@ -72,7 +75,7 @@ export default {
       updateVisibleWidgets(widgets) {
         // Slice het deel van de lijst die nodig is en assign dit aan visibleDoors, update ook de currentPage
         this.visibleWidgets = widgets.slice(this.currentPage * this.pageSize, (this.currentPage * this.pageSize) + this.pageSize)
-        if(this.visibleWidgets.length == 0 && this.currentPage > 0) {
+        if (this.visibleWidgets.length == 0 && this.currentPage > 0) {
           this.updatePage(this.currentPage - 1)
         }
       },
@@ -92,13 +95,13 @@ export default {
       containsString(value) {
         return value.name.match(this.searchterm)
       },
-      async pollWidgets(){
+      async pollWidgets() {
         let widgetsOverview = await db.default.getAllWidgetsForOverview()
         this.widgets = widgetsOverview
-        setTimeout(this.pollWidgets,5000);
+        setTimeout(this.pollWidgets, 5000);
       }
     }
-}
+  }
 </script>
 
 <style scoped>
@@ -106,6 +109,7 @@ export default {
     margin-top: 0.5em;
     height: 48px;
   }
+
   .headerOptions {
     display: flex;
   }
@@ -130,14 +134,16 @@ export default {
     border: 0;
     color: #6E707E;
     background-color: rgba(58, 59, 69, .15);
-    padding:.50rem 1rem;
+    padding: .50rem 1rem;
     border-top-left-radius: .35rem;
     border-bottom-left-radius: .35rem;
   }
-  input:focus, button:focus {
+
+  input:focus,
+  button:focus {
     outline: none;
   }
-  
+
   .searchButton:hover {
     background: rgb(26, 72, 207);
   }
@@ -145,16 +151,16 @@ export default {
   .searchButton {
     margin-left: -1px;
     color: #fff;
-    background: rgba(58,96,208,1);
-    border-color: rgba(58,96,208,1);
+    background: rgba(58, 96, 208, 1);
+    border-color: rgba(58, 96, 208, 1);
     border: 0px;
     border-top-right-radius: .35rem;
     border-bottom-right-radius: .35rem;
-    padding:.50rem 1rem;
-  } 
+    padding: .50rem 1rem;
+  }
 
   h1 {
-    color: rgba(58,96,208,1);
+    color: rgba(58, 96, 208, 1);
     margin: 0;
     font-family: 'Oswald';
     text-transform: uppercase;
@@ -168,7 +174,10 @@ export default {
     margin-left: 2.5em;
     margin-right: 2.5em;
     grid-column-gap: 2em;
-    height: 80%;
+  }
+
+  #widgets {
+    background-color: #F8F9FC;
   }
 
   .widgets {
@@ -184,5 +193,16 @@ export default {
   .form {
     grid-area: form;
   }
-</style>
 
+
+  @media only screen and (max-width: 992px) {
+    .content {
+      display: block;
+    }
+
+    .widgets {
+      margin-top: 2em;
+      display: block;
+    }
+  }
+</style>

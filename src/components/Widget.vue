@@ -1,9 +1,9 @@
 <template>
     <div class="widget" :style="cssVars">
         <div @click="executeWidget" class="iconcontainer">
-            <img class="icon" :src="require(`../assets/icons/${this.widget.icon}.png`)" alt="icoon">    
+            <img class="icon" :src="require(`../assets/icons/${this.widget.icon}.png`)" alt="icoon">
         </div>
-        <div  class="content ">
+        <div class="content ">
             <h2>{{widget.name}}</h2>
             <div class="doors">
                 <p class="door" v-for="door in widget.doors" v-bind:key="door.id">{{door.name}}</p>
@@ -19,10 +19,13 @@
                 </div>
                 <p>{{this.hours}}:{{this.minutes}}:{{this.seconds}}</p>
             </div>
-            
-            <div class="buttons"> 
-                <div  class="button" id="kleur"><router-link :to="{ name: 'WidgetDetails', params: {id: widget.id}}" > <i class="fas fa-edit "></i> </router-link></div>
-                <div @click="remove" class="button"><i class="fas fa-trash-alt"></i></div>   
+
+            <div class="buttons">
+                <div class="button" id="kleur">
+                    <router-link :to="{ name: 'WidgetDetails', params: {id: widget.id}}"> <i class="fas fa-edit "></i>
+                    </router-link>
+                </div>
+                <div @click="remove" class="button"><i class="fas fa-trash-alt"></i></div>
             </div>
         </div>
         <div v-if="!widget.active" @click="executeWidget" class="activate">
@@ -35,114 +38,113 @@
 </template>
 
 <script>
-import * as db from '../database'
-export default {
-    name: "Widget",
-    props: ["widget"],
-    data(){
-        return {
-            hours: '00',
-            minutes: '00',
-            seconds: '00',
-            duration: this.widget.event_duration,
-            canceled: false
-        }
-    },
-    computed: {
-        cssVars(){
+    import * as db from '../database'
+    export default {
+        name: "Widget",
+        props: ["widget"],
+        data() {
             return {
-                '--background': this.widget.color
+                hours: '00',
+                minutes: '00',
+                seconds: '00',
+                duration: this.widget.event_duration,
+                canceled: false
             }
-        }
-    },
-    methods: {
-        async remove(){
-            const result = await db.default.removeWidget(this.widget.id)
-            console.log(result)
-            this.$emit("del-widget")
-            this.$toasted.show(`${this.widget.name} Succesvol verwijderd!`, {
-                theme: "toasted-primary",
-                position: "top-right",
-                duration: 1800,
-                icon: 'cogs',
-                iconPack: 'fontawesome',
-                type: 'success'
-            })
         },
-        async executeWidget(){
-            let event = {
-                doors: this.widget.doors,
-                state: true,
-                duration: this.widget.duration,
-                widget: this.widget
+        computed: {
+            cssVars() {
+                return {
+                    '--background': this.widget.color
+                }
             }
-            let result = await db.default.insertEvent(event)
-            console.log(result)
-            if (result != undefined){
-                this.widget.event_id = result.data.id;
-                this.widget.active = true
-                console.log("starting countdown")
-                this.startCountDown()
-            }  
-            this.$toasted.show(`${this.widgetname} Succesvol Gestart!`, {
-                theme: "toasted-primary",
-                position: "top-right",
-                duration: 1000,
-                icon: 'cogs',
-                iconPack: 'fontawesome',
-                type: 'success'
-            })
         },
-        startCountDown(){
-            this.duration--
-            this.setTime(this.duration)
-            if (this.duration > 0 && !this.canceled){
-                setTimeout(this.startCountDown,1000)
-            }
-            else{
-                this.canceled = false
-                this.widget.active = false;
-                this.widget.event_id = -1;
-                this.duration = this.widget.duration
+        methods: {
+            async remove() {
+                const result = await db.default.removeWidget(this.widget.id)
+                console.log(result)
+                this.$emit("del-widget")
+                this.$toasted.show(`${this.widget.name} Succesvol verwijderd!`, {
+                    theme: "toasted-primary",
+                    position: "top-right",
+                    duration: 1800,
+                    icon: 'cogs',
+                    iconPack: 'fontawesome',
+                    type: 'success'
+                })
+            },
+            async executeWidget() {
+                let event = {
+                    doors: this.widget.doors,
+                    state: true,
+                    duration: this.widget.duration,
+                    widget: this.widget
+                }
+                let result = await db.default.insertEvent(event)
+                console.log(result)
+                if (result != undefined) {
+                    this.widget.event_id = result.data.id;
+                    this.widget.active = true
+                    console.log("starting countdown")
+                    this.startCountDown()
+                }
+                this.$toasted.show(`${this.widgetname} Succesvol Gestart!`, {
+                    theme: "toasted-primary",
+                    position: "top-right",
+                    duration: 1000,
+                    icon: 'cogs',
+                    iconPack: 'fontawesome',
+                    type: 'success'
+                })
+            },
+            startCountDown() {
+                this.duration--
                 this.setTime(this.duration)
+                if (this.duration > 0 && !this.canceled) {
+                    setTimeout(this.startCountDown, 1000)
+                }
+                else {
+                    this.canceled = false
+                    this.widget.active = false;
+                    this.widget.event_id = -1;
+                    this.duration = this.widget.duration
+                    this.setTime(this.duration)
+                }
+            },
+            cancelEvent() {
+                this.duration = this.widget.duration
+                this.canceled = true
+                db.default.cancelEvent(this.widget.event_id)
+
+                this.$toasted.show(`${this.widget.name} Succesvol gecancelled!`, {
+                    theme: "toasted-primary",
+                    position: "top-right",
+                    duration: 1500,
+                    icon: 'cogs',
+                    iconPack: 'fontawesome',
+                    type: 'success'
+                })
+            },
+            setTime(duration) {
+                let hours = Math.floor((duration / 3600))
+                duration = duration % 3600
+                let minutes = Math.floor((duration / 60));
+                duration = duration % 60;
+                this.hours = hours > 9 ? hours : `0${hours}`;
+                this.minutes = minutes > 9 ? minutes : `0${minutes}`;
+                this.seconds = duration > 9 ? duration : `0${duration}`;
             }
         },
-        cancelEvent(){
-            this.duration = this.widget.duration
-            this.canceled = true
-            db.default.cancelEvent(this.widget.event_id)
-
-            this.$toasted.show(`${this.widget.name} Succesvol gecancelled!`, {
-                theme: "toasted-primary",
-                position: "top-right",
-                duration: 1500,
-                icon: 'cogs',
-                iconPack: 'fontawesome',
-                type: 'success'
-            })
-        },
-        setTime(duration){
-            let hours = Math.floor((duration / 3600))
-            duration = duration % 3600
-            let minutes = Math.floor((duration / 60));
-            duration = duration % 60;
-            this.hours = hours > 9 ? hours : `0${hours}`;
-            this.minutes = minutes > 9 ? minutes : `0${minutes}`;
-            this.seconds = duration > 9 ? duration : `0${duration}`;
-        }
-    },
-    created(){
-        // calculate hour, minute, seconds
-        this.setTime(this.widget.duration)
-        if (this.widget.active){
-            this.startCountDown()
+        created() {
+            // calculate hour, minute, seconds
+            this.setTime(this.widget.duration)
+            if (this.widget.active) {
+                this.startCountDown()
+            }
         }
     }
-}
 </script>
 
 <style scoped>
-
     .widget {
         width: 100%;
         box-shadow: 0 .15rem 1.5rem 0 rgba(58, 59, 69, .5);
@@ -167,7 +169,7 @@ export default {
         box-shadow: .15rem 0 1.5rem 0 rgba(58, 59, 69, .5);
     }*/
 
-    .content{
+    .content {
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -177,10 +179,10 @@ export default {
     }
 
     .icons {
-       justify-content: space-between;
+        justify-content: space-between;
     }
 
-    .icon{ 
+    .icon {
         margin: 10px;
         width: 45px;
         height: 45px;
@@ -190,7 +192,7 @@ export default {
     .buttons {
         display: flex;
         padding: 1em;
-       
+
     }
 
     #kleur {
@@ -199,7 +201,7 @@ export default {
 
     }
 
-    .button {    
+    .button {
         flex-basis: 50%;
     }
 
@@ -218,7 +220,7 @@ export default {
         bottom: 0;
     }
 
-    .activate p{
+    .activate p {
         font-family: 'Oswald';
         font-size: 1.2em;
         margin-top: 0.5em;
@@ -226,29 +228,29 @@ export default {
     }
 
     h2 {
-        color:  rgba(58,96,208,1);
+        color: rgba(58, 96, 208, 1);
         bottom: 0;
     }
 
-    .doors{
+    .doors {
         display: flex;
         justify-content: center;
         width: 100%;
     }
 
-    .fa-bolt{
+    .fa-bolt {
         color: rgb(58, 208, 121);
         /* stroke: black;
         stroke-width: 2px; */
-        
+
         /*box-shadow: 0 0 0 0 rgba(0,0,0,1);*/
         transform: scale(1);
-        animation: pulse 1.5s infinite;  
-    } 
+        animation: pulse 1.5s infinite;
+    }
 
     .active {
         font-size: 1.1em;
-        margin-bottom: 1em;	  
+        margin-bottom: 1em;
 
     }
 
@@ -258,6 +260,12 @@ export default {
 
     .time {
         font-size: 1.22em;
+    }
+
+    @media only screen and (max-width: 992px) {
+        .activate {
+            position: initial;
+        }
     }
 
 
@@ -277,6 +285,4 @@ export default {
             /*box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);*/
         }
     }
-
-
 </style>

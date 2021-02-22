@@ -7,24 +7,24 @@
 </template>
 
 <script>
-export default {
-    name: 'Pagination',
-    props: ['list', 'currentPage', 'pageSize'],
-    methods: {
-        updatePage(pageNumber) {
-            this.$emit('page:update', pageNumber)
-        },
-        totalPages() {
-            return Math.ceil(this.list.length / this.pageSize)
-        },
-        showPreviousLink() {
-            return this.currentPage == 0 ? false : true;
-        },
-        showNextLink() {
-            return this.currentPage == this.totalPages() - 1 ? false : true;
+    export default {
+        name: 'Pagination',
+        props: ['list', 'currentPage', 'pageSize'],
+        methods: {
+            updatePage(pageNumber) {
+                this.$emit('page:update', pageNumber)
+            },
+            totalPages() {
+                return Math.ceil(this.list.length / this.pageSize)
+            },
+            showPreviousLink() {
+                return this.currentPage == 0 ? false : true;
+            },
+            showNextLink() {
+                return this.currentPage == this.totalPages() - 1 ? false : true;
+            }
         }
     }
-}
 </script>
 
 <style scoped>
@@ -38,12 +38,12 @@ export default {
         cursor: pointer;
         font-weight: bold;
         font-size: 2em;
-        color: rgba(58,96,208,1);
+        color: rgba(58, 96, 208, 1);
     }
 
     .page-counter {
         font-size: 1.25em;
         margin-left: 1em;
-        margin-right: 1em; 
+        margin-right: 1em;
     }
 </style>
