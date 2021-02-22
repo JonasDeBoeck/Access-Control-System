@@ -55,11 +55,11 @@
 
         <div class="input-group mb-3 colorpicker">
             <span class="input-group-text" id="inputGroup-sizing-default">
-                <colour-picker v-model="colour" :value="colour" label="Pick Colour" picker="compact"
+                <colour-picker v-model="color" :value="color" label="Pick Colour" picker="compact"
                     v-on:accept="changeColour" />
             </span>
             <input type="text" class="form-control" aria-label="Sizing example input"
-                aria-describedby="inputGroup-sizing-default" v-model="colour">
+                aria-describedby="inputGroup-sizing-default" v-model="color">
         </div>
 
         <div class="icons">
@@ -109,7 +109,7 @@
                 minutes: 0,
                 seconds: 0,
                 widgetname: "",
-                colour: "#000000",
+                color: "#0000000",
                 icon: "open-door",
                 form_errors_strings: []
             }
@@ -131,7 +131,7 @@
                         error: "U moet nog deuren selecteren!"
                     })
                 }
-                if (this.colour === null || this.colour === "") {
+                if (this.color === null || this.color === "") {
                     this.form_errors_strings.push({
                         error: "Geen kleur geselecteerd!"
                     })
@@ -150,7 +150,7 @@
                     let widget = {
                         name: this.widgetname,
                         doors: this.selectedDoors.map(this.changeDoor),
-                        color: this.colour,
+                        color: this.color,
                         icon: this.icon,
                         duration: this.hours * 3600 + this.minutes * 60 + this.seconds
                     }
@@ -172,7 +172,7 @@
             },
             changeColour(colour) {
                 let hex = colour.hex;
-                this.colour = hex;
+                this.color = hex;
             },
             setIcon(e) {
                 let value = e.target.parentNode.value
@@ -201,9 +201,6 @@
 </script>
 
 <style src="vue-multiselect/dist/vue-multiselect.min.css">
-    .vc-target {
-        background: #123456 !important;
-    }
 </style>
 <style scoped>
     #add_widget {

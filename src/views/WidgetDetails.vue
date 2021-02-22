@@ -18,11 +18,11 @@
                         <label for="colorpicker" class="labels">Kleur</label>
                         <div class="colorinput">
                             <span class="input-group-text" id="colorpicker">
-                                <colour-picker v-model="new_widget.color" :value="new_widget.color" label="Pick Colour"
+                                <colour-picker v-model="color" :value="color" label="Pick Colour"
                                     picker="compact" :style="cssVars" v-on:accept="changeColour" />
                             </span>
                             <input type="text" class="form-control" aria-label="Sizing example input"
-                                aria-describedby="colorpicker" v-model="new_widget.color">
+                                aria-describedby="colorpicker" v-model="color">
                         </div>
                     </div>
                 </form>
@@ -112,9 +112,9 @@
                 widget: undefined,
                 new_widget: undefined,
                 searchterm: "",
-                colour: "",
                 doors: [],
                 hours: 0,
+                color: "",
                 minutes: 0,
                 seconds: 0,
                 buttons: []
@@ -124,11 +124,12 @@
             'colour-picker': ColourPicker
         },
         async created() {
-            console.log("test")
             const result = await db.default.getWidget(this.$route.params.id)
+            const doors = await api.default.getDoorsForOverview(this.$session.get('bs-session-id'))
+            this.color = result.color;
+            console.log(this.color)
             this.widget = result;
             this.new_widget = result;
-            const doors = await api.default.getDoorsForOverview(this.$session.get('bs-session-id'))
             this.doors = doors;
             let duration = this.widget.duration
             this.hours = Math.floor(duration / 3600)
@@ -140,7 +141,11 @@
         },
         methods: {
             search() { },
-            changeColour() { },
+            changeColour(colour) {
+                let hex = colour.hex;
+                this.new_widget.color = hex;
+                this.color = hex;
+            },
             selectall(e) {
                 if (e.target.checked) {
                     this.widget.doors = this.doors
@@ -150,11 +155,14 @@
                 }
             },
             setIcon(e) {
+                this.new_widget.icon = e.target.parentNode.value
                 this.buttons.forEach(element => {
                     element.classList.remove('active')
                 });
-                e.target.parentNode.classList.add('active')
-                this.new_widget.icon = e.target.parentNode.value
+                this.buttons.forEach(element => {
+                    if (element.value === this.new_widget.icon){element.classList.add('active')}  
+                });
+                
             },
             async save() {
                 this.hours = parseInt(this.hours)
@@ -162,6 +170,7 @@
                 this.seconds = parseInt(this.seconds)
                 this.new_widget.duration = (this.hours * 3600) + (this.minutes * 60) + this.seconds
                 console.log(this.new_widget)
+                this.new_widget.color = this.color;
                 const result = await db.default.updateWidget(this.new_widget)
                 console.log(result)
                 this.$router.push({ path: '/widgets' })
@@ -179,7 +188,7 @@
         computed: {
             cssVars() {
                 return {
-                    '--background': this.widget.color
+                    '--background': this.color
                 }
             }
         },
@@ -320,18 +329,16 @@
     }
 
     .icon {
+        padding: 1em;
         border-radius: 0.5em;
         border: none;
         outline: none;
     }
 
-    .icon:hover {
-        border: 2px solid #4e73df;
-    }
-
     .active {
+        border: 2px solid #212529;
         border-radius: 0.5em;
-        border: 2px solid #4e73df;
+        /* border: 2px solid #4e73df; */
     }
 
     .icons {

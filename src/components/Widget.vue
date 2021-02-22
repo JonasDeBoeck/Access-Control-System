@@ -21,8 +21,8 @@
             </div>
             
             <div class="buttons"> 
-                <div  class="button" id="kleur"><router-link :to="{ name: 'WidgetDetails', params: {id: widget.id}}" > <i class="fas fa-edit "></i> </router-link></div>
-                <div @click="checkRemove" class="button"><i class="fas fa-trash-alt"></i></div>   
+                <div  class="button" id="kleur"><router-link :to="{ name: 'WidgetDetails', params: {id: widget.id}}" > <i class="fas fa-edit fa-2x"></i> </router-link></div>
+                <div @click="checkRemove" class="button"><i class="fas fa-trash-alt fa-2x"></i></div>   
             </div>
         </div>
         <div v-if="!widget.active" @click="executeWidget" class="activate">
@@ -367,6 +367,10 @@ export default {
 
     .fa-trash-alt{
         color: #dc3545;
+    }
+
+    .fa-trash-alt:hover{
+        color: #aa2330;
     }
 
     @media only screen and (max-width: 992px) {
