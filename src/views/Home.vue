@@ -177,6 +177,10 @@
     margin-right: 0;
   }
 
+  .home{
+    background-color: white;
+  }
+
   @media screen and (max-width: 780px) {
     section {
       width: 90%;
