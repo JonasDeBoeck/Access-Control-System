@@ -1,7 +1,9 @@
 <template>
 <form id="add_widget" class="border border3 p-5" style="max-width=30vw">
     <h2>Voeg Widget toe</h2>
-
+    <div v-if="form_errors_strings.length !==null">
+        <p class="error" v-for="error in form_errors_strings" v-bind:key="error.error">{{error.error}}</p>
+    </div>
     <div class="input-group mb-3">
         <span class="input-group-text" id="inputGroup-sizing-default">Naam</span>
         <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" v-model="widgetname">
@@ -99,7 +101,8 @@ export default {
         seconds: 0,
         widgetname: "",
         colour: "#000000",
-        icon: ""
+        icon: "",
+        form_errors_strings: []
         }
     },
     methods: {
@@ -108,16 +111,52 @@ export default {
             this.hours = parseInt(this.hours)
             this.minutes = parseInt(this.minutes)
             this.seconds = parseInt(this.seconds)
-            let widget = {
-                name: this.widgetname,
-                doors: this.selectedDoors.map(this.changeDoor),
-                color: this.colour,
-                icon: this.icon,
-                duration: this.hours * 3600 + this.minutes * 60 + this.seconds
+            this.form_errors_strings = []
+            if(this.widgetname === null || this.widgetname === ""){
+                this.form_errors_strings.push({
+                    error: "U moet nog een naam ingeven voor de widget!"
+                })
             }
-            const result = await db.default.insertWidget(widget)
-            console.log(result)
-            this.$emit('add-widget')
+            if(this.selectedDoors === null || this.selectedDoors.length === 0){
+                this.form_errors_strings.push({
+                    error: "U moet nog deuren selecteren!"
+                })
+            }
+            if(this.colour===null || this.colour === ""){
+                this.form_errors_strings.push({
+                    error:"Geen kleur geselecteerd!"
+                })
+            }
+            if(this.icon === null || this.icon === ""){
+                this.form_errors_strings.push({
+                error: "Geen icon geselecteerd!"
+                })
+            }
+            if((this.hours * 3600 + this.minutes * 60 + this.seconds) ===0){
+                this.form_errors_strings.push({
+                    error: "De duratie mag niet 0 zijn!"
+                })
+            }
+            if(this.form_errors_strings.length === 0){
+                let widget = {
+                    name: this.widgetname,
+                    doors: this.selectedDoors.map(this.changeDoor),
+                    color: this.colour,
+                    icon: this.icon,
+                    duration: this.hours * 3600 + this.minutes * 60 + this.seconds
+                }
+                const result = await db.default.insertWidget(widget)
+                console.log(result)
+                this.$emit('add-widget')
+                this.$toasted.show(`${this.widgetname} Succesvol toegevoegd!`, {
+                    theme: "toasted-primary",
+                    position: "top-right",
+                    duration: 1000,
+                    icon: 'cogs',
+                    iconPack: 'fontawesome',
+                    type: 'success'
+                })
+            }
         },
         changeDoor(door){
             return {id: door.id, name: door.name}
@@ -248,5 +287,8 @@ export default {
     }
     .door{
         margin-right: 5px;
+    }
+    .error{
+        color: red;
     }
 </style>
