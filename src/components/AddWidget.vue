@@ -194,8 +194,6 @@
         async created() {
             let doors = await api.default.getDoorsForOverview(this.$session.get("bs-session-id"))
             this.doors = doors;
-            console.log("doors")
-            console.log(this.doors)
         }
     }
 </script>

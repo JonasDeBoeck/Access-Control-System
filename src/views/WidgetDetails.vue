@@ -18,11 +18,11 @@
                         <label for="colorpicker" class="labels">Kleur</label>
                         <div class="colorinput">
                             <span class="input-group-text" id="colorpicker">
-                                <colour-picker v-model="color" :value="color" label="Pick Colour"
-                                    picker="compact" :style="cssVars" v-on:accept="changeColour" />
+                                <colour-picker label="Pick Colour" :color="new_widget.color"
+                                    picker="compact" :style="cssVars" v-on:input="changeColour" />
                             </span>
                             <input type="text" class="form-control" aria-label="Sizing example input"
-                                aria-describedby="colorpicker" v-model="color">
+                                aria-describedby="colorpicker" v-model="new_widget.color">
                         </div>
                     </div>
                 </form>
@@ -34,16 +34,16 @@
                 <form class="form">
                     <div class="form-group">
                         <label class="labels" for="hours">Uren</label>
-                        <input type="number" class="form-control" id="hours" v-model="hours" v-bind:placeholder="hours">
+                        <input type="number" min="0" class="form-control" id="hours" v-model="hours" v-bind:placeholder="hours">
                     </div>
                     <div class="form-group">
                         <label class="labels" for="minutes">Minuten</label>
-                        <input type="number" class="form-control" id="minutes" v-model="minutes"
+                        <input type="number" min="0" max="59" class="form-control" id="minutes" v-model="minutes"
                             v-bind:placeholder="minutes">
                     </div>
                     <div class="form-group">
                         <label class="labels" for="seconds">Seconden</label>
-                        <input type="number" class="form-control" id="seconden" v-model="seconds"
+                        <input type="number" min="0" max="59" class="form-control" id="seconden" v-model="seconds"
                             v-bind:placeholder="minutes">
                     </div>
                 </form>
@@ -111,10 +111,9 @@
             return {
                 widget: undefined,
                 new_widget: undefined,
-                searchterm: "",
                 doors: [],
+                init: false,
                 hours: 0,
-                color: "",
                 minutes: 0,
                 seconds: 0,
                 buttons: []
@@ -124,12 +123,8 @@
             'colour-picker': ColourPicker
         },
         async created() {
-            const result = await db.default.getWidget(this.$route.params.id)
+            await this.fetchWidget()
             const doors = await api.default.getDoorsForOverview(this.$session.get('bs-session-id'))
-            this.color = result.color;
-            console.log(this.color)
-            this.widget = result;
-            this.new_widget = result;
             this.doors = doors;
             let duration = this.widget.duration
             this.hours = Math.floor(duration / 3600)
@@ -138,13 +133,16 @@
             duration -= this.minutes * 60
             this.seconds = duration
             this.buttons = document.getElementsByClassName('icon')
+            this.$forceUpdate()
         },
         methods: {
             search() { },
-            changeColour(colour) {
-                let hex = colour.hex;
-                this.new_widget.color = hex;
-                this.color = hex;
+            changeColour(color) {
+                if (this.init){
+                    console.log("changing color")
+                    console.log(color)
+                    this.new_widget.color = color;
+                }
             },
             selectall(e) {
                 if (e.target.checked) {
@@ -162,17 +160,13 @@
                 this.buttons.forEach(element => {
                     if (element.value === this.new_widget.icon){element.classList.add('active')}  
                 });
-                
             },
             async save() {
                 this.hours = parseInt(this.hours)
                 this.minutes = parseInt(this.minutes)
                 this.seconds = parseInt(this.seconds)
                 this.new_widget.duration = (this.hours * 3600) + (this.minutes * 60) + this.seconds
-                console.log(this.new_widget)
-                this.new_widget.color = this.color;
                 const result = await db.default.updateWidget(this.new_widget)
-                console.log(result)
                 this.$router.push({ path: '/widgets' })
 
                 this.$toasted.show(`${this.new_widget.name} Succesvol aangepast!`, {
@@ -183,12 +177,18 @@
                     iconPack: 'fontawesome',
                     type: 'success'
                 })
+            },
+            async fetchWidget(){
+                const result = await db.default.getWidget(this.$route.params.id)
+                this.widget = result;
+                this.new_widget = result;
+                this.init = true
             }
         },
         computed: {
             cssVars() {
                 return {
-                    '--background': this.color
+                    '--background': this.new_widget.color
                 }
             }
         },
