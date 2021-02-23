@@ -75,6 +75,9 @@
          </div>
          <div class="options card">
             <h5 class="card-header">Informatie</h5>
+            <div v-if="errors.length !==null">
+               <p class="error" v-for="error in errors" v-bind:key="error.error">{{error.error}}</p>
+            </div>
             <div class="optionsform">
                <form>
                   <div class="form-group">
@@ -137,6 +140,7 @@
                   }
                }
             },
+            errors: [],
             number_access_group: 0
             // groups: {
             //    rows: []
@@ -180,9 +184,17 @@
             setTimeout(this.pollStatus, 3000)
          },
          async updateNameDesc() {
+            this.errors = []
             let name = this.door.name
             let description = this.door.description
-            f.default.updateDoorNameAndDesc(this.door.id, name, description, this.$session.get("bs-session-id"))
+            if(name === null || name === ""){
+               this.errors.push({
+                  error: "Naam moet ingevuld worden!"
+                  })
+            }
+            if(this.errors.length === 0){
+               f.default.updateDoorNameAndDesc(this.door.id, name, description, this.$session.get("bs-session-id"))
+            }
          }
       }
    }
@@ -376,6 +388,10 @@
 
    .dicht img {
       padding-left: 15%;
+   }
+
+   .error {
+      color:red;
    }
 
    @media only screen and (max-width: 992px) {
