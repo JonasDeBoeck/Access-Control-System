@@ -55,7 +55,7 @@
 
         <div class="input-group mb-3 colorpicker">
             <span class="input-group-text" id="inputGroup-sizing-default">
-                <colour-picker v-model="color" :value="color" label="Pick Colour" picker="compact"
+                <colour-picker v-model="color" :value="color" :color="'#4e73df'" label="Pick Colour" picker="compact"
                     v-on:accept="changeColour" />
             </span>
             <input type="text" class="form-control" aria-label="Sizing example input"
@@ -194,8 +194,6 @@
         async created() {
             let doors = await api.default.getDoorsForOverview(this.$session.get("bs-session-id"))
             this.doors = doors;
-            console.log("doors")
-            console.log(this.doors)
         }
     }
 </script>
