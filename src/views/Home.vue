@@ -65,7 +65,7 @@
       },
       async pollActiveWidgets() {
         const temp = await db.default.getActiveWidgets()
-        this.activeWidgets = temp
+        this.activeWidgets = temp.slice(0, 5)
         setTimeout(this.pollActiveWidgets, 3000)
       }
     }
@@ -94,10 +94,11 @@
   }
 
   .wrapper {
-
     display: flex;
     justify-content: center;
-    margin-top: 4em;
+    margin-top: 2.5em;
+    margin-left: 2.5em;
+    margin-right: 2.5em;
     flex-direction: column;
   }
 
@@ -111,6 +112,7 @@
     border-radius: 0.8em;
     box-shadow: 0 .3rem 3rem 0 rgba(0, 0, 0, .15);
     border: 1px solid #305bdb;
+    align-self: center;
   }
 
 
@@ -143,7 +145,6 @@
     margin: 10px 0px;
     font-weight: bold;
     background-color: #1337a3;
-    ;
     border: none;
     color: #e0dada;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
@@ -159,31 +160,34 @@
 
   .widgets {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     column-gap: 5%;
-    row-gap: 10%;
-    margin: 5%;
+    margin-top: 1em;
   }
 
-  .widget {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    height: 120%;
+  .wrapper:last-of-type {
+    margin-bottom: 2.5em;
   }
 
   .door {
     margin-right: 0;
   }
 
-  .home{
+  .home {
     background-color: white;
   }
 
-  @media screen and (max-width: 780px) {
-    section {
-      width: 90%;
-    }
-  }
+  @media only screen and (max-width: 992px) {
+      .widgets {
+         display: block;
+      }
+
+      .widget {
+        margin-top: 1em;
+      }
+
+      .widget:last-of-type {
+        margin-bottom: 2.5em;
+      }
+   }
 </style>

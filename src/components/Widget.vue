@@ -373,6 +373,10 @@ export default {
         color: #aa2330;
     }
 
+    .fa-bolt {
+        font-size: 1.5em;
+    }
+
     @media only screen and (max-width: 992px) {
         .activate {
             position: initial;
@@ -381,17 +385,17 @@ export default {
 
     @keyframes pulse {
         0% {
-            transform: scale(1);
+            transform: scale(0.7);
             /*box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);*/
         }
 
         70% {
-            transform: scale(1.4);
+            transform: scale(0.9);
             /*box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);*/
         }
 
         100% {
-            transform: scale(1);
+            transform: scale(0.7);
             /*box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);*/
         }
     }
