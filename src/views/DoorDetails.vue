@@ -75,6 +75,9 @@
          </div>
          <div class="options card">
             <h5 class="card-header">Informatie</h5>
+            <div v-if="errors.length !==null">
+               <p class="error" v-for="error in errors" v-bind:key="error.error">{{error.error}}</p>
+            </div>
             <div class="optionsform">
                <form>
                   <div class="form-group">
@@ -160,10 +163,15 @@
                   }
                }
             },
+<<<<<<< HEAD
             number_access_group: 0,
             number_last_users: 0,
             last_users: [],
             event_types: []
+=======
+            errors: [],
+            number_access_group: 0
+>>>>>>> c4d002f715ee3e9791ee9b4634f43f30b32909a1
             // groups: {
             //    rows: []
             // }
@@ -207,8 +215,10 @@
             setTimeout(this.pollStatus, 3000)
          },
          async updateNameDesc() {
+            this.errors = []
             let name = this.door.name
             let description = this.door.description
+<<<<<<< HEAD
             f.default.updateDoorNameAndDesc(this.door.id, name, description, this.$session.get("bs-session-id"))
          },
          async getLastUsers(){
@@ -219,6 +229,16 @@
             let lastusers = await f.default.monitoring(this.$session.get("bs-session-id"),10,first_date.toISOString(),last_date.toISOString(),device_id)
             this.last_users = lastusers
             console.log(this.last_users)
+=======
+            if(name === null || name === ""){
+               this.errors.push({
+                  error: "Naam moet ingevuld worden!"
+                  })
+            }
+            if(this.errors.length === 0){
+               f.default.updateDoorNameAndDesc(this.door.id, name, description, this.$session.get("bs-session-id"))
+            }
+>>>>>>> c4d002f715ee3e9791ee9b4634f43f30b32909a1
          }
       }
    }
@@ -416,6 +436,10 @@
 
    .dicht img {
       padding-left: 15%;
+   }
+
+   .error {
+      color:red;
    }
 
    @media only screen and (max-width: 992px) {

@@ -9,6 +9,9 @@
                     Algemene informatie
                 </h5>
                 <form class="form">
+                    <div v-if="error_name !==''">
+                        <p class="error">{{error_name}}</p>
+                    </div>
                     <div class="form-group">
                         <label class="labels align" for="name">Naam</label>
                         <input type="text" class="form-control" id="name" v-model="new_widget.name"
@@ -32,6 +35,9 @@
                     Tijd instellen
                 </h5>
                 <form class="form">
+                    <div v-if="error_time !==''">
+                        <p class="error">{{error_time}}</p>
+                    </div>
                     <div class="form-group">
                         <label class="labels" for="hours">Uren</label>
                         <input type="number" min="0" class="form-control" id="hours" v-model="hours" v-bind:placeholder="hours">
@@ -53,6 +59,9 @@
                     Icoon selecteren
                 </h5>
                 <form class="form">
+                    <div v-if="error_icon !==''">
+                        <p class="error">{{error_icon}}</p>
+                    </div>
                     <div class="iconbuttons">
                         <button type="button" class="icon" @click="setIcon" value="open-door"><img
                                 src="@/assets/icons/open-door.png" alt=""></button>
@@ -68,6 +77,9 @@
                     Deuren selectie
                 </h5>
                 <form class="form">
+                    <div v-if="error_doors !==''">
+                        <p class="error">{{error_doors}}</p>
+                    </div>
                     <div class="input-group mb-3 deuren">
                         <div class="tag">
                             <div class="input-group-prepend">
@@ -116,7 +128,11 @@
                 hours: 0,
                 minutes: 0,
                 seconds: 0,
-                buttons: []
+                buttons: [],
+                error_name: "",
+                error_time:"",
+                error_icon:"",
+                error_doors:""
             }
         },
         components: {
@@ -162,21 +178,44 @@
                 });
             },
             async save() {
+                this.error_name= "",
+                this.error_time = "",
+                this.error_icon="",
+                this.error_doors=""
                 this.hours = parseInt(this.hours)
                 this.minutes = parseInt(this.minutes)
                 this.seconds = parseInt(this.seconds)
                 this.new_widget.duration = (this.hours * 3600) + (this.minutes * 60) + this.seconds
-                const result = await db.default.updateWidget(this.new_widget)
-                this.$router.push({ path: '/widgets' })
+                if(this.new_widget.duration <= 0)
+                {
+                    this.error_time = "Tijd moet langer dan 0 seconden zijn!"
+                }
+                if(this.new_widget.icon === null || this.new_widget.icon === "")
+                {
+                    this.error_icon = "Je moet nog een icon selecteren!"
+                }
+                if(this.new_widget.name === null || this.new_widget.name === "")
+                {
+                    this.error_name = "Naam mag niet leeg zijn!"
+                }
+                if(this.new_widget.doors === null || this.new_widget.doors.length === 0)
+                {
+                    this.error_doors = "Je moet minstens 1 deur selecteren!"
+                }
+                if(this.error_time === "" && this.error_name === "" && this.error_icon === "" && this.error_doors ==="")
+                {
+                    const result = await db.default.updateWidget(this.new_widget)
+                    this.$router.push({ path: '/widgets' })
 
-                this.$toasted.show(`${this.new_widget.name} Succesvol aangepast!`, {
-                    theme: "toasted-primary",
-                    position: "top-right",
-                    duration: 2000,
-                    icon: 'cogs',
-                    iconPack: 'fontawesome',
-                    type: 'success'
-                })
+                    this.$toasted.show(`${this.new_widget.name} Succesvol aangepast!`, {
+                        theme: "toasted-primary",
+                        position: "top-right",
+                        duration: 2000,
+                        icon: 'cogs',
+                        iconPack: 'fontawesome',
+                        type: 'success'
+                    })
+                }
             },
             async fetchWidget(){
                 const result = await db.default.getWidget(this.$route.params.id)
@@ -362,6 +401,10 @@
 
     .details {
         background-color: #F8F9FC;
+    }
+
+    .error {
+        color:red;
     }
 
     @media only screen and (max-width: 992px) {
