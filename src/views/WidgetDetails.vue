@@ -172,7 +172,7 @@
                 this.$toasted.show(`${this.new_widget.name} Succesvol aangepast!`, {
                     theme: "toasted-primary",
                     position: "top-right",
-                    duration: 1500,
+                    duration: 2000,
                     icon: 'cogs',
                     iconPack: 'fontawesome',
                     type: 'success'
@@ -368,6 +368,10 @@
         .content {
             grid-template-columns: 1fr 1fr;
             grid-template-rows: 1fr 1fr;
+        }
+
+        .btn {
+            margin-bottom: 2.5em;
         }
     }
 </style>

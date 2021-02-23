@@ -204,5 +204,9 @@
       margin-top: 2em;
       display: block;
     }
+
+    .widget {
+      margin-top: 1em;
+    }
   }
 </style>

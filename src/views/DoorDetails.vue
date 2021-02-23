@@ -402,5 +402,9 @@
             "options options";
          height: 100%;
       }
+
+      .options {
+         margin-bottom: 2.5em;
+      }
    }
 </style>

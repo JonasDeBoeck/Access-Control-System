@@ -110,7 +110,7 @@ export default {
             this.$toasted.show(`${this.widget.name} Succesvol verwijderd!`, {
                 theme: "toasted-primary",
                 position: "top-right",
-                duration: 1800,
+                duration: 2800,
                 icon: 'cogs',
                 iconPack: 'fontawesome',
                 type: 'success'
@@ -124,24 +124,33 @@ export default {
                 widget: this.widget
             }
             let result = await db.default.insertEvent(event)
-            console.log(result)
-            if (result != undefined){
+            if (result.data.success){
                 this.widget.event_id = result.data.id;
                 this.widget.active = true
                 console.log("starting countdown")
                 this.startCountDown()
 
                 this.$toasted.show(`${this.widget.name} Succesvol Gestart!`, {
-                theme: "toasted-primary",
-                position: "top-right",
-                duration: 1000,
-                icon: 'cogs',
-                iconPack: 'fontawesome',
-                type: 'success'
+                    theme: "toasted-primary",
+                    position: "top-right",
+                    duration: 2000,
+                    icon: 'cogs',
+                    iconPack: 'fontawesome',
+                    type: 'success'
                 })
-                // force update rerender 
-                this.$forceUpdate();
-            }  
+            } 
+            else{
+                this.$toasted.show(`${this.widget.name} Kon niet starten!`, {
+                    theme: "toasted-primary",
+                    position: "top-right",
+                    duration: 2000,
+                    icon: 'cogs',
+                    iconPack: 'fontawesome',
+                    type: 'error'
+                })
+            }
+            // force update rerender 
+            this.$forceUpdate();
         },
         startCountDown(){
             this.duration--
