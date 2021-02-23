@@ -369,5 +369,9 @@
             grid-template-columns: 1fr 1fr;
             grid-template-rows: 1fr 1fr;
         }
+
+        .btn {
+            margin-bottom: 2.5em;
+        }
     }
 </style>
