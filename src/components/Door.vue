@@ -98,7 +98,7 @@ export default {
             this.$toasted.show(`${this.door.name} succesvol gesloten!`, {
                 theme: "toasted-primary",
                 position: "top-right",
-                duration: 1000,
+                duration: 2000,
                 icon: 'lock',
                 iconPack: 'fontawesome',
                 type: 'error'
@@ -111,7 +111,7 @@ export default {
             this.$toasted.show(`${this.door.name} succesvol geopend!`, {
                 theme: "toasted-primary",
                 position: "top-right",
-                duration: 1000,
+                duration: 2000,
                 icon: 'lock-open',
                 iconPack: 'fontawesome',
                 type: 'success'
