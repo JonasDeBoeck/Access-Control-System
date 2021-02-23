@@ -105,6 +105,29 @@
                </form>
             </div>
          </div>
+         <div class="monitoring card">
+            <h5 class="card-header">
+               Monitoring
+            </h5>
+            <table class="table table-bordered">
+               <thead>
+                  <tr>
+                     <th scope="col">#</th>
+                     <th scope="col">Naam/Voornaam</th>
+                     <th scope="col">Datum</th>
+                     <th scope="col">Event</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr v-for="event in last_users" v-bind:key="event.id">
+                     <td>{{event.number}}</td>
+                     <td>{{event.user.name}}</td>
+                     <td>{{event.date}}</td>
+                     <td>{{event.event_name}}</td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
       </div>
    </div>
 </template>
@@ -137,7 +160,10 @@
                   }
                }
             },
-            number_access_group: 0
+            number_access_group: 0,
+            number_last_users: 0,
+            last_users: [],
+            event_types: []
             // groups: {
             //    rows: []
             // }
@@ -156,6 +182,7 @@
          this.door.access_groups = result_array[0]
          this.door.access_levels = result_array[1]
          this.pollStatus(this.door_id)
+         this.getLastUsers()
          // this.groups.rows = await f.default.getAllAccesGroups(this.$session.get("bs-session-id"))
          // const test = this.groups.rows
          // console.log(test)
@@ -183,6 +210,15 @@
             let name = this.door.name
             let description = this.door.description
             f.default.updateDoorNameAndDesc(this.door.id, name, description, this.$session.get("bs-session-id"))
+         },
+         async getLastUsers(){
+            let device_id = this.details.Door.entry_device_id.id
+            console.log(device_id)
+            let first_date = new Date('22 February 2021 10:00 UTC')
+            let last_date = new Date(Date.now())
+            let lastusers = await f.default.monitoring(this.$session.get("bs-session-id"),10,first_date.toISOString(),last_date.toISOString(),device_id)
+            this.last_users = lastusers
+            console.log(this.last_users)
          }
       }
    }
@@ -231,7 +267,7 @@
       margin-bottom: 2.5em;
       height: 80%;
       grid-template-areas: "status opentimegroup lastusers"
-         "options options lastusers";
+         "options options monitoring";
    }
 
    .lastusers {
@@ -254,6 +290,10 @@
       grid-area: status;
       display: flex;
       justify-content: space-evenly;
+   }
+
+   .monitoring{
+      grid-area: monitoring;
    }
 
    .dichtWrapper {

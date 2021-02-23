@@ -445,6 +445,78 @@ function errorHandling(error) {
     }
 }
 
+
+async function monitoring(session,limit,first_date,second_date,device_id){
+    let headers = {
+        headers: {
+            "bs-session-id": session
+        }
+    }
+    let body = {
+        "Query": {
+          "limit": limit,
+          "conditions": [
+            {
+              "column": "datetime",
+              "operator": 3,
+              "values": [
+                first_date,
+                second_date
+              ]
+            },
+            {
+                "column": "device_id",
+                "operator": 4,
+                "values":[
+                    device_id
+                ]
+            }
+          ],
+          "orders": [
+            {
+              "column": "datetime",
+              "descending": true
+            }
+          ]
+        }
+      }
+    
+    const response = await axios.post(`http://${hostname}/api/events/search`,body,headers)
+    const filtered = []
+    let collection = response.data.EventCollection.rows
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour:'numeric', minute:'numeric', second: 'numeric' };
+    let i = 1;
+    const event_types = await getEventTypes(session)
+    console.log(event_types)
+    for (let event of collection){
+        const event_name = event_types.EventTypeCollection.rows.filter(type => type.code === event.event_type_id.code);
+        let filter = {
+            number: i,
+            id: event.id,
+            date: new Date(event.datetime).toLocaleDateString("nl-BE",options),
+            event_code: event.event_type_id.code,
+            event_name: event_name[0].name,
+            user: {id: event.user_id.user_id, name: event.user_id.name},
+            user_group: event.user_group_id
+        }
+        i++;
+        filtered.push(filter)
+    }
+    return filtered
+}
+
+async function getEventTypes(session){
+    let headers = {
+        headers: {
+            "bs-session-id": session
+        }
+    }
+
+    const response = await axios.get(`http://${hostname}/api/event_types?setting_all=true`,headers)
+    console.log(response)
+    return response.data
+}
+
 export default {
     login,
     getDoors,
@@ -459,5 +531,7 @@ export default {
     updateDoorOpen_Duration,
     getAccesGroupNamesAndLevelsForDoor,
     updateDoorNameAndDesc,
-    getDoorGroups
+    getDoorGroups,
+    monitoring,
+    getEventTypes
 }
