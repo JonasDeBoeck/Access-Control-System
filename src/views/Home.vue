@@ -13,17 +13,21 @@
         </form>
       </div>
     </div>
+    <div class="topWrapper">
     <div v-if="this.$session.has('bs-session-id')" class="wrapper">
       <h2>Top 5 meest gebruikte widgets</h2>
       <div v-if="top5WidgetsUsed.length > 0" class="widgets">
         <Widget class="widget" v-for="widget in top5WidgetsUsed" v-bind:key="widget.name" v-bind:widget="widget" />
       </div>
     </div>
-    <div v-if="this.$session.has('bs-session-id') &&  activeWidgets.length > 0" class="wrapper">
+    <div>
       <h2>Actieve widgets</h2>
+    <div v-if="this.$session.has('bs-session-id') &&  activeWidgets.length > 0" class="wrapper">
       <div class="widgets">
         <Widget class="widget" v-for="widget in  activeWidgets" v-bind:key="widget.name" v-bind:widget="widget" />
       </div>
+    </div>
+    </div>
     </div>
   </div>
 </template>
@@ -176,6 +180,7 @@
   .home {
     background-color: white;
   }
+
 
   @media only screen and (max-width: 992px) {
       .widgets {
