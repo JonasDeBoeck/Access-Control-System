@@ -149,14 +149,27 @@ export default {
             let endString = new Date().toString().replace(/\d\d:\d\d:\d\d/i, this.time + ":00")
             let now = Date.parse(nowString)
             let end = Date.parse(endString)
-            let duration = (end - now) / 1000
-            let event = {
-                doors: [this.door],
-                state: true,
-                duration: duration,
+            if (end > now){
+                let duration = (end - now) / 1000
+                let event = {
+                    doors: [this.door],
+                    state: true,
+                    duration: duration,
+                }
+                db.default.insertEvent(event)
+                this.$vm2.close(this.timeModal)
             }
-            db.default.insertEvent(event)
-            this.$vm2.close(this.timeModal)
+            else{
+                this.$toasted.show(`Selecteer een tijdstip later dan de huidige tijd`, {
+                    theme: "toasted-primary",
+                    position: "top-right",
+                    duration: 2000,
+                    icon: 'lock-open',
+                    iconPack: 'fontawesome',
+                    type: 'error'
+                })
+            }
+            
         },
         resetInputs() {
             this.hours = 0;

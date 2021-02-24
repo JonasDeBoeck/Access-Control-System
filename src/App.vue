@@ -44,6 +44,27 @@
     background-color: #F8F9FC;
   }
 
+    /* width */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #eee; 
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #4e73df; 
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #104cd6; 
+  }
+
+
   body {
     margin: 0px;
     height: 100%;

@@ -14,13 +14,12 @@
                 <div class="input-group-prepend">
                     <span id="selected_deur" class="input-group-text" for="inputGroupSelect01">Deur</span>
                 </div>
-                <div id="multiselect">
-                    <div>
-                        <multiselect class="selecter" :select-label="''" :taggable="true" :limit="0"
-                            v-model="selectedDoors" :options="doors" :multiple="true" :close-on-select="false"
-                            :clear-on-select="false" :preserve-search="true" placeholder="Pick some" label="name"
-                            track-by="id" :preselect-first="false">
-                        </multiselect>
+                <div id="multi-select">
+                    <div class="input">
+                        <input @input="filterInput" type="text" class="select-input form-control"><button type="button" class="btn btn-primary dropdown" id="arrow" @click="showDropDown"><i id="arrow-icon" class="fas fa-chevron-down"></i></button>
+                    </div> 
+                    <div v-if="show" id="options">
+                        <option @click="addRemoveSelected" v-for="door in filteredDoors" :key="door.id" class="option" :id="door.id" value="">{{door.name}}</option>
                     </div>
                 </div>
                 <div class="form-check checkbox">
@@ -28,12 +27,11 @@
                     <label class="form-check-label" for="all">All</label>
                 </div>
             </div>
-            <div class="doors" v-if="this.selectedDoors.length > 0">
-                <pre class="door" v-for="door in selectedDoors" v-bind:key="door.id">{{ door.name  }}</pre>
+            <p>Geselecteerde deuren:</p>
+            <div class="doors">
+                <p id="list"></p>
             </div>
-
         </div>
-
 
         <div class="time_form">
             <div class="input-group mb-3">
@@ -71,47 +69,32 @@
                     alt=""></button>
         </div>
 
-        <!-- <div class="form-check">
-            <input class="form-check-input" type="radio" name="flexRadioDefault" id="open">
-            <label class="form-check-label" for="flexRadioDefault1">Open</label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="flexRadioDefault" id="close" checked>
-            <label class="form-check-label" for="flexRadioDefault2">Close</label>
-        </div> -->
-
-        <!-- coole button -->
-        <!-- <div class="form-check form-switch options">
-        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-        <label class="form-check-label" for="flexSwitchCheckDefault">Open</label>
-    </div> -->
-
         <button @click="addWidget" class="btn btn-primary" type="button">Voeg toe</button>
     </form>
 </template>
 <script>
-    //import vSelect from "vue-select"
-    import Multiselect from "vue-multiselect"
     import ColourPicker from 'vue-colour-picker'
     import * as api from '../variables'
     import * as db from '../database'
     export default {
         name: "AddWidget",
         components: {
-            Multiselect,
             'colour-picker': ColourPicker
         },
         data() {
             return {
-                doors: [],
+                doors: [{name: "test door", id:1},{name: "test door 2", id:2},{name: "another test", id:3},
+                        {name: "another test 2", id:4}, {name: "idk what to do", id:5},{name: "lsfqsjfsdj", id:6},],
                 selectedDoors: [],
+                filteredDoors: [],
                 hours: 0,
                 minutes: 0,
                 seconds: 0,
                 widgetname: "",
                 color: "#0000000",
                 icon: "open-door",
-                form_errors_strings: []
+                form_errors_strings: [],
+                show: false
             }
         },
         methods: {
@@ -185,22 +168,167 @@
             selectall(e) {
                 if (e.target.checked) {
                     this.selectedDoors = this.doors
+                    console.log(this.selectedDoors)
+                    // for (let door of this.selectedDoors){
+                    //     let option = document.getElementById(door.id)
+                    //     console.log(option)
+                    //     option.classList.add("option-active")
+                    // }   
                 }
                 else {
                     this.selectedDoors = []
+                    // for (let door of this.selectedDoors){
+                    //     let option = document.getElementById(door.id)
+                    //     console.log(option)
+                    //     option.classList.remove("option-active")
+                    // }  
                 }
+                this.updateList()
+            },
+            showDropDown(e){
+                let arrow = document.getElementById('arrow-icon')
+                console.log(arrow)
+                this.show = !this.show; 
+                if (this.show){
+                    e.target.style.borderBottomRightRadius = "0rem";
+                    console.log(e.target.style)
+                    arrow.classList.remove("down")
+                    arrow.classList.add("up")
+                }
+                else{
+                    e.target.style.borderBottomRightRadius = "0.25rem";
+                    console.log(e.target.style)
+                    arrow.classList.remove("up")
+                    arrow.classList.add("down")
+                }
+                
+            },
+            filterInput(e){
+                this.show = true;
+                let searchString = e.target.value
+                this.filteredDoors = []
+                for (let d of this.doors){
+                    if (d.name.toUpperCase().indexOf(searchString.toUpperCase()) > -1){
+                        this.filteredDoors.push(d)
+                    }
+                }
+                if (this.filteredDoors.length === 0){
+                    this.filteredDoors.push({name:"Geen gevonden",id:0})
+                }
+                if (searchString === ''){
+                    this.filteredDoors = this.doors;
+                }
+            },
+            addRemoveSelected(e){
+                console.log(e)
+                let id = e.target.id
+                let i = 0
+                for (let door of this.selectedDoors){
+                    if (door.id == id){
+                        this.selectedDoors.splice(i,1)
+                        console.log(this.selectedDoors)
+                        e.target.classList.remove("option-active")
+                        this.updateList()
+                        return;
+                    }
+                    i++
+                }
+                let door = this.doors.filter(door => door.id == id)[0]
+                console.log(door)
+                if (door != undefined){
+                    this.selectedDoors.push(door)
+                    console.log(this.selectedDoors)
+                    console.log("adding class")
+                    e.target.classList.add("option-active")
+                }
+                this.updateList()
+            },
+            updateList(){
+                let element = document.getElementById("list")
+                let doors = this.selectedDoors.map(door => door.name)
+                console.log(doors)
+                element.innerText = doors.join(', ')
             }
         },
         async created() {
-            let doors = await api.default.getDoorsForOverview(this.$session.get("bs-session-id"))
-            this.doors = doors;
+            // let doors = await api.default.getDoorsForOverview(this.$session.get("bs-session-id"))
+            // this.doors = doors;
+            this.filteredDoors = this.doors
         }
     }
 </script>
 
-<style src="vue-multiselect/dist/vue-multiselect.min.css">
-</style>
 <style scoped>
+
+    .up{
+        transform: rotate(180deg);
+        transition: transform .3s ease-in-out;
+    }
+
+    .down{
+        transform: rotate(0deg);
+        transition: transform .3s ease-in-out;
+    }
+
+    #selected_deur{
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    .dropdown{
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+    .option:last-of-type{
+        border-bottom-left-radius: 0.25rem;
+        border-bottom-right-radius: 0.25rem;
+    }
+
+    .input{
+        display: flex;
+    }
+
+    #multi-select{
+        display: inline-block;
+    }
+
+    .select-input{
+        border-radius: 0;
+    }
+
+    .option:hover{
+        /* background-color: #4e73df !important; */
+        background-color: var(--bs-primary);
+        color: white;
+    }
+
+    .option-active{
+        background-color: #6ad665 !important;
+    }
+
+    .option-active:hover{
+        background-color: #ed4242 !important;
+        color: white;
+    }
+
+    .option{
+        background-color: #eee;
+    }
+    .option:hover{
+        cursor: pointer;
+    }
+
+    #arrow{
+        display: inline;
+    }
+
+    #options{
+        height: fit-content;
+        max-height: 100px;
+        overflow: auto;
+    }
+
     #add_widget {
         background: #fff;
         box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);

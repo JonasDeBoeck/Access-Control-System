@@ -19,6 +19,7 @@
     "jquery": "^3.5.1",
     "laravel-mix": "^5.0.9",
     "vue": "^2.6.12",
+    "vue-advanced-search": "^0.1.43",
     "vue-color": "^2.8.1",
     "vue-color-picker": "^0.6.1",
     "vue-colour-picker": "^0.0.5",
