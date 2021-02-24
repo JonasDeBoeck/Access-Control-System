@@ -181,6 +181,7 @@
     background-color: white;
   }
 
+<<<<<<< Updated upstream
 
   @media only screen and (max-width: 992px) {
       .widgets {
@@ -195,4 +196,16 @@
         margin-bottom: 2.5em;
       }
    }
+=======
+  .topWrapper {
+    display: grid;
+     grid-template-columns: 1fr 1fr;
+  }
+
+  @media screen and (max-width: 780px) {
+    section {
+      width: 90%;
+    }
+  }
+>>>>>>> Stashed changes
 </style>
