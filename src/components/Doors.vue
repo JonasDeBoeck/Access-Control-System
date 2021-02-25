@@ -25,9 +25,9 @@ export default {
     grid-template-columns: 1fr 1fr 1fr;
     row-gap: 20%;
     column-gap: 5%;
-    margin-left: 2.5em;
-    margin-right: 2.5em;
-    margin-top: 2.5em;
+    margin-left: 1em;
+    margin-right: 1em;
+    margin-top: 1em;
     height: 80%;
   }
 

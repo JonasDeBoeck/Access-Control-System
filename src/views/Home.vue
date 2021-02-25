@@ -100,9 +100,9 @@
   .wrapper {
     display: flex;
     justify-content: center;
-    margin-top: 2.5em;
-    margin-left: 2.5em;
-    margin-right: 2.5em;
+    margin-top: 1em;
+    margin-left: 1em;
+    margin-right: 1em;
     flex-direction: column;
   }
 

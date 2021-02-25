@@ -328,10 +328,10 @@
       text-align: left;
       row-gap: 5%;
       column-gap: 5%;
-      margin-left: 2.5em;
-      margin-right: 2.5em;
-      margin-top: 2.5em;
-      margin-bottom: 2.5em;
+      margin-left: 1em;
+      margin-right: 1em;
+      margin-top: 1em;
+      margin-bottom: 1em;
       height: 80%;
       grid-template-areas: "status opentimegroup lastusers"
          "options options monitoring";

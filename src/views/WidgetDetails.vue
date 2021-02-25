@@ -265,7 +265,7 @@
     }
 
     .detail {
-        margin: 2em;
+        margin: 1em;
         background: #fff;
         box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
         border-radius: .35rem;
@@ -407,6 +407,10 @@
         color:red;
     }
 
+    .btn {
+        margin-bottom: 1em;
+    }
+
     @media only screen and (max-width: 992px) {
         .content {
             grid-template-columns: 1fr 1fr;
@@ -414,7 +418,7 @@
         }
 
         .btn {
-            margin-bottom: 2.5em;
+            margin-bottom: 1em;
         }
     }
 </style>
