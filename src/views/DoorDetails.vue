@@ -294,6 +294,8 @@
 
    .detail {
       font-family: 'Oswald';
+      overflow: auto;
+      margin-bottom: 1em;
    }
 
    input,
@@ -492,14 +494,20 @@
    @media only screen and (max-width: 992px) {
       .deurdetail {
          grid-template-columns: 1fr 1fr;
-         grid-template-areas: "status opentimegroup"
+         grid-template-areas: 
+            "status opentimegroup"
             "lastusers lastusers"
-            "options options";
+            "options options"
+            "monitoring monitoring";
          height: 100%;
       }
 
       .options {
          margin-bottom: 2.5em;
+      }
+
+      .detail {
+         overflow: visible;
       }
    }
 </style>
