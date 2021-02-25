@@ -170,7 +170,7 @@
   }
 
   .wrapper:last-of-type {
-    margin-bottom: 2.5em;
+    margin-bottom: 1em;
   }
 
   .door {
