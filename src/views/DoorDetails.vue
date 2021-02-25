@@ -295,6 +295,8 @@
 
    .detail {
       font-family: 'Oswald';
+      overflow: auto;
+      margin-bottom: 1em;
    }
 
    input,
@@ -329,10 +331,10 @@
       text-align: left;
       row-gap: 5%;
       column-gap: 5%;
-      margin-left: 2.5em;
-      margin-right: 2.5em;
-      margin-top: 2.5em;
-      margin-bottom: 2.5em;
+      margin-left: 1em;
+      margin-right: 1em;
+      margin-top: 1em;
+      margin-bottom: 1em;
       height: 80%;
       grid-template-areas: "status opentimegroup lastusers"
          "options options monitoring";
@@ -493,14 +495,20 @@
    @media only screen and (max-width: 992px) {
       .deurdetail {
          grid-template-columns: 1fr 1fr;
-         grid-template-areas: "status opentimegroup"
+         grid-template-areas: 
+            "status opentimegroup"
             "lastusers lastusers"
-            "options options";
+            "options options"
+            "monitoring monitoring";
          height: 100%;
       }
 
       .options {
          margin-bottom: 2.5em;
+      }
+
+      .detail {
+         overflow: visible;
       }
    }
 </style>

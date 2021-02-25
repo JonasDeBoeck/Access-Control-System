@@ -182,10 +182,6 @@
     text-transform: uppercase;
   }
 
-  .pages {
-    margin-top: 0.5em;
-  }
-
   .filters {
     display: flex;
     align-items: center;
