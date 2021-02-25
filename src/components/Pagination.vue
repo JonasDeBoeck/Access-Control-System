@@ -37,7 +37,7 @@
     .pagination-btn {
         cursor: pointer;
         font-weight: bold;
-        font-size: 2em;
+        font-size: 1.25em;
         color: rgba(58, 96, 208, 1);
     }
 
