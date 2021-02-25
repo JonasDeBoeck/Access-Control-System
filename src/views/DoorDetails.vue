@@ -113,7 +113,7 @@
                Monitoring
             </h5>
             <div class="filtering">
-               <form>
+               <form class="monitor-filtering">
                   <div class="rij">
                      <div class="events">
                         <div class="event" v-for="event of event_types" :key="event.name">
@@ -131,11 +131,11 @@
                         <div class="input-group-prepend">
                            <span class="input-group-text" id="">Start- en einddatum</span>
                         </div>
-                        <input type="datetime-local" class="form-control" v-model="filteroptions.startdate">
-                        <input type="datetime-local" class="form-control" v-model="filteroptions.enddate">
+                        <input @input="setStartDate" id="startDate" type="datetime-local" class="form-control" >
+                        <input @input="setEndDate" id="endDate" type="datetime-local" class="form-control" >
                      </div>
                   </div>
-                  <button type="button" class="btn btn-primary">Zoeken</button>
+                  <button @click="applyFilter" type="button" class="zoek btn btn-primary">Zoek</button>
                </form>
             </div>
             <table class="table table-bordered">
@@ -148,7 +148,7 @@
                   </tr>
                </thead>
                <tbody>
-                  <tr v-for="event in last_users" v-bind:key="event.id">
+                  <tr v-for="event in filtered_users" v-bind:key="event.id">
                      <td>{{event.number}}</td>
                      <td>{{event.user.name}}</td>
                      <td>{{event.date}}</td>
@@ -191,14 +191,17 @@
             },
             number_last_users: 0,
             last_users: [],
+            filtered_users: [],
             errors: [],
             number_access_group: 0,
             filteroptions:{
                event_code: [],
                user_name: undefined,
                startdate: undefined,
-               enddate: undefined
+               enddate: undefined,
+               limit: 10
             },
+            dateChanged: false,
             event_types: [{code:"4102", name: "Success"},{code:"4354", name:"Failed"}] // VERIFY_SUCCESS, VERIFY_FAIL
          }
       },
@@ -215,10 +218,21 @@
          this.door.access_groups = result_array[0]
          this.door.access_levels = result_array[1]
          this.pollStatus(this.door_id)
+         // set startdate to 1 week before the current date
+         let now = new Date()
+         let current = new Date()
+         let lastWeek = new Date(current.setDate(current.getDate() - 7))
+         this.filteroptions.startdate = lastWeek
+         this.filteroptions.enddate = now
          this.getLastUsers()
          // this.groups.rows = await f.default.getAllAccesGroups(this.$session.get("bs-session-id"))
          // const test = this.groups.rows
          // console.log(test)
+         // autofill star-and endDate input fields
+         let startDateField = document.getElementById("startDate")
+         let endDateField = document.getElementById("endDate")
+         startDateField.value = this.formatDate(lastWeek) 
+         endDateField.value = this.formatDate(now) 
       },
       methods: {
          async lock() {
@@ -251,19 +265,24 @@
             }
          },
          async getLastUsers(){
-            let device_id = this.details.Door.entry_device_id.id
-            console.log(device_id)
-            let first_date = `${this.filteroptions.startdate}Z`
-            let last_date = `${this.filteroptions.enddate}Z`
-            let lastusers = await f.default.monitoring(this.$session.get("bs-session-id"),1000,first_date,last_date,device_id,this.event_types[0],2)
-            this.last_users = lastusers.filter(this.filter)
-            console.log(this.last_users)
+            // account for timezone difference
+            // let startDate = `${this.formatDate(this.filteroptions.startdate)}.000Z`
+            // let endDate = `${this.formatDate(this.filteroptions.enddate)}.000Z`
+            let lastusers = await f.default.monitoring(this.$session.get("bs-session-id"),1000,this.filteroptions.startdate.toISOString(),this.filteroptions.enddate.toISOString())
+            this.last_users = lastusers
+            this.filtered_users = this.last_users.slice(0,this.filteroptions.limit)
          },
          filter(event){
             let device_filter = this.details.Door.entry_device_id.id == event.device_id;
-            let user_filter = this.filteroptions === undefined ? true : event.user.name.indexOf(this.filteroptions) > -1
+            let user_filter = this.filteroptions.user_name === undefined || event.user.name === undefined ? true : event.user.name.indexOf(this.filteroptions) > -1
             let event_type_filter = this.filteroptions.event_code.includes(event.event_code)
-            return device_filter && user_filter   
+            // console.log({
+            //    event: event,
+            //    device: device_filter,
+            //    user: user_filter,
+            //    event_type: event_type_filter
+            // })
+            return device_filter && user_filter && event_type_filter
          },
          checkEventType(e){
             let code = e.target.value
@@ -274,13 +293,59 @@
             else{
                this.filteroptions.event_code.push(code)
             }
-            console.log(this.filteroptions)
+         },
+         async applyFilter(){
+            if(this.dateChanged){
+               console.log(this.last_users)
+               console.log("resending api call")
+               await this.getLastUsers()
+               console.log(this.last_users)
+            }
+            // this.filtered_users = this.last_users.filter(this.filter)
+            // this.filtered_users = this.filtered_users.slice(0,this.filtered_users.limit)
+         },
+         formatDate(date){
+            // 0 = jan, 1 = feb, ...
+            let month = date.getMonth() + 1
+            let days = date.getDate()
+            let minutes = date.getMinutes()
+            let hours = date.getHours()
+            month = month < 10 ? `0${month}` : month
+            days = days < 10 ? `0${days}` : days 
+            minutes = minutes < 10 ? `0${minutes}` : minutes 
+            hours = hours < 10 ? `0${hours}` : hours 
+            return `${date.getFullYear()}-${month}-${days}T${hours}:${minutes}`
+         },
+         setStartDate(e){
+            this.dateChanged = true
+            let date = new Date(e.target.value)
+            this.filteroptions.startdate = date
+            // this.filteroptions.startdate = `${e.target.value}Z`
+         },
+         setEndDate(e){
+            this.dateChanged = true
+            let date = new Date(e.target.value)
+            this.filteroptions.enddate = date
+            // this.filteroptions.enddate = `${e.target.value}Z`
          }
       }
    }
 </script>
 
 <style scoped>
+   .monitor-filtering{
+      display: flex;
+      flex-direction: column;
+      justify-content:center;
+      align-content: center;
+   }
+
+   .zoek{
+      margin: auto;
+      width: 10vw;
+      margin-bottom: 1em;
+   }
+
    .events{
       display: flex;
       justify-content: space-around;

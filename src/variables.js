@@ -507,7 +507,6 @@ async function getEventTypes(session){
     }
 
     const response = await axios.get(`http://${hostname}/api/event_types?setting_all=true`,headers)
-    console.log(response)
     return response.data
 }
 
