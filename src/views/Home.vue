@@ -21,8 +21,8 @@
       </div>
     </div>
     <div>
-      <h2>Actieve widgets</h2>
     <div v-if="this.$session.has('bs-session-id') &&  activeWidgets.length > 0" class="wrapper">
+      <h2>Actieve widgets</h2>
       <div class="widgets">
         <Widget class="widget" v-for="widget in  activeWidgets" v-bind:key="widget.name" v-bind:widget="widget" />
       </div>
