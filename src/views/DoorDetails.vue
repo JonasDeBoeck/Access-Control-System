@@ -301,8 +301,8 @@
                await this.getLastUsers()
                console.log(this.last_users)
             }
-            // this.filtered_users = this.last_users.filter(this.filter)
-            // this.filtered_users = this.filtered_users.slice(0,this.filtered_users.limit)
+            this.filtered_users = this.last_users.filter(this.filter)
+            this.filtered_users = this.filtered_users.slice(0,this.filtered_users.limit)
          },
          formatDate(date){
             // 0 = jan, 1 = feb, ...
