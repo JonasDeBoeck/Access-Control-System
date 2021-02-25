@@ -446,7 +446,7 @@ function errorHandling(error) {
 }
 
 
-async function monitoring(session,limit,first_date,second_date,device_id){
+async function monitoring(session,limit,first_date,second_date){
     let headers = {
         headers: {
             "bs-session-id": session
@@ -462,15 +462,8 @@ async function monitoring(session,limit,first_date,second_date,device_id){
               "values": [
                 first_date,
                 second_date
-              ]
-            },
-            {
-                "column": "device_id",
-                "operator": 4,
-                "values":[
-                    device_id
                 ]
-            }
+            },
           ],
           "orders": [
             {
@@ -483,11 +476,11 @@ async function monitoring(session,limit,first_date,second_date,device_id){
     
     const response = await axios.post(`http://${hostname}/api/events/search`,body,headers)
     const filtered = []
+    console.log(response)
     let collection = response.data.EventCollection.rows
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour:'numeric', minute:'numeric', second: 'numeric' };
     let i = 1;
     const event_types = await getEventTypes(session)
-    console.log(event_types)
     for (let event of collection){
         const event_name = event_types.EventTypeCollection.rows.filter(type => type.code === event.event_type_id.code);
         let filter = {
@@ -497,7 +490,8 @@ async function monitoring(session,limit,first_date,second_date,device_id){
             event_code: event.event_type_id.code,
             event_name: event_name[0].name,
             user: {id: event.user_id.user_id, name: event.user_id.name},
-            user_group: event.user_group_id
+            user_group: event.user_group_id,
+            device_id: event.device_id.id
         }
         i++;
         filtered.push(filter)

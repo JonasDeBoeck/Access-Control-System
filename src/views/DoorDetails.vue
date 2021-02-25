@@ -112,6 +112,31 @@
             <h5 class="card-header">
                Monitoring
             </h5>
+            <div class="filtering">
+               <form>
+                  <div class="rij">
+                     <div class="events">
+                        <div class="event" v-for="event of event_types" :key="event.name">
+                           <input @click="checkEventType" type="checkbox" class="btn-check" :id="event.name" :value="event.code" checked="true">
+                           <label class="btn btn-outline-primary" :for="event.name">{{event.name}}</label>
+                        </div>
+                     </div>
+                     <div class="form-group">
+                        <label for="username">Gebruikersnaam</label>
+                        <input type="text" class="form-control" id="username" placeholder="gebruikersnaam">
+                     </div>
+                  </div>
+                  <div class="rij">
+                     <div class="input-group">
+                        <div class="input-group-prepend">
+                           <span class="input-group-text" id="">Start- en einddatum</span>
+                        </div>
+                        <input type="datetime-local" class="form-control" v-model="filteroptions.startdate">
+                        <input type="datetime-local" class="form-control" v-model="filteroptions.enddate">
+                     </div>
+                  </div>
+               </form>
+            </div>
             <table class="table table-bordered">
                <thead>
                   <tr>
@@ -165,12 +190,15 @@
             },
             number_last_users: 0,
             last_users: [],
-            event_types: [],
             errors: [],
-            number_access_group: 0
-            // groups: {
-            //    rows: []
-            // }
+            number_access_group: 0,
+            filteroptions:{
+               event_code: [],
+               user_name: undefined,
+               startdate: undefined,
+               enddate: undefined
+            },
+            event_types: [{code:"4102", name: "Success"},{code:"4354", name:"Failed"}] // VERIFY_SUCCESS, VERIFY_FAIL
          }
       },
       async created() {
@@ -194,13 +222,11 @@
       methods: {
          async lock() {
             this.door.opened = false
-            let key = await f.default.login("admin", "t");
-            f.default.lockDoor(this.door.id, key);
+            f.default.lockDoor(this.door.id, this.$session.get("bs-session-id"));
          },
          async unlock() {
             this.door.opened = true
-            let key = await f.default.login("admin", "t");
-            f.default.unlockDoor(this.door.id, key);
+            f.default.unlockDoor(this.door.id, this.$session.get("bs-session-id"));
          },
          async pollStatus() {
             let detail = await f.default.getDoorDetail(this.door.id, this.$session.get("bs-session-id"))
@@ -226,18 +252,46 @@
          async getLastUsers(){
             let device_id = this.details.Door.entry_device_id.id
             console.log(device_id)
-            let first_date = new Date('22 February 2021 10:00 UTC')
-            let last_date = new Date(Date.now())
-            let lastusers = await f.default.monitoring(this.$session.get("bs-session-id"),10,first_date.toISOString(),last_date.toISOString(),device_id)
-            this.last_users = lastusers
+            let first_date = `${this.filteroptions.startdate}Z`
+            let last_date = `${this.filteroptions.enddate}Z`
+            let lastusers = await f.default.monitoring(this.$session.get("bs-session-id"),1000,first_date,last_date,device_id,this.event_types[0],2)
+            this.last_users = lastusers.filter(this.filter)
             console.log(this.last_users)
-            
+         },
+         filter(event){
+            let device_filter = this.details.Door.entry_device_id.id == event.device_id;
+            let user_filter = this.filteroptions === undefined ? true : event.user.name.indexOf(this.filteroptions) > -1
+            let event_type_filter = this.filteroptions.event_code.includes(event.event_code)
+            return device_filter && user_filter   
+         },
+         checkEventType(e){
+            let code = e.target.value
+            if (this.filteroptions.event_code.includes(code)){
+               let index = this.filteroptions.event_code.indexOf(code)
+               this.filteroptions.event_code.splice(index,1)
+            }
+            else{
+               this.filteroptions.event_code.push(code)
+            }
+            console.log(this.filteroptions)
          }
       }
    }
 </script>
 
 <style scoped>
+   .events{
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+      flex-basis: 50%;
+   }
+   .rij{
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1em;
+   }
+
    .detail {
       font-family: 'Oswald';
    }
