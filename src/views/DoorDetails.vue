@@ -135,6 +135,7 @@
                         <input type="datetime-local" class="form-control" v-model="filteroptions.enddate">
                      </div>
                   </div>
+                  <button type="button" class="btn btn-primary">Zoeken</button>
                </form>
             </div>
             <table class="table table-bordered">
