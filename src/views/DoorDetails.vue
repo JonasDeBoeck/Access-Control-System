@@ -116,14 +116,18 @@
                <form class="monitor-filtering">
                   <div class="rij">
                      <div class="events">
-                        <div class="event" v-for="event of event_types" :key="event.name">
-                           <input @click="checkEventType" type="checkbox" class="btn-check" :id="event.name" :value="event.code" checked="true">
-                           <label class="btn btn-outline-primary" :for="event.name">{{event.name}}</label>
+                        <div class="event">
+                           <input @click="checkEventType" type="checkbox" class="btn-check" id="success" value="Success" checked="true">
+                           <label class="btn btn-outline-primary" for="success">Success</label>
+                        </div>
+                        <div class="event">
+                           <input @click="checkEventType" type="checkbox" class="btn-check" id="failed" value="Failed" checked="true">
+                           <label class="btn btn-outline-primary" for="failed" >Failed</label>
                         </div>
                      </div>
                      <div class="form-group">
                         <label for="username">Gebruikersnaam</label>
-                        <input type="text" class="form-control" id="username" placeholder="gebruikersnaam">
+                        <input type="text" class="form-control" v-model="filteroptions.user_name" id="username" placeholder="gebruikersnaam">
                      </div>
                   </div>
                   <div class="rij">
@@ -202,7 +206,7 @@
                limit: 10
             },
             dateChanged: false,
-            event_types: [{code:"4102", name: "Success"},{code:"4354", name:"Failed"}] // VERIFY_SUCCESS, VERIFY_FAIL
+            event_types: []
          }
       },
       async created() {
@@ -233,6 +237,7 @@
          let endDateField = document.getElementById("endDate")
          startDateField.value = this.formatDate(lastWeek) 
          endDateField.value = this.formatDate(now) 
+         this.fillEventTypes()
       },
       methods: {
          async lock() {
@@ -274,7 +279,9 @@
          },
          filter(event){
             let device_filter = this.details.Door.entry_device_id.id == event.device_id;
-            let user_filter = this.filteroptions.user_name === undefined || event.user.name === undefined ? true : event.user.name.indexOf(this.filteroptions) > -1
+            let user_filter = false;
+            if (event.user.name !== undefined) user_filter = this.filteroptions.user_name === undefined ? true : event.user.name.indexOf(this.filteroptions.user_name) > -1
+            if (user_filter) console.log(event)
             let event_type_filter = this.filteroptions.event_code.includes(event.event_code)
             // console.log({
             //    event: event,
@@ -286,13 +293,22 @@
          },
          checkEventType(e){
             let code = e.target.value
-            if (this.filteroptions.event_code.includes(code)){
+            let codes = []
+            for (let type of this.event_types){
+               if (type.type === code){
+                  codes.push(type.code)
+               }
+            }
+            for (let code of codes){
+               if (this.filteroptions.event_code.includes(code)){
                let index = this.filteroptions.event_code.indexOf(code)
                this.filteroptions.event_code.splice(index,1)
+               }
+               else{
+                  this.filteroptions.event_code.push(code)
+               }
             }
-            else{
-               this.filteroptions.event_code.push(code)
-            }
+            console.log(this.filteroptions.event_code)
          },
          async applyFilter(){
             if(this.dateChanged){
@@ -327,6 +343,33 @@
             let date = new Date(e.target.value)
             this.filteroptions.enddate = date
             // this.filteroptions.enddate = `${e.target.value}Z`
+         },
+         async fillEventTypes(){
+            const event_types = await f.default.getEventTypes(this.$session.get("bs-session-id"))
+            console.log(event_types)
+            for (let type of event_types.EventTypeCollection.rows){
+               if (type.name.indexOf("ACCESS_DENIED") > -1){
+                  let value = {
+                     type: "Failed",
+                     description: type.description,
+                     code: type.code,
+                     name: type.name
+                  }
+                  this.event_types.push(value)
+               }
+               else if (type.name.indexOf("VERIFY") > -1){
+                  let value = {
+                     type: "Success",
+                     description: type.description,
+                     code: type.code,
+                     name: type.name
+                  }
+                  this.event_types.push(value)
+               }
+            }
+            for (let type of this.event_types){
+               this.filteroptions.event_code.push(type.code)
+            }
          }
       }
    }

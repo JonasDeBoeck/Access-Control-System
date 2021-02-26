@@ -61,7 +61,7 @@ async function getDoorsStatus(session) {
         const response = await axios.post(`http://${hostname}/api/doors/status`, JSON.stringify(data), headers)
         return response.data
     } catch (error) {
-        console.log(error.response)
+        // console.log(error.response.data.DeviceResponse.result)
         errorHandling(error)
         return { DoorStatusCollection: { rows: [] } }
     }
