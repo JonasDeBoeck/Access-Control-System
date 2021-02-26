@@ -12,8 +12,8 @@ const session = Vue.prototype.$session;
 /**
  * @brief Logs the user in on the biostar API
  * 
- * @param {*} username 
- * @param {*} password 
+ * @param {string} username 
+ * @param {string} password 
  * 
  * @returns the session-id found in the API respons
  */
@@ -46,7 +46,7 @@ async function login(username, password) {
 /** 
  * @brief sends a get request to the biostar api to get ALL DOORS
  * 
- * @param {*} session 
+ * @param {string} session 
  * 
  * @returns {JSON} All doors in json format
  */
@@ -72,7 +72,7 @@ async function getDoors(session) {
 /**
  * @brief sends a post request to the Biostar API to obtain all doors stausses
  * 
- * @param {*} session 
+ * @param {string} session 
  * 
  * @returns the data found in the response of the API
  */
@@ -105,7 +105,7 @@ async function getDoorsStatus(session) {
  * 
  * @calls getDoorSatus , getDoors 
  * 
- * @param {*} session 
+ * @param {string} session 
  * 
  * @returns an array of Doors with the filtered information
  */
@@ -143,8 +143,8 @@ async function getDoorsForOverview(session) {
 /**
  * @brief sends an unlock door request to the biostar API to unlock 1 door
  * 
- * @param {*} door_id 
- * @param {*} session 
+ * @param {number} door_id 
+ * @param {string} session 
  * 
  * @returns a success or failure message from the API response
  */
@@ -182,8 +182,8 @@ async function unlockDoor(door_id, session) {
 /**
  * @brief sends an unlock door request to the biostar API to unlock MULTIPLE doors
  * 
- * @param {*} doorids 
- * @param {*} session 
+ * @param {number} doorids 
+ * @param {string} session 
  * 
  * @returns a success or failure message from the API response
  */
@@ -219,8 +219,8 @@ async function unlockDoors(doorids, session) {
 /**
  * @brief sends an lock door request to the biostar API to lock MULTIPLE doors
  * 
- * @param {*} door_ids 
- * @param {*} session 
+ * @param {number} door_ids 
+ * @param {string} session 
  * 
  * @returns a success or failure message from the API response
  */
@@ -259,8 +259,8 @@ async function lockDoors(door_ids, session) {
 /**
  * @brief sends an lock door request to the biostar API to lock 1 door
  * 
- * @param {*} door_id 
- * @param {*} session 
+ * @param {number} door_id 
+ * @param {string} session 
  * 
  * @returns a success or failure message from the API response
  */
@@ -300,8 +300,8 @@ async function lockDoor(door_id, session) {
 /**
  * @brief sends a get request to get details on a specific door
  * 
- * @param {*} door_id 
- * @param {*} session 
+ * @param {number} door_id 
+ * @param {string} session 
  * 
  * @returns the door detail data found in the response of the API
  */
@@ -327,8 +327,8 @@ async function getDoorDetail(door_id, session) {
 /**
  * @brief gets all door statusses to then filter only the status from the needed door (false or true)
  * 
- * @param {*} door_id 
- * @param {*} session 
+ * @param {number} door_id 
+ * @param {string} session 
  * 
  * @returns {boolean}
  */
@@ -368,9 +368,9 @@ async function getDoorDetailStatus(door_id, session) {
 /**
  * @brief sends a request to the api to change the set duration of a door
  * 
- * @param {*} door_id 
- * @param {*} newDuration 
- * @param {*} session 
+ * @param {number} door_id 
+ * @param {number} newDuration 
+ * @param {string} session 
  * 
  */
 async function updateDoorOpen_Duration(door_id, newDuration, session) {
@@ -399,8 +399,8 @@ async function updateDoorOpen_Duration(door_id, newDuration, session) {
  * @brief sends a get request to get the different access levels with their doors
  *        and filters out 1 specific door and its access group
  * 
- * @param {*} door_id 
- * @param {*} session 
+ * @param {number} door_id 
+ * @param {string} session 
  * 
  * @return {[]} an array with the access levels of which the door is part of
  */
@@ -452,8 +452,8 @@ async function getAccessLevelForDoor(door_id, session) {
 /**
  * @brief gets the different group names within a certain access level
  * 
- * @param {*} access_level_id_array 
- * @param {*} session 
+ * @param {number} access_level_id_array 
+ * @param {string} session 
  * 
  * @returns {[]} an array of group names
  */
@@ -499,8 +499,8 @@ async function findAccessGroupNamesForAccessLevel(access_level_id_array, session
  * 
  * @calls getAccesGroupNamesForAccessLevel, getAccessLevelForDoor
  * 
- * @param {*} door_id 
- * @param {*} session 
+ * @param {number} door_id 
+ * @param {string} session 
  * 
  * @returns {[]} an array with both the group names and access levels for a door
  */
@@ -520,10 +520,10 @@ async function getAccesGroupNamesAndLevelsForDoor(door_id, session) {
 /**
  * @brief sends a request to change a doors' name and description  
  * 
- * @param {*} door_id 
- * @param {*} name 
- * @param {*} description 
- * @param {*} session 
+ * @param {number} door_id 
+ * @param {string} name 
+ * @param {string} description 
+ * @param {string} session 
  * 
  *
  */
@@ -553,7 +553,7 @@ async function updateDoorNameAndDesc(door_id, name, description, session) {
 /**
  * @brief gets all door groups
  * 
- * @param {*} session 
+ * @param {string} session 
  * 
  * @returns {[]} an array with all door groups and its id, description, name and doors
  */
@@ -603,7 +603,7 @@ async function getDoorGroups(session) {
 /**
  * @brief handles a 401 error by sending you back to the login page
  * 
- * @param {*} error 
+ * @param {error} error 
  */
 function errorHandling(error) {
     if (error.response.status === 401) {
@@ -624,10 +624,10 @@ function errorHandling(error) {
  * 
  * @calls getEventTypes
  * 
- * @param {*} session 
- * @param {*} limit 
- * @param {*} first_date 
- * @param {*} second_date 
+ * @param {string} session 
+ * @param {number} limit 
+ * @param {string} first_date ISO standard representation of a date 
+ * @param {string} second_date ISO standard representation of a date 
  * 
  * @returns {[]} an array with the filtered event data to be showed on the monitoring section on the webpage
  */
@@ -690,7 +690,7 @@ async function monitoring(session,limit,first_date,second_date){
 /**
  * @brief gets all the event types stored within the Biostar API
  * 
- * @param {*} session 
+ * @param {string} session 
  * 
  * @returns the data found in the response of the API, containing all event_types
  */
