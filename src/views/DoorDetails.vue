@@ -238,6 +238,8 @@
          startDateField.value = this.formatDate(lastWeek) 
          endDateField.value = this.formatDate(now) 
          this.fillEventTypes()
+         this.applyFilter()
+         this.$forceUpdate()
       },
       methods: {
          async lock() {
@@ -270,9 +272,6 @@
             }
          },
          async getLastUsers(){
-            // account for timezone difference
-            // let startDate = `${this.formatDate(this.filteroptions.startdate)}.000Z`
-            // let endDate = `${this.formatDate(this.filteroptions.enddate)}.000Z`
             let lastusers = await f.default.monitoring(this.$session.get("bs-session-id"),1000,this.filteroptions.startdate.toISOString(),this.filteroptions.enddate.toISOString())
             this.last_users = lastusers
             this.filtered_users = this.last_users.slice(0,this.filteroptions.limit)
@@ -281,14 +280,8 @@
             let device_filter = this.details.Door.entry_device_id.id == event.device_id;
             let user_filter = false;
             if (event.user.name !== undefined) user_filter = this.filteroptions.user_name === undefined ? true : event.user.name.indexOf(this.filteroptions.user_name) > -1
-            if (user_filter) console.log(event)
+            console.log(this.filteroptions.event_code)
             let event_type_filter = this.filteroptions.event_code.includes(event.event_code)
-            // console.log({
-            //    event: event,
-            //    device: device_filter,
-            //    user: user_filter,
-            //    event_type: event_type_filter
-            // })
             return device_filter && user_filter && event_type_filter
          },
          checkEventType(e){
@@ -311,11 +304,13 @@
             console.log(this.filteroptions.event_code)
          },
          async applyFilter(){
+            console.log("applying filter")
             if(this.dateChanged){
                console.log(this.last_users)
                console.log("resending api call")
                await this.getLastUsers()
                console.log(this.last_users)
+               this.dateChanged = false
             }
             this.filtered_users = this.last_users.filter(this.filter)
             this.filtered_users = this.filtered_users.slice(0,this.filtered_users.limit)
@@ -336,13 +331,11 @@
             this.dateChanged = true
             let date = new Date(e.target.value)
             this.filteroptions.startdate = date
-            // this.filteroptions.startdate = `${e.target.value}Z`
          },
          setEndDate(e){
             this.dateChanged = true
             let date = new Date(e.target.value)
             this.filteroptions.enddate = date
-            // this.filteroptions.enddate = `${e.target.value}Z`
          },
          async fillEventTypes(){
             const event_types = await f.default.getEventTypes(this.$session.get("bs-session-id"))
@@ -435,7 +428,7 @@
 
    .deurdetail {
       display: grid;
-      grid-template-columns: 1fr 33% 33%;
+      grid-template-columns: 1fr 1fr 1.5fr;
       text-align: left;
       row-gap: 5%;
       column-gap: 5%;

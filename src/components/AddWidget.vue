@@ -18,8 +18,8 @@
                     <div class="input">
                         <input @input="filterInput" type="text" class="select-input form-control"><button type="button" class="btn btn-primary dropdown" id="arrow" @click="showDropDown"><i id="arrow-icon" class="fas fa-chevron-down"></i></button>
                     </div> 
-                    <div v-if="show" id="options">
-                        <option @click="addRemoveSelected" v-for="door in filteredDoors" :key="door.id" class="option" :id="door.id" value="">{{door.name}}</option>
+                    <div id="options">
+                        <option @click="addRemoveSelected" v-for="door in filteredDoors" :key="door.id" class="option" :id="door.id" :value="door.name">{{door.name}}</option>
                     </div>
                 </div>
                 <div class="form-check checkbox">
@@ -168,41 +168,47 @@
             },
             selectall(e) {
                 if (e.target.checked) {
-                    this.selectedDoors = this.doors
-                    console.log(this.selectedDoors)
-                    // for (let door of this.selectedDoors){
-                    //     let option = document.getElementById(door.id)
-                    //     console.log(option)
-                    //     option.classList.add("option-active")
-                    // }   
+                    console.log(this.doors)
+                    this.selectedDoors = []
+                    this.selectedDoors.push.apply(this.selectedDoors,this.doors) 
                 }
                 else {
-                    this.selectedDoors = []
-                    // for (let door of this.selectedDoors){
-                    //     let option = document.getElementById(door.id)
-                    //     console.log(option)
-                    //     option.classList.remove("option-active")
-                    // }  
+                    this.selectedDoors = [] 
                 }
+                this.addClassToOptions()
                 this.updateList()
             },
             showDropDown(e){
                 let arrow = document.getElementById('arrow-icon')
-                console.log(arrow)
                 this.show = !this.show; 
                 if (this.show){
+                    document.getElementById("options").style.display = "block"
                     e.target.style.borderBottomRightRadius = "0rem";
-                    console.log(e.target.style)
                     arrow.classList.remove("down")
                     arrow.classList.add("up")
+                    this.addClassToOptions()
                 }
                 else{
+                    document.getElementById("options").style.display = "None"
                     e.target.style.borderBottomRightRadius = "0.25rem";
-                    console.log(e.target.style)
                     arrow.classList.remove("up")
                     arrow.classList.add("down")
+                }  
+            },
+            addClassToOptions(){
+                let options = document.getElementsByClassName("option")
+                let doorslist = this.selectedDoors.map(door => door.name)
+                console.log(doorslist)
+                console.log(options.length)
+                for (let option of options){
+                    if (doorslist.includes(option.value)){
+                        console.log("adding class")
+                        option.classList.add("option-active")
+                    }
+                    else{
+                        option.classList.remove("option-active")
+                    }
                 }
-                
             },
             filterInput(e){
                 this.show = true;
@@ -217,17 +223,17 @@
                     this.filteredDoors.push({name:"Geen gevonden",id:0})
                 }
                 if (searchString === ''){
-                    this.filteredDoors = this.doors;
+                    this.filteredDoors.concat(this.doors)
                 }
+                this.addClassToOptions()
             },
             addRemoveSelected(e){
-                console.log(e)
                 let id = e.target.id
                 let i = 0
                 for (let door of this.selectedDoors){
                     if (door.id == id){
                         this.selectedDoors.splice(i,1)
-                        console.log(this.selectedDoors)
+                        this.filteredDoors.concat(this.doors)
                         e.target.classList.remove("option-active")
                         this.updateList()
                         return;
@@ -235,11 +241,8 @@
                     i++
                 }
                 let door = this.doors.filter(door => door.id == id)[0]
-                console.log(door)
                 if (door != undefined){
                     this.selectedDoors.push(door)
-                    console.log(this.selectedDoors)
-                    console.log("adding class")
                     e.target.classList.add("option-active")
                 }
                 this.updateList()
@@ -260,6 +263,9 @@
 </script>
 
 <style scoped>
+    #options{
+        display: none;
+    }
 
     .up{
         transform: rotate(180deg);
