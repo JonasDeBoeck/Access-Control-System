@@ -8,6 +8,15 @@ import router from './router'
 let hostname = window.location.host;
 const session = Vue.prototype.$session;
 
+
+/**
+ * @brief Logs the user in on the biostar API
+ * 
+ * @param {*} username 
+ * @param {*} password 
+ * 
+ * @returns the session-id found in the API respons
+ */
 async function login(username, password) {
     let data = {
         "User": {
@@ -31,6 +40,16 @@ async function login(username, password) {
     return response.headers["bs-session-id"]
 }
 
+
+
+
+/** 
+ * @brief sends a get request to the biostar api to get ALL DOORS
+ * 
+ * @param {*} session 
+ * 
+ * @returns {JSON} All doors in json format
+ */
 async function getDoors(session) {
     let headers = {
         headers: {
@@ -47,6 +66,16 @@ async function getDoors(session) {
     }
 }
 
+
+
+
+/**
+ * @brief sends a post request to the Biostar API to obtain all doors stausses
+ * 
+ * @param {*} session 
+ * 
+ * @returns the data found in the response of the API
+ */
 async function getDoorsStatus(session) {
     let headers = {
         headers: {
@@ -68,6 +97,18 @@ async function getDoorsStatus(session) {
 
 }
 
+
+
+/**
+ * @brief filters out the needed information out of the API responses
+ *        to show on the Overview page
+ * 
+ * @calls getDoorSatus , getDoors 
+ * 
+ * @param {*} session 
+ * 
+ * @returns an array of Doors with the filtered information
+ */
 async function getDoorsForOverview(session) {
     const doorsStatus = await getDoorsStatus(session)
     const doors = await getDoors(session)
@@ -96,6 +137,17 @@ async function getDoorsForOverview(session) {
     return result
 }
 
+
+
+
+/**
+ * @brief sends an unlock door request to the biostar API to unlock 1 door
+ * 
+ * @param {*} door_id 
+ * @param {*} session 
+ * 
+ * @returns a success or failure message from the API response
+ */
 async function unlockDoor(door_id, session) {
     let headers = {
         headers: {
@@ -125,6 +177,16 @@ async function unlockDoor(door_id, session) {
     }
 }
 
+
+
+/**
+ * @brief sends an unlock door request to the biostar API to unlock MULTIPLE doors
+ * 
+ * @param {*} doorids 
+ * @param {*} session 
+ * 
+ * @returns a success or failure message from the API response
+ */
 async function unlockDoors(doorids, session) {
     let headers = {
         headers: {
@@ -152,6 +214,16 @@ async function unlockDoors(doorids, session) {
     }
 }
 
+
+
+/**
+ * @brief sends an lock door request to the biostar API to lock MULTIPLE doors
+ * 
+ * @param {*} door_ids 
+ * @param {*} session 
+ * 
+ * @returns a success or failure message from the API response
+ */
 async function lockDoors(door_ids, session) {
 
     let headers = {
@@ -182,6 +254,16 @@ async function lockDoors(door_ids, session) {
     }
 }
 
+
+
+/**
+ * @brief sends an lock door request to the biostar API to lock 1 door
+ * 
+ * @param {*} door_id 
+ * @param {*} session 
+ * 
+ * @returns a success or failure message from the API response
+ */
 async function lockDoor(door_id, session) {
     let headers = {
         headers: {
@@ -213,6 +295,16 @@ async function lockDoor(door_id, session) {
 
 }
 
+
+
+/**
+ * @brief sends a get request to get details on a specific door
+ * 
+ * @param {*} door_id 
+ * @param {*} session 
+ * 
+ * @returns the door detail data found in the response of the API
+ */
 async function getDoorDetail(door_id, session) {
     let headers = {
         headers: {
@@ -231,6 +323,15 @@ async function getDoorDetail(door_id, session) {
 
 }
 
+
+/**
+ * @brief gets all door statusses to then filter only the status from the needed door (false or true)
+ * 
+ * @param {*} door_id 
+ * @param {*} session 
+ * 
+ * @returns {boolean}
+ */
 async function getDoorDetailStatus(door_id, session) {
     let headers = {
         headers: {
@@ -264,6 +365,14 @@ async function getDoorDetailStatus(door_id, session) {
     }
 }
 
+/**
+ * @brief sends a request to the api to change the set duration of a door
+ * 
+ * @param {*} door_id 
+ * @param {*} newDuration 
+ * @param {*} session 
+ * 
+ */
 async function updateDoorOpen_Duration(door_id, newDuration, session) {
     let headers = {
         headers: {
@@ -284,6 +393,17 @@ async function updateDoorOpen_Duration(door_id, newDuration, session) {
     }
 }
 
+
+
+/**
+ * @brief sends a get request to get the different access levels with their doors
+ *        and filters out 1 specific door and its access group
+ * 
+ * @param {*} door_id 
+ * @param {*} session 
+ * 
+ * @return {[]} an array with the access levels of which the door is part of
+ */
 async function getAccessLevelForDoor(door_id, session) {
     let headers = {
         headers: {
@@ -327,6 +447,16 @@ async function getAccessLevelForDoor(door_id, session) {
     }
 }
 
+
+
+/**
+ * @brief gets the different group names within a certain access level
+ * 
+ * @param {*} access_level_id_array 
+ * @param {*} session 
+ * 
+ * @returns {[]} an array of group names
+ */
 async function findAccessGroupNamesForAccessLevel(access_level_id_array, session) {
     let headers = {
         headers: {
@@ -362,6 +492,18 @@ async function findAccessGroupNamesForAccessLevel(access_level_id_array, session
     }
 }
 
+
+
+/**
+ * @brief gets both group names and access levels for a certain door.
+ * 
+ * @calls getAccesGroupNamesForAccessLevel, getAccessLevelForDoor
+ * 
+ * @param {*} door_id 
+ * @param {*} session 
+ * 
+ * @returns {[]} an array with both the group names and access levels for a door
+ */
 async function getAccesGroupNamesAndLevelsForDoor(door_id, session) {
     let access_level_array = await getAccessLevelForDoor(door_id, session)
     let access_level_id_array = access_level_array[0]
@@ -373,6 +515,18 @@ async function getAccesGroupNamesAndLevelsForDoor(door_id, session) {
     return result_array
 }
 
+
+
+/**
+ * @brief sends a request to change a doors' name and description  
+ * 
+ * @param {*} door_id 
+ * @param {*} name 
+ * @param {*} description 
+ * @param {*} session 
+ * 
+ *
+ */
 async function updateDoorNameAndDesc(door_id, name, description, session) {
     let headers = {
         headers: {
@@ -394,6 +548,15 @@ async function updateDoorNameAndDesc(door_id, name, description, session) {
     }
 }
 
+
+
+/**
+ * @brief gets all door groups
+ * 
+ * @param {*} session 
+ * 
+ * @returns {[]} an array with all door groups and its id, description, name and doors
+ */
 async function getDoorGroups(session) {
     let headers = {
         headers: {
@@ -435,6 +598,13 @@ async function getDoorGroups(session) {
 //     return arrayResult
 // }
 
+
+
+/**
+ * @brief handles a 401 error by sending you back to the login page
+ * 
+ * @param {*} error 
+ */
 function errorHandling(error) {
     if (error.response.status === 401) {
         // console.log(vuesession)
@@ -446,6 +616,21 @@ function errorHandling(error) {
 }
 
 
+
+
+/**
+ * @brief gets all events for a door according to the params, for a certain time frame, and limit
+ *        Filters this data so only the needed information is showed
+ * 
+ * @calls getEventTypes
+ * 
+ * @param {*} session 
+ * @param {*} limit 
+ * @param {*} first_date 
+ * @param {*} second_date 
+ * 
+ * @returns {[]} an array with the filtered event data to be showed on the monitoring section on the webpage
+ */
 async function monitoring(session,limit,first_date,second_date){
     let headers = {
         headers: {
@@ -499,6 +684,16 @@ async function monitoring(session,limit,first_date,second_date){
     return filtered
 }
 
+
+
+
+/**
+ * @brief gets all the event types stored within the Biostar API
+ * 
+ * @param {*} session 
+ * 
+ * @returns the data found in the response of the API, containing all event_types
+ */
 async function getEventTypes(session){
     let headers = {
         headers: {
