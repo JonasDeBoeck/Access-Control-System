@@ -127,7 +127,9 @@ export default {
             if (result.data.success){
                 this.widget.event_id = result.data.id;
                 this.widget.active = true
+                console.log(this.widget.active)
                 console.log("starting countdown")
+                this.duration = this.widget.duration
                 this.startCountDown()
 
                 this.$toasted.show(`${this.widget.name} Succesvol Gestart!`, {
@@ -150,9 +152,11 @@ export default {
                 })
             }
             // force update rerender 
+            console.log("forced update")
             this.$forceUpdate();
         },
         startCountDown(){
+            console.log(this.duration)
             this.duration--
             this.setTime(this.duration)
             if (this.duration > 0 && !this.canceled){

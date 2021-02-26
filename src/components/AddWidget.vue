@@ -92,7 +92,7 @@
                 seconds: 0,
                 widgetname: "",
                 color: "#0000000",
-                icon: "open-door",
+                icon: "",
                 form_errors_strings: [],
                 show: false
             }
@@ -149,6 +149,7 @@
                         type: 'success'
                     })
                 }
+                this.$forceUpdate();
             },
             changeDoor(door) {
                 return { id: door.id, name: door.name }
