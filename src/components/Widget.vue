@@ -123,6 +123,7 @@ export default {
                 duration: this.widget.duration,
                 widget: this.widget
             }
+            console.log(event)
             let result = await db.default.insertEvent(event)
             if (result.data.success){
                 this.widget.event_id = result.data.id;

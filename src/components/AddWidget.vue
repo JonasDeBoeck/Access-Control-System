@@ -98,6 +98,13 @@
             }
         },
         methods: {
+
+            /**
+             * 
+             * @brief deze functie zorgt voor het toevoegen van een widget, hier zal ook form validatie gebeuren
+             * Ook hier zal een request gestuurd worden naar de Spring back-end. 
+             * 
+             */
             async addWidget() {
                 // make object
                 this.hours = parseInt(this.hours)
