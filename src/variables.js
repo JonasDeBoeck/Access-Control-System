@@ -5,7 +5,10 @@ import Vue from 'vue'
 import router from './router'
 // import session from 'vue-session'
 
-let hostname = window.location.host;
+// let hostname = window.location.host;
+//let hostname = process.env.VUE_BIOSTAR_API_URL
+let hostname = "http://localhost:9090"
+let biostarURL = "https://localhost:500"
 const session = Vue.prototype.$session;
 
 
@@ -18,6 +21,7 @@ const session = Vue.prototype.$session;
  * @returns the session-id found in the API respons
  */
 async function login(username, password) {
+    console.log(hostname)
     let data = {
         "User": {
             "login_id": username,
@@ -25,20 +29,9 @@ async function login(username, password) {
         }
     }
 
-    const instance = axios.create({
-        httpsAgent: new https.Agent({
-            rejectUnauthorized: false
-        })
-    })
-
-    let config = {
-        headers: {
-            "Content-Type": "application/json"
-        }
-    }
     try{
-        const response = await instance.post(`http://${hostname}/api/login`, JSON.stringify(data), config)
-        return response.headers["bs-session-id"]
+        const response = await axios.post(`${hostname}/api/login`, JSON.stringify(data))
+        return response.data
     }catch(err)
     {
         return false
@@ -56,13 +49,14 @@ async function login(username, password) {
  * @returns {JSON} All doors in json format
  */
 async function getDoors(session) {
-    let headers = {
-        headers: {
-            "bs-session-id": session
-        }
+    let forward = {
+        method: "get",
+        apiKey: session,
+        url: `${biostarURL}/api/doors`,
+        body: ""
     }
     try {
-        const response = await axios.get(`http://${hostname}/api/doors`, headers)
+        const response = await axios.post(`${hostname}/api/forward`,forward)
         return response.data
     } catch (error) {
         console.log(error.response)
@@ -82,17 +76,18 @@ async function getDoors(session) {
  * @returns the data found in the response of the API
  */
 async function getDoorsStatus(session) {
-    let headers = {
-        headers: {
-            "bs-session-id": session
-        }
-    }
-
     let data = {
         "monitoring_permission": true
     }
+
+    let forward = {
+        method: "post",
+        apiKey: session,
+        url: `${biostarURL}/api/doors/status`,
+        body: JSON.stringify(data)
+    }
     try {
-        const response = await axios.post(`http://${hostname}/api/doors/status`, JSON.stringify(data), headers)
+        const response = await axios.post(`${hostname}/api/forward`, forward)
         return response.data
     } catch (error) {
         // console.log(error.response.data.DeviceResponse.result)
@@ -154,12 +149,6 @@ async function getDoorsForOverview(session) {
  * @returns a success or failure message from the API response
  */
 async function unlockDoor(door_id, session) {
-    let headers = {
-        headers: {
-            "bs-session-id": session
-        }
-    }
-
     let data = {
         DoorCollection: {
             total: 1,
@@ -170,9 +159,17 @@ async function unlockDoor(door_id, session) {
             ]
         }
     }
+
+    let forward = {
+        method: "post",
+        apiKey: session,
+        url: `${biostarURL}/api/doors/open`,
+        body: JSON.stringify(data)
+    }
+    
     try {
         console.log(door_id)
-        const response = await axios.post(`http://${hostname}/api/doors/open`, data, headers);
+        const response = await axios.post(`${hostname}/api/forward`, forward);
         console.log(response);
         return response.data;
     } catch (error) {
@@ -193,12 +190,6 @@ async function unlockDoor(door_id, session) {
  * @returns a success or failure message from the API response
  */
 async function unlockDoors(doorids, session) {
-    let headers = {
-        headers: {
-            "bs-session-id": session
-        }
-    }
-
     let rows_array = []
     doorids.forEach(doorid => rows_array.push({ id: doorid }))
 
@@ -208,8 +199,16 @@ async function unlockDoors(doorids, session) {
             rows: rows_array
         }
     }
+
+    let forward = {
+        method: "post",
+        apiKey: session,
+        url: `${biostarURL}/api/doors/open`,
+        body: JSON.stringify(data)
+    }
+
     try {
-        const response = await axios.post(`http://${hostname}/api/doors/open`, data, headers);
+        const response = await axios.post(`${hostname}/api/forward`, forward);
         console.log(response);
         return response.data;
     } catch (error) {
@@ -230,13 +229,6 @@ async function unlockDoors(doorids, session) {
  * @returns a success or failure message from the API response
  */
 async function lockDoors(door_ids, session) {
-
-    let headers = {
-        headers: {
-            "bs-session-id": session
-        }
-    }
-
     let rows_array = []
     door_ids.forEach(doorid => rows_array.push({ id: doorid }))
 
@@ -246,9 +238,24 @@ async function lockDoors(door_ids, session) {
             "rows": rows_array
         }
     }
+
+    let forward = {
+        method: "post",
+        apiKey: session,
+        url: `${biostarURL}/api/doors/lock`,
+        body: JSON.stringify(data)
+    }
+    let forward2 = {
+        method: "post",
+        apiKey: session,
+        url: `${biostarURL}/api/doors/release`,
+        body: JSON.stringify(data)
+    }
+
+
     try {
-        const response = await axios.post(`http://${hostname}/api/doors/lock`, data, headers);
-        const res = await axios.post(`http://${hostname}/api/doors/release`, data, headers);
+        const response = await axios.post(`${hostname}/api/forward`, forward);
+        const res = await axios.post(`${hostname}/api/forward`, forward2);
         console.log(response);
         console.log(res)
         return response.data;
@@ -270,12 +277,6 @@ async function lockDoors(door_ids, session) {
  * @returns a success or failure message from the API response
  */
 async function lockDoor(door_id, session) {
-    let headers = {
-        headers: {
-            "bs-session-id": session
-        }
-    }
-
     let data = {
         "DoorCollection": {
             "total": 1,
@@ -286,9 +287,24 @@ async function lockDoor(door_id, session) {
             ]
         }
     }
+
+    let forward = {
+        method: "post",
+        apiKey: session,
+        url: `${biostarURL}/api/doors/lock`,
+        body: JSON.stringify(data)
+    }
+
+    let forward2 = {
+        method: "post",
+        apiKey: session,
+        url: `${biostarURL}/api/doors/release`,
+        body: JSON.stringify(data)
+    }
+
     try {
-        const response = await axios.post(`http://${hostname}/api/doors/lock`, data, headers);
-        const res = await axios.post(`http://${hostname}/api/doors/release`, data, headers);
+        const response = await axios.post(`${hostname}/api/forward`, forward);
+        const res = await axios.post(`${hostname}/api/forward`, forward2);
         console.log(response);
         console.log(res)
         return response.data;
@@ -311,13 +327,15 @@ async function lockDoor(door_id, session) {
  * @returns the door detail data found in the response of the API
  */
 async function getDoorDetail(door_id, session) {
-    let headers = {
-        headers: {
-            "bs-session-id": session
-        }
+    let forward = {
+        method: "get",
+        apiKey: session,
+        url: `${biostarURL}/api/doors/${door_id}`,
+        body: ""
     }
+
     try {
-        const response = await axios.get(`http://${hostname}/api/doors/${door_id}`, headers)
+        const response = await axios.post(`${hostname}/api/forward`,forward)
         const result = response.data
         return result
     } catch (error) {
@@ -338,17 +356,8 @@ async function getDoorDetail(door_id, session) {
  * @returns {boolean}
  */
 async function getDoorDetailStatus(door_id, session) {
-    let headers = {
-        headers: {
-            "bs-session-id": session
-        }
-    }
-    let data = {
-        "monitoring_permission": true
-    }
     try {
-        const response = await axios.post(`http://${hostname}/api/doors/status`, JSON.stringify(data), headers)
-        const result = response.data
+        const result = await getDoorsStatus(session)
         const rowsStatus = result.DoorStatusCollection.rows
         let unlocked = "false"
         for (let i = 0; i < rowsStatus.length; i++) {
@@ -379,18 +388,21 @@ async function getDoorDetailStatus(door_id, session) {
  * 
  */
 async function updateDoorOpen_Duration(door_id, newDuration, session) {
-    let headers = {
-        headers: {
-            "bs-session-id": session
-        }
-    }
     let data = {
         "Door": {
             "open_duration": newDuration
         }
     }
+
+    let forward = {
+        method: "put",
+        apiKey: session,
+        url: `${biostarURL}/api/doors/${door_id}`,
+        body: JSON.stringify(data)
+    }
+    
     try {
-        await axios.put(`http://${hostname}/api/doors/` + door_id, data, headers)
+        await axios.post(`${hostname}/api/forward`, forward)
     } catch (error) {
         console.log(error.response)
         errorHandling(error)
@@ -410,16 +422,18 @@ async function updateDoorOpen_Duration(door_id, newDuration, session) {
  * @return {[]} an array with the access levels of which the door is part of
  */
 async function getAccessLevelForDoor(door_id, session) {
-    let headers = {
-        headers: {
-            "bs-session-id": session
-        }
+    let forward = {
+        method: "get",
+        apiKey: session,
+        url: `${biostarURL}/api/access_levels`,
+        body: ""
     }
+
     let access_level_array = []
     let access_level_id_array = []
     let access_level_name_array = []
     try {
-        let requestResult = await axios.get(`http://${hostname}/api/access_levels`, headers)
+        let requestResult = await axios.post(`${hostname}/api/forward`,forward)
         let rows = requestResult.data.AccessLevelCollection.rows
         for (let i = 0; i < rows.length; i++) {
             let access_level = rows[i]
@@ -463,14 +477,17 @@ async function getAccessLevelForDoor(door_id, session) {
  * @returns {[]} an array of group names
  */
 async function findAccessGroupNamesForAccessLevel(access_level_id_array, session) {
-    let headers = {
-        headers: {
-            "bs-session-id": session
-        }
+    
+    let forward = {
+        method: "get",
+        apiKey: session,
+        url: `${biostarURL}/api/access_groups`,
+        body: ""
     }
+    
     let access_group_name_array = []
     try {
-        let requestResult = await axios.get(`http://${hostname}/api/access_groups`, headers)
+        let requestResult = await axios.post(`${hostname}/api/forward`,forward)
         let access_groups = requestResult.data.AccessGroupCollection.rows
         for (let i = 0; i < access_groups.length; i++) {
             let access_group = access_groups[i]
@@ -533,19 +550,22 @@ async function getAccesGroupNamesAndLevelsForDoor(door_id, session) {
  *
  */
 async function updateDoorNameAndDesc(door_id, name, description, session) {
-    let headers = {
-        headers: {
-            "bs-session-id": session
-        }
-    }
     let data = {
         "Door": {
             "name": name,
             "description": description
         }
     }
+
+    let forward = {
+        method: "put",
+        apiKey: session,
+        url: `${biostarURL}/api/doors/${door_id}`,
+        body: JSON.stringify(data)
+    }
+
     try {
-        await axios.put(`http://${hostname}/api/doors/` + door_id, data, headers)
+        await axios.post(`${hostname}/api/forward`, forward)
     } catch (error) {
         console.log(error.response)
         errorHandling(error)
@@ -563,13 +583,15 @@ async function updateDoorNameAndDesc(door_id, name, description, session) {
  * @returns {[]} an array with all door groups and its id, description, name and doors
  */
 async function getDoorGroups(session) {
-    let headers = {
-        headers: {
-            "bs-session-id": session
-        }
+    let forward = {
+        method: "get",
+        apiKey: session,
+        url: `${biostarURL}/api/door_groups`,
+        body: ""
     }
+
     try {
-        let response = await axios.get(`http://${hostname}/api/door_groups`, headers)
+        let response = await axios.post(`${hostname}/api/forward`,forward)
         let data = response.data['DoorGroupCollection']['rows']
         let result = []
         data.forEach(el => {
@@ -591,7 +613,7 @@ async function getDoorGroups(session) {
 //             "bs-session-id": session
 //         }
 //     }
-//     const result = await axios.get("http://localhost:8080/api/access_groups", headers)
+//     const result = await axios.get("localhost:8080/api/access_groups", headers)
 //     console.log(result.data.AccessGroupCollection.rows)
 //     let arrayResult = []
 //     for(let i=0; i < arrayResult.length; i++){
@@ -637,12 +659,7 @@ function errorHandling(error) {
  * @returns {[]} an array with the filtered event data to be showed on the monitoring section on the webpage
  */
 async function monitoring(session,limit,first_date,second_date){
-    let headers = {
-        headers: {
-            "bs-session-id": session
-        }
-    }
-    let body = {
+    let data = {
         "Query": {
           "limit": limit,
           "conditions": [
@@ -662,9 +679,16 @@ async function monitoring(session,limit,first_date,second_date){
             }
           ]
         }
-      }
+    }
+
+    let forward = {
+        method: "post",
+        apiKey: session,
+        url: `${biostarURL}/api/events/search`,
+        body: JSON.stringify(data)
+    }
     
-    const response = await axios.post(`http://${hostname}/api/events/search`,body,headers)
+    const response = await axios.post(`${hostname}/api/forward`,forward)
     const filtered = []
     console.log(response)
     let collection = response.data.EventCollection.rows
@@ -700,13 +724,14 @@ async function monitoring(session,limit,first_date,second_date){
  * @returns the data found in the response of the API, containing all event_types
  */
 async function getEventTypes(session){
-    let headers = {
-        headers: {
-            "bs-session-id": session
-        }
+    let forward = {
+        method: "get",
+        apiKey: session,
+        url: `${biostarURL}/api/event_types?setting_all=true`,
+        body: ""
     }
 
-    const response = await axios.get(`http://${hostname}/api/event_types?setting_all=true`,headers)
+    const response = await axios.post(`${hostname}/api/forward`,forward)
     return response.data
 }
 

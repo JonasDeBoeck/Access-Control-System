@@ -103,7 +103,7 @@
                      <input type="text" class="form-control" readonly
                         v-bind:placeholder="details.Door.relay_output_id.device_id.name">
                   </div>
-                  <input type="submit" v-on:click="updateNameDesc" value="Opslaan" id="saveNameDesc"
+                  <input type="button" v-on:click="updateNameDesc" value="Opslaan" id="saveNameDesc"
                      class="btn btn-primary" />
                </form>
             </div>
