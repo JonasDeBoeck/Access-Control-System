@@ -36,8 +36,13 @@ async function login(username, password) {
             "Content-Type": "application/json"
         }
     }
-    const response = await instance.post(`http://${hostname}/api/login`, JSON.stringify(data), config)
-    return response.headers["bs-session-id"]
+    try{
+        const response = await instance.post(`http://${hostname}/api/login`, JSON.stringify(data), config)
+        return response.headers["bs-session-id"]
+    }catch(err)
+    {
+        return false
+    }
 }
 
 

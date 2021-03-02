@@ -7,8 +7,11 @@
       <div id="login">
         <form>
           <h2>Log in</h2>
-          <input type="text" placeholder="Username" />
-          <input type="password" placeholder="Password" />
+          <div v-if="error !==null">
+              <p class="error">{{error}}</p>
+          </div>
+          <input type="text" placeholder="Username" v-model="username" />
+          <input type="password" placeholder="Password" v-model="password"/>
           <button type="button" @click="login" :disabled="loggedIn">Log in</button>
         </form>
       </div>
@@ -50,18 +53,29 @@
       return {
         loggedIn: this.$session.has("bs-session-id"),
         top5WidgetsUsed: [],
-        activeWidgets: []
+        activeWidgets: [],
+        username: "",
+        password: "",
+        error: ""
       }
     },
     methods: {
       async login() {
         console.log("login")
-        let key = await api.default.login("admin", 't')
-        this.$session.set("bs-session-id", key)
-        this.loggedIn = true;
-        // Emit event naar parent zo dat header kan worden gereload
-        this.$emit("logIn")
-        console.log(this.$session.getAll())
+        console.log(this.username)
+        console.log(this.password)
+        let key = await api.default.login(this.username, this.password)
+        console.log(key)
+        if(!key){
+          this.error = "Foute login gegevens!"
+        }
+        else{
+          this.$session.set("bs-session-id", key)
+          this.loggedIn = true;
+          // Emit event naar parent zo dat header kan worden gereload
+          this.$emit("logIn")
+          console.log(this.$session.getAll())
+        }
       },
       async pollTopWidgets() {
         this.top5WidgetsUsed = await db.default.top5WidgetsUsed()
@@ -179,6 +193,10 @@
 
   .home {
     background-color: white;
+  }
+
+  .error{
+    color: red;
   }
 
 
