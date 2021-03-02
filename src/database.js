@@ -1,4 +1,4 @@
-let databaseurl = "http://192.168.92.128:9090";
+let databaseurl = process.env.VUE_APP_BACKEND_API_URL;
 import axios from 'axios'
 
 async function insertWidget(widget) {

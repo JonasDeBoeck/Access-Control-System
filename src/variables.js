@@ -1,14 +1,9 @@
 import axios from 'axios'
-import https from 'https'
 import Vue from 'vue'
-// import app from './App.vue'
 import router from './router'
-// import session from 'vue-session'
 
-// let hostname = window.location.host;
-//let hostname = process.env.VUE_BIOSTAR_API_URL
-let hostname = "http://localhost:9090"
-let biostarURL = "https://localhost:<insert_port_here>"
+let hostname = process.env.VUE_APP_BACKEND_API_URL
+let biostarURL = process.env.VUE_APP_BIOSTAR_API_URL
 const session = Vue.prototype.$session;
 
 
@@ -21,7 +16,6 @@ const session = Vue.prototype.$session;
  * @returns the session-id found in the API respons
  */
 async function login(username, password) {
-    console.log(hostname)
     let data = {
         User: {
             login_id: username,
