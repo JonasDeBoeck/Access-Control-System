@@ -127,6 +127,9 @@ export default {
         },
         // Open door for certain time
         setDuration() {
+            if (this.hours === "") this.hours = 0;
+            if (this.minutes === "") this.minutes = 0;
+            if (this.seconds === "") this.seconds = 0;
             let seconds = (this.hours * 3600) + (this.minutes * 60) + this.seconds
             this.$vm2.close(this.durationModal)
             let event = {

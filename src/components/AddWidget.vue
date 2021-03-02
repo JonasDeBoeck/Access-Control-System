@@ -107,6 +107,10 @@
              */
             async addWidget() {
                 // make object
+                if (this.hours === "") this.hours = 0;
+                if (this.minutes === "") this.minutes = 0;
+                if (this.seconds === "") this.seconds = 0;
+
                 this.hours = parseInt(this.hours)
                 this.minutes = parseInt(this.minutes)
                 this.seconds = parseInt(this.seconds)
