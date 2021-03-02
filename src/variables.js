@@ -55,13 +55,16 @@ async function getDoors(session) {
         url: `${biostarURL}/api/doors`,
         body: ""
     }
-    try {
-        const response = await axios.post(`${hostname}/api/forward`,forward)
-        return response.data
-    } catch (error) {
-        console.log(error.response)
-        errorHandling(error)
-        return { DoorCollection: { rows: [] } }
+
+    if (session){
+        try {
+            const response = await axios.post(`${hostname}/api/forward`,forward)
+            return response.data
+        } catch (error) {
+            console.log(error.response)
+            errorHandling(error)
+            return { DoorCollection: { rows: [] } }
+        }
     }
 }
 
@@ -86,15 +89,17 @@ async function getDoorsStatus(session) {
         url: `${biostarURL}/api/doors/status`,
         body: JSON.stringify(data)
     }
-    try {
-        const response = await axios.post(`${hostname}/api/forward`, forward)
-        return response.data
-    } catch (error) {
-        // console.log(error.response.data.DeviceResponse.result)
-        errorHandling(error)
-        return { DoorStatusCollection: { rows: [] } }
-    }
 
+    if (session){
+        try {
+            const response = await axios.post(`${hostname}/api/forward`, forward)
+            return response.data
+        } catch (error) {
+            // console.log(error.response.data.DeviceResponse.result)
+            errorHandling(error)
+            return { DoorStatusCollection: { rows: [] } }
+        }
+    }
 }
 
 
@@ -110,31 +115,33 @@ async function getDoorsStatus(session) {
  * @returns an array of Doors with the filtered information
  */
 async function getDoorsForOverview(session) {
-    const doorsStatus = await getDoorsStatus(session)
-    const doors = await getDoors(session)
-    const rowsDoors = doors['DoorCollection']['rows']
-    const rowsDoorsStatus = doorsStatus['DoorStatusCollection']['rows']
-    const result = []
-    rowsDoors.forEach(row => result.push({
-        id: parseInt(row.id),
-        name: row.name
-    }))
-    const statusResult = []
-    rowsDoorsStatus.forEach(row => statusResult.push({
-        id: parseInt(row.door_id.id),
-        unlocked: row.unlocked === "true",
-        nietdicht: row.opened === "true"
-    }))
-    for (let i = 0; i < result.length; i++) {
-        let door = result[i]
-        for (let j = 0; j < statusResult.length; j++) {
-            let status = statusResult[j]
-            if (door.id === status.id) {
-                door.unlocked = status.unlocked
+    if (session){
+        const doorsStatus = await getDoorsStatus(session)
+        const doors = await getDoors(session)
+        const rowsDoors = doors['DoorCollection']['rows']
+        const rowsDoorsStatus = doorsStatus['DoorStatusCollection']['rows']
+        const result = []
+        rowsDoors.forEach(row => result.push({
+            id: parseInt(row.id),
+            name: row.name
+        }))
+        const statusResult = []
+        rowsDoorsStatus.forEach(row => statusResult.push({
+            id: parseInt(row.door_id.id),
+            unlocked: row.unlocked === "true",
+            nietdicht: row.opened === "true"
+        }))
+        for (let i = 0; i < result.length; i++) {
+            let door = result[i]
+            for (let j = 0; j < statusResult.length; j++) {
+                let status = statusResult[j]
+                if (door.id === status.id) {
+                    door.unlocked = status.unlocked
+                }
             }
         }
+        return result
     }
-    return result
 }
 
 
@@ -166,16 +173,17 @@ async function unlockDoor(door_id, session) {
         url: `${biostarURL}/api/doors/open`,
         body: JSON.stringify(data)
     }
-    
-    try {
-        console.log(door_id)
-        const response = await axios.post(`${hostname}/api/forward`, forward);
-        console.log(response);
-        return response.data;
-    } catch (error) {
-        console.log(error.response)
-        errorHandling(error)
-        return { error: "unauthorized" }
+    if (session){
+        try {
+            console.log(door_id)
+            const response = await axios.post(`${hostname}/api/forward`, forward);
+            console.log(response);
+            return response.data;
+        } catch (error) {
+            console.log(error.response)
+            errorHandling(error)
+            return { error: "unauthorized" }
+        }
     }
 }
 
@@ -206,15 +214,16 @@ async function unlockDoors(doorids, session) {
         url: `${biostarURL}/api/doors/open`,
         body: JSON.stringify(data)
     }
-
-    try {
-        const response = await axios.post(`${hostname}/api/forward`, forward);
-        console.log(response);
-        return response.data;
-    } catch (error) {
-        console.log(error.response)
-        errorHandling(error)
-        return { error: "unauthorized" }
+    if (session){
+        try {
+            const response = await axios.post(`${hostname}/api/forward`, forward);
+            console.log(response);
+            return response.data;
+        } catch (error) {
+            console.log(error.response)
+            errorHandling(error)
+            return { error: "unauthorized" }
+        }
     }
 }
 
@@ -252,17 +261,18 @@ async function lockDoors(door_ids, session) {
         body: JSON.stringify(data)
     }
 
-
-    try {
-        const response = await axios.post(`${hostname}/api/forward`, forward);
-        const res = await axios.post(`${hostname}/api/forward`, forward2);
-        console.log(response);
-        console.log(res)
-        return response.data;
-    } catch (error) {
-        console.log(error.response)
-        errorHandling(error)
-        return { error: "unauthorized" }
+    if (session){
+        try {
+            const response = await axios.post(`${hostname}/api/forward`, forward);
+            const res = await axios.post(`${hostname}/api/forward`, forward2);
+            console.log(response);
+            console.log(res)
+            return response.data;
+        } catch (error) {
+            console.log(error.response)
+            errorHandling(error)
+            return { error: "unauthorized" }
+        }
     }
 }
 
@@ -301,19 +311,19 @@ async function lockDoor(door_id, session) {
         url: `${biostarURL}/api/doors/release`,
         body: JSON.stringify(data)
     }
-
-    try {
-        const response = await axios.post(`${hostname}/api/forward`, forward);
-        const res = await axios.post(`${hostname}/api/forward`, forward2);
-        console.log(response);
-        console.log(res)
-        return response.data;
-    } catch (error) {
-        console.log(error.response)
-        errorHandling(error)
-        return { error: "unauthorized" }
+    if (session){
+        try {
+            const response = await axios.post(`${hostname}/api/forward`, forward);
+            const res = await axios.post(`${hostname}/api/forward`, forward2);
+            console.log(response);
+            console.log(res)
+            return response.data;
+        } catch (error) {
+            console.log(error.response)
+            errorHandling(error)
+            return { error: "unauthorized" }
+        }
     }
-
 }
 
 
@@ -333,17 +343,17 @@ async function getDoorDetail(door_id, session) {
         url: `${biostarURL}/api/doors/${door_id}`,
         body: ""
     }
-
-    try {
-        const response = await axios.post(`${hostname}/api/forward`,forward)
-        const result = response.data
-        return result
-    } catch (error) {
-        console.log(error.response)
-        errorHandling(error)
-        return { error: "unauthorized" }
+    if (session){
+        try {
+            const response = await axios.post(`${hostname}/api/forward`,forward)
+            const result = response.data
+            return result
+        } catch (error) {
+            console.log(error.response)
+            errorHandling(error)
+            return { error: "unauthorized" }
+        }
     }
-
 }
 
 
@@ -356,26 +366,28 @@ async function getDoorDetail(door_id, session) {
  * @returns {boolean}
  */
 async function getDoorDetailStatus(door_id, session) {
-    try {
-        const result = await getDoorsStatus(session)
-        const rowsStatus = result.DoorStatusCollection.rows
-        let unlocked = "false"
-        for (let i = 0; i < rowsStatus.length; i++) {
-            if (rowsStatus[i].door_id.id === door_id) {
-                unlocked = rowsStatus[i].unlocked
+    if (session){
+        try {
+            const result = await getDoorsStatus(session)
+            const rowsStatus = result.DoorStatusCollection.rows
+            let unlocked = "false"
+            for (let i = 0; i < rowsStatus.length; i++) {
+                if (rowsStatus[i].door_id.id === door_id) {
+                    unlocked = rowsStatus[i].unlocked
+                }
             }
+            if (unlocked === "false") {
+                unlocked = false
+            }
+            else {
+                unlocked = true
+            }
+            return unlocked
+        } catch (error) {
+            console.log(error.response)
+            errorHandling(error)
+            return { error: "unauthorized" }
         }
-        if (unlocked === "false") {
-            unlocked = false
-        }
-        else {
-            unlocked = true
-        }
-        return unlocked
-    } catch (error) {
-        console.log(error.response)
-        errorHandling(error)
-        return { error: "unauthorized" }
     }
 }
 
@@ -401,12 +413,14 @@ async function updateDoorOpen_Duration(door_id, newDuration, session) {
         body: JSON.stringify(data)
     }
     
-    try {
-        await axios.post(`${hostname}/api/forward`, forward)
-    } catch (error) {
-        console.log(error.response)
-        errorHandling(error)
-        return { error: "unauthorized" }
+    if (session){
+        try {
+            await axios.post(`${hostname}/api/forward`, forward)
+        } catch (error) {
+            console.log(error.response)
+            errorHandling(error)
+            return { error: "unauthorized" }
+        }
     }
 }
 
@@ -428,41 +442,42 @@ async function getAccessLevelForDoor(door_id, session) {
         url: `${biostarURL}/api/access_levels`,
         body: ""
     }
-
-    let access_level_array = []
-    let access_level_id_array = []
-    let access_level_name_array = []
-    try {
-        let requestResult = await axios.post(`${hostname}/api/forward`,forward)
-        let rows = requestResult.data.AccessLevelCollection.rows
-        for (let i = 0; i < rows.length; i++) {
-            let access_level = rows[i]
-            let access_level_items = access_level.access_level_items
-            if (typeof (access_level_items) !== 'undefined' && access_level_items !== null) {
-                for (let k = 0; k < access_level_items.length; k++) {
-                    let doors = access_level_items[k].doors
-                    if (typeof (doors) !== 'undefined' && doors !== null) {
-                        for (let j = 0; j < doors.length; j++) {
-                            let door = doors[j]
-                            if (door.id == door_id) {
-                                access_level_id_array.push(access_level.id)
-                                access_level_name_array.push({
-                                    id: access_level.id,
-                                    name: access_level.name
-                                })
+    if (session){
+        let access_level_array = []
+        let access_level_id_array = []
+        let access_level_name_array = []
+        try {
+            let requestResult = await axios.post(`${hostname}/api/forward`,forward)
+            let rows = requestResult.data.AccessLevelCollection.rows
+            for (let i = 0; i < rows.length; i++) {
+                let access_level = rows[i]
+                let access_level_items = access_level.access_level_items
+                if (typeof (access_level_items) !== 'undefined' && access_level_items !== null) {
+                    for (let k = 0; k < access_level_items.length; k++) {
+                        let doors = access_level_items[k].doors
+                        if (typeof (doors) !== 'undefined' && doors !== null) {
+                            for (let j = 0; j < doors.length; j++) {
+                                let door = doors[j]
+                                if (door.id == door_id) {
+                                    access_level_id_array.push(access_level.id)
+                                    access_level_name_array.push({
+                                        id: access_level.id,
+                                        name: access_level.name
+                                    })
+                                }
                             }
                         }
                     }
                 }
             }
+            access_level_array.push(access_level_id_array)
+            access_level_array.push(access_level_name_array)
+            return access_level_array
+        } catch (error) {
+            console.log(error.response)
+            errorHandling(error)
+            return { error: "unauthorized" }
         }
-        access_level_array.push(access_level_id_array)
-        access_level_array.push(access_level_name_array)
-        return access_level_array
-    } catch (error) {
-        console.log(error.response)
-        errorHandling(error)
-        return { error: "unauthorized" }
     }
 }
 
@@ -485,32 +500,34 @@ async function findAccessGroupNamesForAccessLevel(access_level_id_array, session
         body: ""
     }
     
-    let access_group_name_array = []
-    try {
-        let requestResult = await axios.post(`${hostname}/api/forward`,forward)
-        let access_groups = requestResult.data.AccessGroupCollection.rows
-        for (let i = 0; i < access_groups.length; i++) {
-            let access_group = access_groups[i]
-            let access_levels = access_group.access_levels
-            if (typeof (access_levels) !== 'undefined' || access_levels !== null) {
-                for (let j = 0; j < access_levels.length; j++) {
-                    let access_level = access_levels[j]
-                    for (let l = 0; l < access_level_id_array.length; l++) {
-                        if (access_level.id === access_level_id_array[l]) {
-                            access_group_name_array.push({
-                                id: access_group.id,
-                                name: access_group.name
-                            })
+    if (session){
+        let access_group_name_array = []
+        try {
+            let requestResult = await axios.post(`${hostname}/api/forward`,forward)
+            let access_groups = requestResult.data.AccessGroupCollection.rows
+            for (let i = 0; i < access_groups.length; i++) {
+                let access_group = access_groups[i]
+                let access_levels = access_group.access_levels
+                if (typeof (access_levels) !== 'undefined' || access_levels !== null) {
+                    for (let j = 0; j < access_levels.length; j++) {
+                        let access_level = access_levels[j]
+                        for (let l = 0; l < access_level_id_array.length; l++) {
+                            if (access_level.id === access_level_id_array[l]) {
+                                access_group_name_array.push({
+                                    id: access_group.id,
+                                    name: access_group.name
+                                })
+                            }
                         }
                     }
                 }
             }
+            return access_group_name_array
+        } catch (error) {
+            console.log(error.response)
+            errorHandling(error)
+            return { error: "unauthorized" }
         }
-        return access_group_name_array
-    } catch (error) {
-        console.log(error.response)
-        errorHandling(error)
-        return { error: "unauthorized" }
     }
 }
 
@@ -527,14 +544,16 @@ async function findAccessGroupNamesForAccessLevel(access_level_id_array, session
  * @returns {[]} an array with both the group names and access levels for a door
  */
 async function getAccesGroupNamesAndLevelsForDoor(door_id, session) {
-    let access_level_array = await getAccessLevelForDoor(door_id, session)
-    let access_level_id_array = access_level_array[0]
-    let access_level_name_array = access_level_array[1]
-    let result_array = []
-    let access_group_name_array = await findAccessGroupNamesForAccessLevel(access_level_id_array, session)
-    result_array.push(access_group_name_array)
-    result_array.push(access_level_name_array)
-    return result_array
+    if (session){
+        let access_level_array = await getAccessLevelForDoor(door_id, session)
+        let access_level_id_array = access_level_array[0]
+        let access_level_name_array = access_level_array[1]
+        let result_array = []
+        let access_group_name_array = await findAccessGroupNamesForAccessLevel(access_level_id_array, session)
+        result_array.push(access_group_name_array)
+        result_array.push(access_level_name_array)
+        return result_array
+    }
 }
 
 
@@ -563,13 +582,14 @@ async function updateDoorNameAndDesc(door_id, name, description, session) {
         url: `${biostarURL}/api/doors/${door_id}`,
         body: JSON.stringify(data)
     }
-
-    try {
-        await axios.post(`${hostname}/api/forward`, forward)
-    } catch (error) {
-        console.log(error.response)
-        errorHandling(error)
-        return { error: "unauthorized" }
+    if (session){
+        try {
+            await axios.post(`${hostname}/api/forward`, forward)
+        } catch (error) {
+            console.log(error.response)
+            errorHandling(error)
+            return { error: "unauthorized" }
+        }
     }
 }
 
@@ -589,43 +609,24 @@ async function getDoorGroups(session) {
         url: `${biostarURL}/api/door_groups`,
         body: ""
     }
-
-    try {
-        let response = await axios.post(`${hostname}/api/forward`,forward)
-        let data = response.data['DoorGroupCollection']['rows']
-        let result = []
-        data.forEach(el => {
-            result.push({ "id": el.id, "name": el.name, "description": el.description, "doors": el.doors });
-        })
-        result[0].doors = await getDoorsForOverview(session)
-        console.log(result)
-        return result
-    } catch (error) {
-        console.log(error.response)
-        errorHandling(error)
-        return { error: "unauthorized" }
-    }
+    if(session){
+        try {
+            let response = await axios.post(`${hostname}/api/forward`,forward)
+            let data = response.data['DoorGroupCollection']['rows']
+            let result = []
+            data.forEach(el => {
+                result.push({ "id": el.id, "name": el.name, "description": el.description, "doors": el.doors });
+            })
+            result[0].doors = await getDoorsForOverview(session)
+            console.log(result)
+            return result
+        } catch (error) {
+            console.log(error.response)
+            errorHandling(error)
+            return { error: "unauthorized" }
+        }
+    }   
 }
-
-// async function getAllAccesGroups(session){
-//     let headers = {
-//         headers: {
-//             "bs-session-id": session
-//         }
-//     }
-//     const result = await axios.get("localhost:8080/api/access_groups", headers)
-//     console.log(result.data.AccessGroupCollection.rows)
-//     let arrayResult = []
-//     for(let i=0; i < arrayResult.length; i++){
-//         arrayResult.push({
-//             id: result[i].id,
-//             name: result[i].name
-//         })
-//     }
-//     return arrayResult
-// }
-
-
 
 /**
  * @brief handles a 401 error by sending you back to the login page
@@ -687,34 +688,33 @@ async function monitoring(session,limit,first_date,second_date){
         url: `${biostarURL}/api/events/search`,
         body: JSON.stringify(data)
     }
-    
-    const response = await axios.post(`${hostname}/api/forward`,forward)
-    const filtered = []
-    console.log(response)
-    let collection = response.data.EventCollection.rows
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour:'numeric', minute:'numeric', second: 'numeric' };
-    let i = 1;
-    const event_types = await getEventTypes(session)
-    for (let event of collection){
-        const event_name = event_types.EventTypeCollection.rows.filter(type => type.code === event.event_type_id.code);
-        let filter = {
-            number: i,
-            id: event.id,
-            date: new Date(event.datetime).toLocaleDateString("nl-BE",options),
-            event_code: event.event_type_id.code,
-            event_name: event_name[0].name,
-            user: {id: event.user_id.user_id, name: event.user_id.name},
-            user_group: event.user_group_id,
-            device_id: event.device_id.id
+
+    if (session){
+        const response = await axios.post(`${hostname}/api/forward`,forward)
+        const filtered = []
+        console.log(response)
+        let collection = response.data.EventCollection.rows
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour:'numeric', minute:'numeric', second: 'numeric' };
+        let i = 1;
+        const event_types = await getEventTypes(session)
+        for (let event of collection){
+            const event_name = event_types.EventTypeCollection.rows.filter(type => type.code === event.event_type_id.code);
+            let filter = {
+                number: i,
+                id: event.id,
+                date: new Date(event.datetime).toLocaleDateString("nl-BE",options),
+                event_code: event.event_type_id.code,
+                event_name: event_name[0].name,
+                user: {id: event.user_id.user_id, name: event.user_id.name},
+                user_group: event.user_group_id,
+                device_id: event.device_id.id
+            }
+            i++;
+            filtered.push(filter)
         }
-        i++;
-        filtered.push(filter)
-    }
-    return filtered
+        return filtered
+    }    
 }
-
-
-
 
 /**
  * @brief gets all the event types stored within the Biostar API
@@ -730,9 +730,11 @@ async function getEventTypes(session){
         url: `${biostarURL}/api/event_types?setting_all=true`,
         body: ""
     }
+    if (session){
+        const response = await axios.post(`${hostname}/api/forward`,forward)
+        return response.data
+    }
 
-    const response = await axios.post(`${hostname}/api/forward`,forward)
-    return response.data
 }
 
 export default {
