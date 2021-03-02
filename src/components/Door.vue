@@ -89,7 +89,7 @@ export default {
         }
     },
     created(){
-        console.log(this.door)
+        
     },
     methods: {
         async lock() {
@@ -128,7 +128,6 @@ export default {
         // Open door for certain time
         setDuration() {
             let seconds = (this.hours * 3600) + (this.minutes * 60) + this.seconds
-            console.log(seconds)
             this.$vm2.close(this.durationModal)
             let event = {
                 doors: [this.door],

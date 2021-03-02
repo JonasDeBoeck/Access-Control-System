@@ -8,7 +8,7 @@ import router from './router'
 // let hostname = window.location.host;
 //let hostname = process.env.VUE_BIOSTAR_API_URL
 let hostname = "http://localhost:9090"
-let biostarURL = "https://localhost:444"
+let biostarURL = "https://localhost:<insert_port_here>"
 const session = Vue.prototype.$session;
 
 

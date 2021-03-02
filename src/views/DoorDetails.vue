@@ -229,9 +229,6 @@
          this.filteroptions.startdate = lastWeek
          this.filteroptions.enddate = now
          this.getLastUsers()
-         // this.groups.rows = await f.default.getAllAccesGroups(this.$session.get("bs-session-id"))
-         // const test = this.groups.rows
-         // console.log(test)
          // autofill star-and endDate input fields
          let startDateField = document.getElementById("startDate")
          let endDateField = document.getElementById("endDate")
@@ -280,7 +277,6 @@
             let device_filter = this.details.Door.entry_device_id.id == event.device_id;
             let user_filter = false;
             if (event.user.name !== undefined) user_filter = this.filteroptions.user_name === undefined ? true : event.user.name.indexOf(this.filteroptions.user_name) > -1
-            console.log(this.filteroptions.event_code)
             let event_type_filter = this.filteroptions.event_code.includes(event.event_code)
             return device_filter && user_filter && event_type_filter
          },
@@ -301,15 +297,10 @@
                   this.filteroptions.event_code.push(code)
                }
             }
-            console.log(this.filteroptions.event_code)
          },
          async applyFilter(){
-            console.log("applying filter")
             if(this.dateChanged){
-               console.log(this.last_users)
-               console.log("resending api call")
                await this.getLastUsers()
-               console.log(this.last_users)
                this.dateChanged = false
             }
             this.filtered_users = this.last_users.filter(this.filter)
@@ -339,7 +330,6 @@
          },
          async fillEventTypes(){
             const event_types = await f.default.getEventTypes(this.$session.get("bs-session-id"))
-            console.log(event_types)
             for (let type of event_types.EventTypeCollection.rows){
                if (type.name.indexOf("ACCESS_DENIED") > -1){
                   let value = {

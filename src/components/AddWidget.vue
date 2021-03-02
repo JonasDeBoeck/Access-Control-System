@@ -145,7 +145,6 @@
                         duration: this.hours * 3600 + this.minutes * 60 + this.seconds
                     }
                     const result = await db.default.insertWidget(widget)
-                    console.log(result)
                     this.$emit('add-widget')
                     this.$toasted.show(`${this.widgetname} Succesvol toegevoegd!`, {
                         theme: "toasted-primary",
@@ -167,7 +166,6 @@
             },
             setIcon(e) {
                 let value = e.target.parentNode.value
-                console.log(value)
                 this.icon = value;
                 let icons = document.getElementsByClassName("icon")
                 icons.forEach(element => element.classList.remove("active-icon"))
@@ -175,7 +173,6 @@
             },
             selectall(e) {
                 if (e.target.checked) {
-                    console.log(this.doors)
                     this.selectedDoors = []
                     this.selectedDoors.push.apply(this.selectedDoors,this.doors) 
                 }
@@ -205,11 +202,8 @@
             addClassToOptions(){
                 let options = document.getElementsByClassName("option")
                 let doorslist = this.selectedDoors.map(door => door.name)
-                console.log(doorslist)
-                console.log(options.length)
                 for (let option of options){
                     if (doorslist.includes(option.value)){
-                        console.log("adding class")
                         option.classList.add("option-active")
                     }
                     else{
@@ -257,7 +251,6 @@
             updateList(){
                 let element = document.getElementById("list")
                 let doors = this.selectedDoors.map(door => door.name)
-                console.log(doors)
                 element.innerText = doors.join(', ')
             }
         },

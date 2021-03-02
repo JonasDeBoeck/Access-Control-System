@@ -61,11 +61,7 @@
     },
     methods: {
       async login() {
-        console.log("login")
-        console.log(this.username)
-        console.log(this.password)
         let key = await api.default.login(this.username, this.password)
-        console.log(key)
         if(!key){
           this.error = "Foute login gegevens!"
         }
@@ -74,7 +70,6 @@
           this.loggedIn = true;
           // Emit event naar parent zo dat header kan worden gereload
           this.$emit("logIn")
-          console.log(this.$session.getAll())
         }
       },
       async pollTopWidgets() {

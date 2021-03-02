@@ -114,7 +114,6 @@
             })
           })
           this.visibleDoors = filtered
-          console.log(this.visibleDoors)
         }
       }
     },

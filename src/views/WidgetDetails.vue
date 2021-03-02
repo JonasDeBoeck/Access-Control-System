@@ -155,8 +155,6 @@
             search() { },
             changeColour(color) {
                 if (this.init){
-                    console.log("changing color")
-                    console.log(color)
                     this.new_widget.color = color;
                 }
             },

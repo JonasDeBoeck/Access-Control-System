@@ -94,8 +94,6 @@ export default {
     },
     methods: {
         checkRemove(){
-            console.log("trying to remove widget")
-            console.log(this.widget)
             if (this.widget.active){
                 this.$vm2.open(this.warning)
             }
@@ -105,7 +103,6 @@ export default {
         },
         async remove(){
             const result = await db.default.removeWidget(this.widget.id)
-            console.log(result)
             this.$emit("del-widget")
             this.$toasted.show(`${this.widget.name} Succesvol verwijderd!`, {
                 theme: "toasted-primary",
@@ -123,13 +120,10 @@ export default {
                 duration: this.widget.duration,
                 widget: this.widget
             }
-            console.log(event)
             let result = await db.default.insertEvent(event)
             if (result.data.success){
                 this.widget.event_id = result.data.id;
                 this.widget.active = true
-                console.log(this.widget.active)
-                console.log("starting countdown")
                 this.duration = this.widget.duration
                 this.startCountDown()
 
@@ -153,11 +147,9 @@ export default {
                 })
             }
             // force update rerender 
-            console.log("forced update")
             this.$forceUpdate();
         },
         startCountDown(){
-            console.log(this.duration)
             this.duration--
             this.setTime(this.duration)
             if (this.duration > 0 && !this.canceled){
