@@ -8,7 +8,7 @@ import router from './router'
 // let hostname = window.location.host;
 //let hostname = process.env.VUE_BIOSTAR_API_URL
 let hostname = "http://localhost:9090"
-let biostarURL = "https://localhost:500"
+let biostarURL = "https://localhost:444"
 const session = Vue.prototype.$session;
 
 
@@ -23,14 +23,20 @@ const session = Vue.prototype.$session;
 async function login(username, password) {
     console.log(hostname)
     let data = {
-        "User": {
-            "login_id": username,
-            "password": password
+        User: {
+            login_id: username,
+            password: password
+        }
+    }
+
+    let headers = {
+        headers: {
+            "Content-Type": "application/json"
         }
     }
 
     try{
-        const response = await axios.post(`${hostname}/api/login`, JSON.stringify(data))
+        const response = await axios.post(`${hostname}/api/login`, JSON.stringify(data), headers)
         return response.data
     }catch(err)
     {

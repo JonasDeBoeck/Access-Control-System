@@ -1,4 +1,4 @@
-let databaseurl = "http://localhost:9090";
+let databaseurl = "http://192.168.92.128:9090";
 import axios from 'axios'
 
 async function insertWidget(widget) {
