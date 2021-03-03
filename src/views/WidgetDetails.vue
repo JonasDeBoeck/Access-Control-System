@@ -50,7 +50,7 @@
                     <div class="form-group">
                         <label class="labels" for="seconds">Seconden</label>
                         <input type="number" min="0" max="59" class="form-control" id="seconden" v-model="seconds"
-                            v-bind:placeholder="minutes">
+                            v-bind:placeholder="seconds">
                     </div>
                 </form>
             </div>
@@ -180,6 +180,9 @@
                 this.error_time = "",
                 this.error_icon="",
                 this.error_doors=""
+		if (this.hours === "") this.hours = 0
+		if (this.minutes === "") this.minutes = 0
+		if (this.seconds === "") this.seconds = 0
                 this.hours = parseInt(this.hours)
                 this.minutes = parseInt(this.minutes)
                 this.seconds = parseInt(this.seconds)

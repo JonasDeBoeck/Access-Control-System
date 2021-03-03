@@ -83,7 +83,7 @@
         this.updateVisibleDoors(this.filteredDoors)
       },
       containsString(value) {
-        return value.name.match(this.searchterm)
+        return value.name.toLowerCase().match(this.searchterm.toLowerCase())
       },
       async pollStatusses() {
         // Poll deurstatussen
