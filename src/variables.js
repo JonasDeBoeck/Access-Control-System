@@ -372,7 +372,7 @@ async function getDoorDetailStatus(door_id, session) {
             const rowsStatus = result.DoorStatusCollection.rows
             let unlocked = "false"
             for (let i = 0; i < rowsStatus.length; i++) {
-                if (rowsStatus[i].door_id.id === door_id) {
+                if (rowsStatus[i].door_id.id == door_id) {
                     unlocked = rowsStatus[i].unlocked
                 }
             }
