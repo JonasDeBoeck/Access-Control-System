@@ -9,7 +9,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@burhanahmeed/vue-modal-2": "1.1.9",
+    "@burhanahmeed/vue-modal-2": "^1.1.11",
     "@pencilpix/vue2-clock-picker": "^0.1.6",
     "@popperjs/core": "^2.6.0",
     "axios": "^0.21.1",
