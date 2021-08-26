@@ -198,6 +198,7 @@ export default {
         },
         async removeAndCancelWidget(){
             await this.cancelEvent()
+            this.$vm2.close(this.warning)
             await this.remove()
         },
         closeWarning(){
