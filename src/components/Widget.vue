@@ -103,6 +103,7 @@ export default {
         },
         async remove(){
             const result = await db.default.removeWidget(this.widget.id)
+            this.$vm2.close(this.confirmation)
             this.$emit("del-widget")
             this.$toasted.show(`${this.widget.name} Succesvol verwijderd!`, {
                 theme: "toasted-primary",
