@@ -20,7 +20,7 @@
                         <option @click="addRemoveSelected" v-for="door in filteredDoors" :key="door.id" class="option" :id="door.id" :value="door.name">{{door.name}}</option>
                     </div>
                 </div>
-                <div class="form-check checkbox">
+                <div class="form-check checkbox" id="allSelector">
                     <input @change="selectall" class="form-check-input" type="checkbox" value="" id="all">
                     <label class="form-check-label" for="all">All</label>
                 </div>
@@ -458,5 +458,14 @@
 
     .error {
         color: red;
+    }
+
+    #allSelector {
+        margin-left: 0 !important;
+    }
+
+    #allSelector label {
+        margin-left: 0;
+        margin-right: 0;
     }
 </style>
