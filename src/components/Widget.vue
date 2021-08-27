@@ -180,7 +180,7 @@ export default {
                     duration: 1500,
                     icon: 'cogs',
                     iconPack: 'fontawesome',
-                    type: 'success'
+                    type: 'error'
                 })
             }
             
