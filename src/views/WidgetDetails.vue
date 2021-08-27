@@ -358,6 +358,7 @@
         margin-bottom: 15px;
         background: #eee;
         border-radius: 5px;
+        flex-direction: column;
     }
 
     .door {
