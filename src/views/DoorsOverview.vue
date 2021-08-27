@@ -17,6 +17,9 @@
         </form>
       </div>
     </div>
+    <div class="loader" v-if="visibleDoors.length === 0 && searchterm.length !== 0">
+      <p>Er is geen deur gevonden voor u zoekopdracht</p>
+    </div>
     <div class="loader" v-if="visibleDoors.length === 0">
       <pacman-loader :color="color"></pacman-loader>
     </div>
