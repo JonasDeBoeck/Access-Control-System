@@ -156,6 +156,23 @@
                         iconPack: 'fontawesome',
                         type: 'success'
                     })
+                    this.hours = "0"
+                    this.minutes = "0"
+                    this.seconds = "0"
+                    this.widgetname = ""
+                    this.selectedDoors = []
+
+                    let element = document.getElementById("list")
+                    element.innerText = ""
+
+                    let options = document.getElementsByClassName("option")
+                    options.forEach(option => option.classList.remove("option-active"))
+
+                    this.icon = ""
+                    let icons = document.getElementsByClassName("icon")
+                    icons.forEach(element => element.classList.remove("active-icon"))
+
+                    document.getElementById("all").checked = false
                 }
                 this.$forceUpdate();
             },

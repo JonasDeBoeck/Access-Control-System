@@ -69,7 +69,7 @@
     methods: {
       async updateWidgets() {
         let response = await db.default.getAllWidgets()
-        this.widgets = response
+        this.widgets = response.sort((first, second) => first.id - second.id)
         this.filteredWidgets = this.widgets
         this.updateVisibleWidgets(response)
       },
