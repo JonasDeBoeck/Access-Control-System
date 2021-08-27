@@ -468,4 +468,10 @@
         margin-left: 0;
         margin-right: 0;
     }
+
+    @media only screen and (max-width: 992px) {
+    #allSelector {
+      margin-left: 1em !important;
+    }
+  }
 </style>
