@@ -6,7 +6,7 @@
         <div  class="content ">
             <h2>{{widget.name}}</h2>
             <div class="doors">
-                <p class="door" v-for="door in widget.doors" v-bind:key="door.id">{{door.name}}</p>
+                <p class="door" v-for="door in this.showDoors" v-bind:key="door">{{door}}</p>
             </div>
             <div v-bind:class="{'is-active': widget.active, 'not-active':!widget.active}" class="active">
                 <i class="fas fa-bolt"></i>
@@ -82,7 +82,8 @@ export default {
             canceled: false,
             confirmation: "confirmation" + this.widget.id.toString(),
             warning: "warning " + this.widget.id.toString(),
-            active: false
+            active: false,
+            showDoors: []
         }
     },
     computed: {
@@ -210,6 +211,11 @@ export default {
         this.setTime(this.widget.duration)
         if (this.widget.active){
             this.startCountDown()
+        }
+        if (this.widget.doors.length > 1) {
+            this.showDoors = [this.widget.doors[0].name, this.widget.doors[1].name, this.widget.doors[2].name, "..."]
+        } else {
+            Array.from(this.widget.doors).forEach(door => this.showDoors.push(door.name))
         }
     }
 }
