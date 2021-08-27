@@ -26,13 +26,13 @@
                Dicht?
             </h2>
             <div class="lock">
-               <div v-on:click="lock" v-if="door.nietdicht" class="open">
+               <div v-if="door.nietdicht" class="open">
                   <img class="icon" :src="require(`../assets/icons/open-door-oh-no.png`)" alt="icoon">
                   <div>
                      <small>Deur is niet dicht</small>
                   </div>
                </div>
-               <div v-on:click="lock" v-if="!door.nietdicht" class="dicht">
+               <div v-if="!door.nietdicht" class="dicht">
                   <img class="icon" :src="require(`../assets/icons/closed-door.png`)" alt="icoon">
                   <div>
                      <small>Deur is dicht</small>
@@ -53,7 +53,7 @@
                </thead>
                <tbody>
                   <tr v-for="access_group in door.access_groups" v-bind:key="access_group.id">
-                     <td>{{number_access_group + 1}}</td>
+                     <td>{{access_group.id}}</td>
                      <td>{{access_group.name}}</td>
                   </tr>
                </tbody>
@@ -67,7 +67,7 @@
                </thead>
                <tbody>
                   <tr v-for="access_level in door.access_levels" v-bind:key="access_level.id">
-                     <td>{{number_access_group + 1}}</td>
+                     <td>{{access_level.id}}</td>
                      <td>{{access_level.name}}</td>
                   </tr>
                </tbody>
@@ -193,11 +193,9 @@
                   }
                }
             },
-            number_last_users: 0,
             last_users: [],
             filtered_users: [],
             errors: [],
-            number_access_group: 0,
             filteroptions:{
                event_code: [],
                user_name: undefined,

@@ -13,7 +13,7 @@
             <div class="input-group mb-3 deuren">
                 <div id="multi-select">
                     <div class="input">
-                                            <span id="selected_deur" class="input-group-text" for="inputGroupSelect01">Deur</span>
+                        <span id="selected_deur" class="input-group-text" for="inputGroupSelect01">Deur</span>
                         <input @input="filterInput" type="text" class="select-input form-control"><button type="button" class="btn btn-primary dropdown" id="arrow" @click="showDropDown"><i id="arrow-icon" class="fas fa-chevron-down"></i></button>
                     </div> 
                     <div id="options">
