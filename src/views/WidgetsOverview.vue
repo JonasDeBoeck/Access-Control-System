@@ -43,6 +43,7 @@
     },
     async created() {
       this.widgets = await db.default.getAllWidgetsForOverview()
+      this.widgets = this.widgets.sort((first, second) => first.id - second.id)
       this.filteredWidgets = this.widgets
       this.updateVisibleWidgets(this.widgets)
       this.pollWidgets()
@@ -97,7 +98,7 @@
       },
       async pollWidgets() {
         let widgetsOverview = await db.default.getAllWidgetsForOverview()
-        this.widgets = widgetsOverview
+        this.widgets = widgetsOverview.sort((first, second) => first.id - second.id)
         setTimeout(this.pollWidgets, 5000);
       }
     }

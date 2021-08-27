@@ -212,7 +212,7 @@ export default {
         if (this.widget.active){
             this.startCountDown()
         }
-        if (this.widget.doors.length > 1) {
+        if (this.widget.doors.length > 3) {
             this.showDoors = [this.widget.doors[0].name, this.widget.doors[1].name, this.widget.doors[2].name, "..."]
         } else {
             Array.from(this.widget.doors).forEach(door => this.showDoors.push(door.name))
