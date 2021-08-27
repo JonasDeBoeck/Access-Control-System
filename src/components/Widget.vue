@@ -315,6 +315,7 @@ export default {
         display: flex;
         justify-content: center;
         width: 100%;
+        flex-direction: column;
     }
 
     .is-active{
