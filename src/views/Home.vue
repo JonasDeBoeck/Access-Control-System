@@ -182,6 +182,7 @@
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     column-gap: 5%;
     margin-top: 1em;
+    margin-bottom: 1em;
   }
 
   .wrapper:last-of-type {
@@ -200,6 +201,17 @@
     color: red;
   }
 
+  .widget {
+    margin-bottom: 1em;
+  }
+
+
+  @media only screen and (max-width: 1460px) {
+    .widgets {
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+    }
+  }
 
   @media only screen and (max-width: 992px) {
       .widgets {
