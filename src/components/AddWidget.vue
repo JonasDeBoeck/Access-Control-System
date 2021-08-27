@@ -11,11 +11,9 @@
         </div>
         <div class="deurenselect">
             <div class="input-group mb-3 deuren">
-                <div class="input-group-prepend">
-                    <span id="selected_deur" class="input-group-text" for="inputGroupSelect01">Deur</span>
-                </div>
                 <div id="multi-select">
                     <div class="input">
+                                            <span id="selected_deur" class="input-group-text" for="inputGroupSelect01">Deur</span>
                         <input @input="filterInput" type="text" class="select-input form-control"><button type="button" class="btn btn-primary dropdown" id="arrow" @click="showDropDown"><i id="arrow-icon" class="fas fa-chevron-down"></i></button>
                     </div> 
                     <div id="options">
@@ -35,17 +33,17 @@
 
         <div class="time_form">
             <div class="input-group mb-3">
-                <span class="input-group-text" id="inputGroup-sizing-default">Hours</span>
+                <span class="input-group-text" id="inputGroup-sizing-default">Uren</span>
                 <input type="number" min=0 max=12 class="form-control" aria-label="Sizing example input"
                     aria-describedby="inputGroup-sizing-default" v-model="hours">
             </div>
             <div class="input-group mb-3">
-                <span class="input-group-text" id="inputGroup-sizing-default">Minutes</span>
+                <span class="input-group-text" id="inputGroup-sizing-default">Minuten</span>
                 <input type="number" min=0 max=60 class="form-control" aria-label="Sizing example input"
                     aria-describedby="inputGroup-sizing-default" v-model="minutes">
             </div>
             <div class="input-group mb-3">
-                <span class="input-group-text" id="inputGroup-sizing-default">Seconds</span>
+                <span class="input-group-text" id="inputGroup-sizing-default">Seconden</span>
                 <input type="number" min=0 max=60 class="form-control" aria-label="Sizing example input"
                     aria-describedby="inputGroup-sizing-default" v-model="seconds">
             </div>

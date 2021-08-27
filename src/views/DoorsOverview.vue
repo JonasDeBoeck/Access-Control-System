@@ -57,6 +57,7 @@
         doorGroups: [],
         // De gekozen filter
         chosenFilter: 'Kies een deurgroep',
+        chosenGroup: '',
         color: ' rgba(78,115,223,1)'
       }
     },
@@ -79,8 +80,15 @@
       },
       search() {
         // Filter lijst
-        this.filteredDoors = this.doors.filter(this.containsString)
-        this.updateVisibleDoors(this.filteredDoors)
+        if(this.chosenGroup) {
+          let groupdoors = this.chosenGroup.doors
+          console.log(groupdoors)
+          this.filteredDoors = groupdoors.filter(this.containsString)
+          this.updateVisibleDoors(this.filteredDoors)
+        } else {
+          this.filteredDoors = this.doors.filter(this.containsString)
+          this.updateVisibleDoors(this.filteredDoors)
+        }
       },
       containsString(value) {
         return value.name.toLowerCase().match(this.searchterm.toLowerCase())
@@ -115,6 +123,7 @@
           })
           this.visibleDoors = filtered
         }
+        this.chosenGroup = group
       }
     },
     async created() {
