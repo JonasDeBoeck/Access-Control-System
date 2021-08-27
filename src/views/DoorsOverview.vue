@@ -18,9 +18,9 @@
       </div>
     </div>
     <div class="loader" v-if="visibleDoors.length === 0 && searchterm.length !== 0">
-      <p>Er is geen deur gevonden voor u zoekopdracht</p>
+      <p>Er is geen deur gevonden voor u zoekopdracht.</p>
     </div>
-    <div class="loader" v-if="visibleDoors.length === 0">
+    <div class="loader" v-if="visibleDoors.length === 0 && searchterm.length === 0">
       <pacman-loader :color="color"></pacman-loader>
     </div>
     <Doors v-if="visibleDoors.length > 0" v-bind:doors="visibleDoors" />
@@ -206,7 +206,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 90%;
+    height: 80%;
   }
 
   @media only screen and (max-width: 992px) {
