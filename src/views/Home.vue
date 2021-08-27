@@ -20,14 +20,14 @@
     <div v-if="this.$session.has('bs-session-id')" class="wrapper">
       <h2>Top 5 meest gebruikte widgets</h2>
       <div v-if="top5WidgetsUsed.length > 0" class="widgets">
-        <Widget class="widget" v-for="widget in top5WidgetsUsed" v-bind:key="widget.name" v-bind:widget="widget" />
+        <Widget class="widget" v-for="widget in top5WidgetsUsed" v-bind:key="widget.name" v-bind:widget="widget" v-on:del-widget="updateWidgets"/>
       </div>
     </div>
     <div>
     <div v-if="this.$session.has('bs-session-id') &&  activeWidgets.length > 0" class="wrapper">
       <h2>Actieve widgets</h2>
       <div class="widgets">
-        <Widget class="widget" v-for="widget in  activeWidgets" v-bind:key="widget.name" v-bind:widget="widget" />
+        <Widget class="widget" v-for="widget in  activeWidgets" v-bind:key="widget.name" v-bind:widget="widget" v-on:del-widget="updateWidgets"/>
       </div>
     </div>
     </div>
@@ -80,7 +80,13 @@
         const temp = await db.default.getActiveWidgets()
         this.activeWidgets = temp.slice(0, 5)
         setTimeout(this.pollActiveWidgets, 3000)
-      }
+      },
+      async updateWidgets() {
+        let active = await db.default.getActiveWidgets()
+        let top5 = await db.default.top5WidgetsUsed()
+        this.activeWidgets = active
+        this.top5WidgetsUsed = top5
+      },
     }
   }
 </script>
